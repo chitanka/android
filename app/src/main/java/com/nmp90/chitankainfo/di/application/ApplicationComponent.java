@@ -5,8 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 
-import com.nmp90.chitankainfo.parser.ChitankaParser;
+import com.nmp90.chitankainfo.utils.ChitankaParser;
 import com.nmp90.chitankainfo.ui.BaseActivity;
+import com.nmp90.chitankainfo.utils.RxBus;
 
 import javax.inject.Singleton;
 
@@ -22,6 +23,7 @@ public interface ApplicationComponent {
     Application getApplication();
     SharedPreferences getSharedPreferences();
     Resources getResources();
+    RxBus getRxBus();
     ChitankaParser getUrlParser();
 
     void inject(BaseActivity baseActivity);

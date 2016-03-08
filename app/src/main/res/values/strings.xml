@@ -1,4 +1,7 @@
 <resources>
-    <string name="app_name">Chitanka Info</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">Читанка.инфо</string>
+    <string name="action_search">Търси книга</string>
+    <string name="download">СВАЛИ</string>
+    <string name="share">СПОДЕЛИ</string>
+    <string name="share_text">%1$s от %2$s</string>
 </resources>

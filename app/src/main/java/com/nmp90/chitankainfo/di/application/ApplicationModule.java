@@ -6,7 +6,8 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 
 import com.nmp90.chitankainfo.Constants;
-import com.nmp90.chitankainfo.parser.ChitankaParser;
+import com.nmp90.chitankainfo.utils.ChitankaParser;
+import com.nmp90.chitankainfo.utils.RxBus;
 
 import javax.inject.Singleton;
 
@@ -52,5 +53,11 @@ public class ApplicationModule {
     @Singleton
     public ChitankaParser providesGsonInstance() {
         return new ChitankaParser();
+    }
+
+    @Provides
+    @Singleton
+    public RxBus providesEventBus() {
+        return new RxBus();
     }
 }

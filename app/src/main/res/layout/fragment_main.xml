@@ -9,8 +9,33 @@
     tools:context=".ui.fragments.MainActivityFragment"
     tools:showIn="@layout/activity_main">
 
+    <RelativeLayout
+        android:id="@+id/container_empty"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/iv_empty"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_download"
+            android:paddingBottom="15dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp" />
+        <TextView
+            android:id="@+id/tv_empty"
+            android:textSize="22sp"
+            android:gravity="center"
+            android:layout_below="@id/iv_empty"
+            android:layout_centerHorizontal="true"
+            android:text="Няма резултати от търсенето!"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+
+
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/books"
+        android:id="@+id/rv_books"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

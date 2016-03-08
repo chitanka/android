@@ -1,4 +1,4 @@
-package com.nmp90.chitankainfo.parser;
+package com.nmp90.chitankainfo.utils;
 
 import com.nmp90.chitankainfo.mvp.models.Book;
 
@@ -37,8 +37,9 @@ public class ChitankaParser {
                     String title = element.select(".media-body").select("a").first().select("i").first().text();
                     String category = element.select("div.bookcat").select("a").first().text();
                     String author = element.select("div.bookauthor").select("a").first().text();
+                    String downloadUrl = element.select("div.download-links").select("a.dl-epub").first().absUrl("href");
 
-                    books.add(new Book(title, author, category, imageUrl, ""));
+                    books.add(new Book(title, author, category, imageUrl, "", downloadUrl));
                 }
 
                 subscriber.onNext(books);
