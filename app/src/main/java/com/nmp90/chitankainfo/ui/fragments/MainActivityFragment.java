@@ -31,6 +31,8 @@ import rx.Subscription;
  */
 public class MainActivityFragment extends BaseFragment implements MainView{
 
+    private static final String KEY_QUERY = "query";
+
     @Inject
     BooksPresenter booksPresenter;
 
@@ -44,6 +46,7 @@ public class MainActivityFragment extends BaseFragment implements MainView{
     RelativeLayout containerEmpty;
 
     private Subscription subscription;
+    private String query;
 
     public MainActivityFragment() {
     }
@@ -52,14 +55,21 @@ public class MainActivityFragment extends BaseFragment implements MainView{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getComponent(PresenterComponent.class).inject(this);
-        booksPresenter.searchBooks(Constants.INITIAL_SEARCH_BOOK_NAME);
+        if(savedInstanceState != null) {
+            query = savedInstanceState.getString(KEY_QUERY);
+        } else {
+            query = Constants.INITIAL_SEARCH_BOOK_NAME;
+        }
+
+        booksPresenter.searchBooks(query);
         booksPresenter.setView(this);
 
         subscription = rxBus.toObserverable().subscribe((event) -> {
             if (event instanceof SearchBookEvent) {
                 containerEmpty.setVisibility(View.GONE);
                 rvBooks.setVisibility(View.GONE);
-                booksPresenter.searchBooks(((SearchBookEvent) event).getName());
+                query = ((SearchBookEvent) event).getName();
+                booksPresenter.searchBooks(query);
             }
         });
     }
@@ -73,6 +83,12 @@ public class MainActivityFragment extends BaseFragment implements MainView{
         rvBooks.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_QUERY, query);
     }
 
     @Override

@@ -3,12 +3,14 @@ package com.nmp90.chitankainfo;
 import android.app.Application;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.nmp90.chitankainfo.di.application.ApplicationComponent;
 import com.nmp90.chitankainfo.di.application.ApplicationModule;
 import com.nmp90.chitankainfo.di.application.DaggerApplicationComponent;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
+import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
 /**
@@ -23,11 +25,11 @@ public class ChitankaApplication extends Application {
         super.onCreate();
         applicationComponent = DaggerApplicationComponent.builder().applicationModule(new ApplicationModule(this)).build();
 
-        refWatcher = LeakCanary.install(this);
-
         if (BuildConfig.DEBUG) {
+            refWatcher = LeakCanary.install(this);
             Timber.plant(new Timber.DebugTree());
         } else {
+            Fabric.with(this, new Crashlytics());
             Timber.plant(new CrashReportingTree());
         }
     }
@@ -45,14 +47,12 @@ public class ChitankaApplication extends Application {
             if (priority == Log.VERBOSE || priority == Log.DEBUG) {
                 return;
             }
-            //TODO: Add fake crash library or Crashlytics
-            //FakeCrashLibrary.log(priority, tag, message);
+
+            Crashlytics.log(priority, tag, message);
 
             if (t != null) {
                 if (priority == Log.ERROR) {
-                    //FakeCrashLibrary.logError(t);
-                } else if (priority == Log.WARN) {
-                    //FakeCrashLibrary.logWarning(t);
+                    Crashlytics.logException(t);
                 }
             }
         }
