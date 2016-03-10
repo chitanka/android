@@ -29,7 +29,9 @@ public class BooksPresenterImpl implements BooksPresenter {
         }, (error) -> {
             Timber.e(error, "Error receiving books!");
             error.printStackTrace();
-            view.loadBooks(new ArrayList<>());
+            if(view != null) {
+                view.loadBooks(new ArrayList<>());
+            }
         });
     }
 
