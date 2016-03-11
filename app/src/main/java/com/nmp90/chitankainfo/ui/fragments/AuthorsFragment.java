@@ -8,19 +8,43 @@ import android.view.ViewGroup;
 
 import com.nmp90.chitankainfo.R;
 import com.nmp90.chitankainfo.di.presenters.PresenterComponent;
+import com.nmp90.chitankainfo.events.SearchBookEvent;
 import com.nmp90.chitankainfo.mvp.presenters.authors.AuthorsPresenter;
+import com.nmp90.chitankainfo.mvp.views.AuthorsView;
+import com.nmp90.chitankainfo.utils.RxBus;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import rx.Subscription;
 
 /**
  * Created by nmp on 16-3-11.
  */
-public class AuthorsFragment extends BaseFragment {
+public class AuthorsFragment extends BaseFragment implements AuthorsView {
 
     @Inject
     AuthorsPresenter authorsPresenter;
+
+    @Inject
+    RxBus rxBus;
+
+    private Subscription subscription;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        getComponent(PresenterComponent.class).inject(this);
+        authorsPresenter.setView(this);
+
+        subscription = rxBus.toObserverable().subscribe((event) -> {
+            if(event instanceof SearchBookEvent) {
+                authorsPresenter.searchAuthors(((SearchBookEvent)event).getName());
+            }
+        });
+
+    }
 
     @Nullable
     @Override
@@ -28,7 +52,6 @@ public class AuthorsFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_authors, container, false);
         ButterKnife.bind(this, view);
 
-        getComponent(PresenterComponent.class).inject(this);
 
         return view;
     }
@@ -37,6 +60,17 @@ public class AuthorsFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
+        subscription.unsubscribe();
         authorsPresenter = null;
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void showLoading() {
+
     }
 }

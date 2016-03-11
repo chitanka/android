@@ -42,7 +42,7 @@ public class BooksFragment extends BaseFragment implements BooksView {
     @Bind(R.id.rv_books)
     RecyclerView rvBooks;
 
-//    @Bind(R.id.container_empty)
+    @Bind(R.id.container_empty)
     RelativeLayout containerEmpty;
 
     private Subscription subscription;
@@ -66,7 +66,7 @@ public class BooksFragment extends BaseFragment implements BooksView {
 
         subscription = rxBus.toObserverable().subscribe((event) -> {
             if (event instanceof SearchBookEvent) {
-//                containerEmpty.setVisibility(View.GONE);
+                containerEmpty.setVisibility(View.GONE);
                 rvBooks.setVisibility(View.GONE);
                 query = ((SearchBookEvent) event).getName();
                 booksPresenter.searchBooks(query);
@@ -104,10 +104,10 @@ public class BooksFragment extends BaseFragment implements BooksView {
     public void loadBooks(List<Book> books) {
         if(books.size() == 0) {
             rvBooks.setVisibility(View.GONE);
-//            containerEmpty.setVisibility(View.VISIBLE);
+            containerEmpty.setVisibility(View.VISIBLE);
         } else {
             rvBooks.setVisibility(View.VISIBLE);
-//            containerEmpty.setVisibility(View.GONE);
+            containerEmpty.setVisibility(View.GONE);
         }
 
         rvBooks.setAdapter(new BooksAdapter(getActivity(), books));
