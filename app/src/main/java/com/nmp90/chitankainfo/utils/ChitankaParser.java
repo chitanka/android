@@ -18,6 +18,7 @@ import rx.Subscriber;
  * Created by joro on 16-3-8.
  */
 public class ChitankaParser {
+
     public Observable<List<Book>> searchBooks(String q) {
         return Observable.create(new Observable.OnSubscribe<List<Book>>() {
             @Override

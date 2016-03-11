@@ -7,4 +7,5 @@
     <color name="primary_title">#D9000000</color>
     <color name="secondary_title">#8C000000</color>
     <color name="hint">#59000000</color>
+    <color name="tab_text_color">@android:color/white</color>
 </resources>

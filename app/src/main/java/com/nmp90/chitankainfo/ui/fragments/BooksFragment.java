@@ -14,7 +14,7 @@ import com.nmp90.chitankainfo.di.presenters.PresenterComponent;
 import com.nmp90.chitankainfo.events.SearchBookEvent;
 import com.nmp90.chitankainfo.mvp.models.Book;
 import com.nmp90.chitankainfo.mvp.presenters.books.BooksPresenter;
-import com.nmp90.chitankainfo.mvp.views.MainView;
+import com.nmp90.chitankainfo.mvp.views.BooksView;
 import com.nmp90.chitankainfo.ui.adapters.BooksAdapter;
 import com.nmp90.chitankainfo.utils.RxBus;
 
@@ -29,7 +29,7 @@ import rx.Subscription;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends BaseFragment implements MainView{
+public class BooksFragment extends BaseFragment implements BooksView {
 
     private static final String KEY_QUERY = "query";
 
@@ -48,7 +48,7 @@ public class MainActivityFragment extends BaseFragment implements MainView{
     private Subscription subscription;
     private String query;
 
-    public MainActivityFragment() {
+    public BooksFragment() {
     }
 
     @Override

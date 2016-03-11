@@ -1,7 +1,9 @@
 package com.nmp90.chitankainfo.ui;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -14,24 +16,40 @@ import com.nmp90.chitankainfo.di.HasComponent;
 import com.nmp90.chitankainfo.di.presenters.DaggerPresenterComponent;
 import com.nmp90.chitankainfo.di.presenters.PresenterComponent;
 import com.nmp90.chitankainfo.events.SearchBookEvent;
+import com.nmp90.chitankainfo.ui.adapters.MainPagerAdapter;
 import com.nmp90.chitankainfo.utils.RxBus;
 
 import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements HasComponent<PresenterComponent> {
 
     @Inject
     RxBus rxBus;
 
+    @Bind(R.id.pager)
+    ViewPager pager;
+
+    @Bind(R.id.tabs)
+    TabLayout tabs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getComponent().inject(this);
+
+        pager.setAdapter(new MainPagerAdapter(getSupportFragmentManager()));
+        tabs.setupWithViewPager(pager);
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -69,6 +87,12 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
     }
 
     @Override

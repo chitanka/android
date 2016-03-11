@@ -7,6 +7,6 @@ import java.util.List;
 /**
  * Created by nmp on 16-3-8.
  */
-public interface MainView {
+public interface BooksView {
     void loadBooks(List<Book> books);
 }
