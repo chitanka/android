@@ -92,8 +92,8 @@ public class MainActivityFragment extends BaseFragment implements MainView{
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
         ButterKnife.unbind(this);
         subscription.unsubscribe();
         booksPresenter.setView(null);
