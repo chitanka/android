@@ -10,6 +10,8 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import rx.Observable;
@@ -39,6 +41,7 @@ public class ChitankaParser {
                 authors.add(new Author(name, country, link));
             }
 
+            sortAuthors(authors);
             subscriber.onNext(authors);
             subscriber.onCompleted();
         });
@@ -100,6 +103,16 @@ public class ChitankaParser {
             subscriber.onNext(books);
             subscriber.onCompleted();
         });
+    }
+
+    private void sortAuthors(List<Author> authors) {
+        Comparator<Author> comparator = new Comparator<Author>() {
+            public int compare(Author c1, Author c2) {
+                return c1.getName().compareTo(c2.getName()); // use your logic
+            }
+        };
+
+        Collections.sort(authors, comparator);
     }
 
     private String getElement(Element element, String className) {
