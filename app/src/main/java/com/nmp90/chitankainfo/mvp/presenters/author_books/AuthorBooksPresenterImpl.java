@@ -1,4 +1,4 @@
-package com.nmp90.chitankainfo.mvp.presenters.books;
+package com.nmp90.chitankainfo.mvp.presenters.author_books;
 
 import com.nmp90.chitankainfo.mvp.presenters.BasePresenter;
 import com.nmp90.chitankainfo.mvp.views.BooksView;
@@ -12,30 +12,31 @@ import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 /**
- * Created by nmp on 16-3-8.
+ * Created by nmp on 16-3-13.
  */
-public class BooksPresenterImpl extends BasePresenter implements BooksPresenter {
+public class AuthorBooksPresenterImpl extends BasePresenter implements AuthorBooksPresenter {
     private ChitankaParser webParser;
     private WeakReference<BooksView> view;
 
-    public BooksPresenterImpl(ChitankaParser webParser) {
+    public AuthorBooksPresenterImpl(ChitankaParser webParser) {
         this.webParser = webParser;
     }
 
     @Override
-    public void searchBooks(String q) {
-        if (!viewExists(view))
+    public void searchAuthorBooks(String link) {
+        if(!viewExists(view))
             return;
 
         view.get().showLoading();
-        webParser.searchBooks(q).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe((books) -> {
+        webParser.searchAuthorBooks(link).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe((books) -> {
             view.get().hideLoading();
             view.get().loadBooks(books);
+
         }, (error) -> {
             Timber.e(error, "Error receiving books!");
-            error.printStackTrace();
             view.get().hideLoading();
             view.get().loadBooks(new ArrayList<>());
+
         });
     }
 

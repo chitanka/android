@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         getComponent().inject(this);
 
@@ -84,6 +87,9 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        if(id == android.R.id.home) {
+            finish();
+        }
 
 
         return super.onOptionsItemSelected(item);

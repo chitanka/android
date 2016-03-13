@@ -6,4 +6,9 @@ package com.nmp90.chitankainfo;
 public class Constants {
     public static final String SHARED_PREFS_NAME = "chtanka.info";
     public static final String INITIAL_SEARCH_BOOK_NAME = "test";
+    public static final String INITIAL_SEARCH_AUTHOR_NAME = "ivan";
+
+    public static final int AUTHORS_PER_ROW = 2;
+    public static final String EXTRA_AUTHOR_LINK = "extra_author_link";
+    public static final String EXTRA_AUTHOR_NAME = "extra_author_name";
 }

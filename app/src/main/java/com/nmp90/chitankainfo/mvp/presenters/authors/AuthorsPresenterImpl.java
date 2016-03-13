@@ -4,6 +4,7 @@ import com.nmp90.chitankainfo.mvp.views.AuthorsView;
 import com.nmp90.chitankainfo.utils.ChitankaParser;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -27,9 +28,17 @@ public class AuthorsPresenterImpl implements AuthorsPresenter {
     @Override
     public void searchAuthors(String name) {
         if(viewExists()) {
-            webParser.searchAuthors(name).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe((authors) -> {
-
-            });
+            authorsViewWeakReference.get().showLoading();
+            webParser.searchAuthors(name)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe((authors) -> {
+                        authorsViewWeakReference.get().hideLoading();
+                        authorsViewWeakReference.get().presentAuthors(authors);
+                    }, (error) -> {
+                        authorsViewWeakReference.get().hideLoading();
+                        authorsViewWeakReference.get().presentAuthors(new ArrayList<>());
+                    });
         }
     }
 

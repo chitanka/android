@@ -27,15 +27,15 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
     private final Context context;
     private List<Book> books = new ArrayList<>();
 
+    public BooksAdapter(Context context, List<Book> books) {
+        this.context = context;
+        this.books = books;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_book, null, false);
         return new ViewHolder(view);
-    }
-
-    public BooksAdapter(Context context, List<Book> books) {
-        this.context = context;
-        this.books = books;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.nmp90.chitankainfo.di.presenters;
 
 import com.nmp90.chitankainfo.di.scopes.ActivityScope;
+import com.nmp90.chitankainfo.mvp.presenters.author_books.AuthorBooksPresenterImpl;
+import com.nmp90.chitankainfo.mvp.presenters.author_books.AuthorBooksPresenter;
 import com.nmp90.chitankainfo.mvp.presenters.authors.AuthorsPresenter;
 import com.nmp90.chitankainfo.mvp.presenters.authors.AuthorsPresenterImpl;
 import com.nmp90.chitankainfo.mvp.presenters.books.BooksPresenter;
@@ -26,5 +28,11 @@ public class PresenterModule {
     @ActivityScope
     public AuthorsPresenter providesAuthorsPresenter(ChitankaParser webParser) {
         return new AuthorsPresenterImpl(webParser);
+    }
+
+    @Provides
+    @ActivityScope
+    public AuthorBooksPresenter providesAuthorBooksPresenter(ChitankaParser webParser) {
+        return new AuthorBooksPresenterImpl(webParser);
     }
 }
