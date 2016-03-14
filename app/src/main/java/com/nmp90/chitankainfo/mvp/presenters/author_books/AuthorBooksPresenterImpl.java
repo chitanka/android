@@ -29,11 +29,15 @@ public class AuthorBooksPresenterImpl extends BasePresenter implements AuthorBoo
 
         view.get().showLoading();
         webParser.searchAuthorBooks(link).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe((books) -> {
+            if (!viewExists(view))
+                return;
             view.get().hideLoading();
             view.get().loadBooks(books);
 
         }, (error) -> {
             Timber.e(error, "Error receiving books!");
+            if (!viewExists(view))
+                return;
             view.get().hideLoading();
             view.get().loadBooks(new ArrayList<>());
 

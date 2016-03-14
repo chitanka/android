@@ -29,11 +29,14 @@ public class BooksPresenterImpl extends BasePresenter implements BooksPresenter 
 
         view.get().showLoading();
         webParser.searchBooks(q).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe((books) -> {
+            if (!viewExists(view))
+                return;
             view.get().hideLoading();
             view.get().loadBooks(books);
         }, (error) -> {
             Timber.e(error, "Error receiving books!");
-            error.printStackTrace();
+            if (!viewExists(view))
+                return;
             view.get().hideLoading();
             view.get().loadBooks(new ArrayList<>());
         });

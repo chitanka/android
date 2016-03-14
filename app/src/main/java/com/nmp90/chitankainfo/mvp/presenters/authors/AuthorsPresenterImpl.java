@@ -1,5 +1,6 @@
 package com.nmp90.chitankainfo.mvp.presenters.authors;
 
+import com.nmp90.chitankainfo.mvp.presenters.BasePresenter;
 import com.nmp90.chitankainfo.mvp.views.AuthorsView;
 import com.nmp90.chitankainfo.utils.ChitankaParser;
 
@@ -8,13 +9,14 @@ import java.util.ArrayList;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * Created by nmp on 16-3-11.
  */
-public class AuthorsPresenterImpl implements AuthorsPresenter {
+public class AuthorsPresenterImpl extends BasePresenter implements AuthorsPresenter {
     private final ChitankaParser webParser;
-    private WeakReference<AuthorsView> authorsViewWeakReference;
+    private WeakReference<AuthorsView> authorsView;
 
     public AuthorsPresenterImpl(ChitankaParser webParser) {
         this.webParser = webParser;
@@ -22,27 +24,32 @@ public class AuthorsPresenterImpl implements AuthorsPresenter {
 
     @Override
     public void setView(AuthorsView authorsViewWeakReference) {
-        this.authorsViewWeakReference = new WeakReference<>(authorsViewWeakReference);
+        this.authorsView = new WeakReference<>(authorsViewWeakReference);
     }
 
     @Override
     public void searchAuthors(String name) {
         if(viewExists()) {
-            authorsViewWeakReference.get().showLoading();
+            authorsView.get().showLoading();
             webParser.searchAuthors(name)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe((authors) -> {
-                        authorsViewWeakReference.get().hideLoading();
-                        authorsViewWeakReference.get().presentAuthors(authors);
+                        if (!viewExists(authorsView))
+                            return;
+                        authorsView.get().hideLoading();
+                        authorsView.get().presentAuthors(authors);
                     }, (error) -> {
-                        authorsViewWeakReference.get().hideLoading();
-                        authorsViewWeakReference.get().presentAuthors(new ArrayList<>());
+                        Timber.e(error, "Error printing authors!");
+                        if (!viewExists(authorsView))
+                            return;
+                        authorsView.get().hideLoading();
+                        authorsView.get().presentAuthors(new ArrayList<>());
                     });
         }
     }
 
     private boolean viewExists() {
-        return authorsViewWeakReference != null && authorsViewWeakReference.get() != null;
+        return authorsView != null && authorsView.get() != null;
     }
 }
