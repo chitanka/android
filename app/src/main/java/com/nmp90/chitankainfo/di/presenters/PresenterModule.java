@@ -1,5 +1,6 @@
 package com.nmp90.chitankainfo.di.presenters;
 
+import com.nmp90.chitankainfo.api.ChitankaApi;
 import com.nmp90.chitankainfo.di.scopes.ActivityScope;
 import com.nmp90.chitankainfo.mvp.presenters.author_books.AuthorBooksPresenterImpl;
 import com.nmp90.chitankainfo.mvp.presenters.author_books.AuthorBooksPresenter;
@@ -7,6 +8,8 @@ import com.nmp90.chitankainfo.mvp.presenters.authors.AuthorsPresenter;
 import com.nmp90.chitankainfo.mvp.presenters.authors.AuthorsPresenterImpl;
 import com.nmp90.chitankainfo.mvp.presenters.books.BooksPresenter;
 import com.nmp90.chitankainfo.mvp.presenters.books.BooksPresenterImpl;
+import com.nmp90.chitankainfo.mvp.presenters.categories.CategoriesPresenter;
+import com.nmp90.chitankainfo.mvp.presenters.categories.CategoriesPresenterImpl;
 import com.nmp90.chitankainfo.utils.ChitankaParser;
 
 import dagger.Module;
@@ -34,5 +37,11 @@ public class PresenterModule {
     @ActivityScope
     public AuthorBooksPresenter providesAuthorBooksPresenter(ChitankaParser webParser) {
         return new AuthorBooksPresenterImpl(webParser);
+    }
+
+    @Provides
+    @ActivityScope
+    public CategoriesPresenter providesCategoriesPresenter(ChitankaApi chitankaApi) {
+        return new CategoriesPresenterImpl(chitankaApi);
     }
 }

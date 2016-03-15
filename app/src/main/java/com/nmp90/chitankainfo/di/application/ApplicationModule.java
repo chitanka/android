@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 
 import com.nmp90.chitankainfo.Constants;
+import com.nmp90.chitankainfo.api.ChitankaApi;
+import com.nmp90.chitankainfo.api.ChitankaApiService;
 import com.nmp90.chitankainfo.utils.ChitankaParser;
 import com.nmp90.chitankainfo.utils.RxBus;
 
@@ -59,5 +61,11 @@ public class ApplicationModule {
     @Singleton
     public RxBus providesEventBus() {
         return new RxBus();
+    }
+
+    @Provides
+    @Singleton
+    public ChitankaApi providesApi() {
+        return ChitankaApiService.createChitankaApiService();
     }
 }

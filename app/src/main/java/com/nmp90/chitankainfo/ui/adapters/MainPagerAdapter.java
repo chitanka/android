@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.nmp90.chitankainfo.ui.fragments.AuthorsFragment;
 import com.nmp90.chitankainfo.ui.fragments.BooksFragment;
+import com.nmp90.chitankainfo.ui.fragments.CategoriesFragment;
 
 /**
  * Created by nmp on 16-3-11.
@@ -22,6 +23,8 @@ public class MainPagerAdapter extends FragmentStatePagerAdapter {
                 return new BooksFragment();
             case 1:
                 return new AuthorsFragment();
+            case 2:
+                return new CategoriesFragment();
             default:
                 return new BooksFragment();
         }
@@ -29,7 +32,7 @@ public class MainPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -39,6 +42,8 @@ public class MainPagerAdapter extends FragmentStatePagerAdapter {
                 return "Книги";
             case 1:
                 return "Автори";
+            case 2:
+                return "Категории";
             default:
                 return "Книги";
         }

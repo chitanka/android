@@ -6,6 +6,7 @@ import com.nmp90.chitankainfo.ui.AuthorBooksActivity;
 import com.nmp90.chitankainfo.ui.MainActivity;
 import com.nmp90.chitankainfo.ui.fragments.AuthorsFragment;
 import com.nmp90.chitankainfo.ui.fragments.BooksFragment;
+import com.nmp90.chitankainfo.ui.fragments.CategoriesFragment;
 
 import dagger.Component;
 
@@ -21,4 +22,5 @@ public interface PresenterComponent {
 
     void inject(BooksFragment fragment);
     void inject(AuthorsFragment authorsFragment);
+    void inject(CategoriesFragment categoriesFragment);
 }
