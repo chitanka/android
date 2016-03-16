@@ -2,6 +2,8 @@ package com.nmp90.chitankainfo.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +13,14 @@ import com.nmp90.chitankainfo.di.presenters.PresenterComponent;
 import com.nmp90.chitankainfo.mvp.models.Category;
 import com.nmp90.chitankainfo.mvp.presenters.categories.CategoriesPresenter;
 import com.nmp90.chitankainfo.mvp.views.CategoriesView;
+import com.nmp90.chitankainfo.ui.adapters.CategoriesAdapter;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 /**
  * Created by nmp on 16-3-15.
@@ -26,6 +29,9 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
 
     @Inject
     CategoriesPresenter categoriesPresenter;
+
+    @Bind(R.id.rv_categories)
+    RecyclerView rvCategories;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +45,7 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
         View view = inflater.inflate(R.layout.fragment_categories, container, false);
         ButterKnife.bind(this, view);
 
+        rvCategories.setLayoutManager(new LinearLayoutManager(getActivity()));
         categoriesPresenter.setView(this);
         categoriesPresenter.loadCategories();
 
@@ -47,9 +54,7 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
 
     @Override
     public void presentCategories(List<Category> categories) {
-        for(Category category : categories) {
-            Timber.d(category.getName());
-        }
+        rvCategories.setAdapter(new CategoriesAdapter(getActivity(), categories));
     }
 
     @Override

@@ -33,7 +33,7 @@ public class CategoriesPresenterImpl extends BasePresenter implements Categories
         .getCategories()
         .map(Categories::getCategories)
         .flatMapIterable(c -> c)
-        .filter(category -> category.getNrOfBooks() > 0)
+        .filter(c -> c.getNrOfBooks() > 0)
         .toList()
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
