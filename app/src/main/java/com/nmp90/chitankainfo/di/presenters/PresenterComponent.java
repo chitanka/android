@@ -2,8 +2,9 @@ package com.nmp90.chitankainfo.di.presenters;
 
 import com.nmp90.chitankainfo.di.application.ApplicationComponent;
 import com.nmp90.chitankainfo.di.scopes.ActivityScope;
-import com.nmp90.chitankainfo.ui.AuthorBooksActivity;
+import com.nmp90.chitankainfo.ui.BooksActivity;
 import com.nmp90.chitankainfo.ui.MainActivity;
+import com.nmp90.chitankainfo.ui.fragments.AuthorBooksFragment;
 import com.nmp90.chitankainfo.ui.fragments.AuthorsFragment;
 import com.nmp90.chitankainfo.ui.fragments.BooksFragment;
 import com.nmp90.chitankainfo.ui.fragments.CategoriesFragment;
@@ -18,9 +19,10 @@ import dagger.Component;
 public interface PresenterComponent {
 
     void inject(MainActivity activity);
-    void inject(AuthorBooksActivity authorBooksActivity);
+    void inject(BooksActivity booksActivity);
 
     void inject(BooksFragment fragment);
     void inject(AuthorsFragment authorsFragment);
     void inject(CategoriesFragment categoriesFragment);
+    void inject(AuthorBooksFragment authorBooksFragment);
 }

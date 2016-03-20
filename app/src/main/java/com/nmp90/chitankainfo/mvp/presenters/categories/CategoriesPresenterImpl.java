@@ -1,7 +1,6 @@
 package com.nmp90.chitankainfo.mvp.presenters.categories;
 
 import com.nmp90.chitankainfo.api.ChitankaApi;
-import com.nmp90.chitankainfo.mvp.models.Categories;
 import com.nmp90.chitankainfo.mvp.presenters.BasePresenter;
 import com.nmp90.chitankainfo.mvp.views.CategoriesView;
 
@@ -31,15 +30,11 @@ public class CategoriesPresenterImpl extends BasePresenter implements Categories
     public void loadCategories() {
     chitankaApi
         .getCategories()
-        .map(Categories::getCategories)
-        .flatMapIterable(c -> c)
-        .filter(c -> c.getNrOfBooks() > 0)
-        .toList()
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(categories -> {
             if(viewExists(categoriesView)) {
-                categoriesView.get().presentCategories(categories);
+                categoriesView.get().presentCategories(categories.getCategories(), 0);
             }
         });
     }

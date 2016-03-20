@@ -11,6 +11,8 @@ public class Constants {
     public static final String INITIAL_SEARCH_AUTHOR_NAME = "ivan";
 
     public static final int AUTHORS_PER_ROW = 2;
-    public static final String EXTRA_AUTHOR_LINK = "extra_author_link";
+    public static final String EXTRA_LINK = "extra_author_link";
     public static final String EXTRA_AUTHOR_NAME = "extra_author_name";
+    public static final String EXTRA_SEARCH_TERM = "extra_search_term";
+    public static final String EXTRA_TITLE = "extra_title";
 }

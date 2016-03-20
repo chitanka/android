@@ -30,7 +30,7 @@
 
         <activity
             android:parentActivityName=".ui.MainActivity"
-            android:name=".ui.AuthorBooksActivity"
+            android:name=".ui.BooksActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
         <meta-data

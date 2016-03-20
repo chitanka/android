@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.nmp90.chitankainfo.R;
 import com.nmp90.chitankainfo.di.presenters.PresenterComponent;
@@ -15,6 +16,7 @@ import com.nmp90.chitankainfo.mvp.presenters.categories.CategoriesPresenter;
 import com.nmp90.chitankainfo.mvp.views.CategoriesView;
 import com.nmp90.chitankainfo.ui.adapters.CategoriesAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -46,16 +48,33 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
         ButterKnife.bind(this, view);
 
         rvCategories.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         categoriesPresenter.setView(this);
         categoriesPresenter.loadCategories();
 
+        Toast.makeText(getActivity(), "Test", Toast.LENGTH_SHORT).show();
         return view;
     }
 
+    List<Category> flatCategories = new ArrayList<>();
+
     @Override
-    public void presentCategories(List<Category> categories) {
-        rvCategories.setAdapter(new CategoriesAdapter(getActivity(), categories));
+    public void presentCategories(List<Category> categories, int level) {
+        populateCategoriesLevel(categories, level);
+        rvCategories.setAdapter(new CategoriesAdapter(getActivity(), flatCategories));
     }
+
+    private void populateCategoriesLevel(List<Category> categories, int level) {
+        level++;
+        for(Category category : categories) {
+            category.setLevel(level);
+            flatCategories.add(category);
+            if(category.getChildren() != null && category.getChildren().size() > 0) {
+                populateCategoriesLevel(category.getChildren(), level);
+            }
+        }
+    }
+
 
     @Override
     public void hideLoading() {

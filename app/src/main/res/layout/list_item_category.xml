@@ -1,19 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:clickable="true"
+    android:id="@+id/container_category"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
+    android:layout_height="60dp">
     <TextView
         android:id="@+id/tv_name"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/tv_books_count"
+        android:textSize="20sp"
+        android:gravity="center_vertical"
+        android:layout_centerVertical="true"
+        android:layout_margin="16dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/tv_books_count"
+        android:textSize="22sp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <View
+        android:id="@+id/divider"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:background="@color/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp" />
 
 </RelativeLayout>

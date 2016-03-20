@@ -8,12 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.nmp90.chitankainfo.Constants;
 import com.nmp90.chitankainfo.R;
 import com.nmp90.chitankainfo.di.presenters.PresenterComponent;
 import com.nmp90.chitankainfo.events.SearchBookEvent;
 import com.nmp90.chitankainfo.mvp.models.Book;
-import com.nmp90.chitankainfo.mvp.presenters.books.BooksPresenter;
+import com.nmp90.chitankainfo.mvp.presenters.author_books.AuthorBooksPresenter;
 import com.nmp90.chitankainfo.mvp.views.BooksView;
 import com.nmp90.chitankainfo.ui.adapters.BooksAdapter;
 import com.nmp90.chitankainfo.utils.RxBus;
@@ -30,14 +29,14 @@ import rx.Subscription;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class BooksFragment extends BaseFragment implements BooksView {
+public class AuthorBooksFragment extends BaseFragment implements BooksView {
 
     private static final String KEY_QUERY = "query";
     private static final String KEY_LINK = "link";
     private static final String KEY_SEARCH_TERM = "link";
 
     @Inject
-    BooksPresenter booksPresenter;
+    AuthorBooksPresenter authorBooksPresenter;
 
     @Inject
     RxBus rxBus;
@@ -54,14 +53,13 @@ public class BooksFragment extends BaseFragment implements BooksView {
     private Subscription subscription;
     private String query, link;
 
-    public BooksFragment() {
+    public AuthorBooksFragment() {
     }
 
-    public static BooksFragment newInstance(String searchTerm, String link) {
+    public static AuthorBooksFragment newInstance(String link) {
         Bundle bundle = new Bundle();
         bundle.putString(KEY_LINK, link);
-        bundle.putString(KEY_SEARCH_TERM, searchTerm);
-        BooksFragment fragment = new BooksFragment();
+        AuthorBooksFragment fragment = new AuthorBooksFragment();
         fragment.setArguments(bundle);
 
         return fragment;
@@ -72,18 +70,13 @@ public class BooksFragment extends BaseFragment implements BooksView {
         super.onCreate(savedInstanceState);
         this.getComponent(PresenterComponent.class).inject(this);
 
-        if(savedInstanceState != null) {
-            query = savedInstanceState.getString(KEY_QUERY);
-        } else {
-            query = Constants.INITIAL_SEARCH_BOOK_NAME;
-        }
+        link = getArguments().getString(KEY_LINK);
 
         subscription = rxBus.toObserverable().subscribe((event) -> {
             if (event instanceof SearchBookEvent) {
                 containerEmpty.setVisibility(View.GONE);
                 rvBooks.setVisibility(View.GONE);
                 query = ((SearchBookEvent) event).getName();
-                booksPresenter.searchBooks(query);
             }
         });
     }
@@ -94,8 +87,8 @@ public class BooksFragment extends BaseFragment implements BooksView {
         View view = inflater.inflate(R.layout.fragment_books, container, false);
         ButterKnife.bind(this, view);
 
-        booksPresenter.setView(this);
-        booksPresenter.searchBooks(query);
+        authorBooksPresenter.setView(this);
+        authorBooksPresenter.searchAuthorBooks(link);
 
         rvBooks.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -113,8 +106,7 @@ public class BooksFragment extends BaseFragment implements BooksView {
         super.onDestroy();
         ButterKnife.unbind(this);
         subscription.unsubscribe();
-        booksPresenter.setView(null);
-        booksPresenter = null;
+        authorBooksPresenter.setView(null);
     }
 
     @Override

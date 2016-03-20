@@ -3,6 +3,7 @@ package com.nmp90.chitankainfo.ui;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 
 import com.nmp90.chitankainfo.Constants;
@@ -11,11 +12,11 @@ import com.nmp90.chitankainfo.di.HasComponent;
 import com.nmp90.chitankainfo.di.presenters.DaggerPresenterComponent;
 import com.nmp90.chitankainfo.di.presenters.PresenterComponent;
 import com.nmp90.chitankainfo.di.presenters.PresenterModule;
+import com.nmp90.chitankainfo.mvp.models.SearchTerms;
+import com.nmp90.chitankainfo.ui.fragments.AuthorBooksFragment;
 import com.nmp90.chitankainfo.ui.fragments.BooksFragment;
 
-public class AuthorBooksActivity extends BaseActivity implements HasComponent<PresenterComponent> {
-
-    String authorName, link;
+public class BooksActivity extends BaseActivity implements HasComponent<PresenterComponent> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,23 +30,20 @@ public class AuthorBooksActivity extends BaseActivity implements HasComponent<Pr
 
         getComponent().inject(this);
 
-        if (savedInstanceState == null) {
-            authorName = getIntent().getStringExtra(Constants.EXTRA_AUTHOR_NAME);
-            link = getIntent().getStringExtra(Constants.EXTRA_AUTHOR_LINK);
+        String searchTerm = getIntent().getStringExtra(Constants.EXTRA_SEARCH_TERM);
+        String title = getIntent().getStringExtra(Constants.EXTRA_TITLE);
+        String link = getIntent().getStringExtra(Constants.EXTRA_LINK);
+
+        Fragment fragment;
+        if(searchTerm.equals(SearchTerms.AUTHOR.toString())) {
+         fragment = AuthorBooksFragment.newInstance(link);
         } else {
-            authorName = savedInstanceState.getString(Constants.EXTRA_AUTHOR_NAME);
-            link = savedInstanceState.getString(Constants.EXTRA_AUTHOR_LINK);
+            fragment = BooksFragment.newInstance(searchTerm, link);
         }
 
-        getSupportFragmentManager().beginTransaction().add( R.id.container, BooksFragment.newInstance(link)).commit();
-        setTitle(authorName);
-    }
+        getSupportFragmentManager().beginTransaction().add( R.id.container, fragment).commit();
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(Constants.EXTRA_AUTHOR_NAME, authorName);
-        outState.putString(Constants.EXTRA_AUTHOR_LINK, link);
+        setTitle(title);
     }
 
     @Override

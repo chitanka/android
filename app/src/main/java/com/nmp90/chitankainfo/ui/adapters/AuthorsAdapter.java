@@ -12,7 +12,8 @@ import android.widget.TextView;
 import com.nmp90.chitankainfo.Constants;
 import com.nmp90.chitankainfo.R;
 import com.nmp90.chitankainfo.mvp.models.Author;
-import com.nmp90.chitankainfo.ui.AuthorBooksActivity;
+import com.nmp90.chitankainfo.mvp.models.SearchTerms;
+import com.nmp90.chitankainfo.ui.BooksActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +45,10 @@ public class AuthorsAdapter extends RecyclerView.Adapter<AuthorsAdapter.ViewHold
         holder.tvAuthorCountry.setText(author.getCountry());
         holder.tvAuthorName.setText(author.getName());
         holder.cardView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, AuthorBooksActivity.class);
-            intent.putExtra(Constants.EXTRA_AUTHOR_NAME, author.getName());
-            intent.putExtra(Constants.EXTRA_AUTHOR_LINK, author.getLink());
+            Intent intent = new Intent(context, BooksActivity.class);
+            intent.putExtra(Constants.EXTRA_SEARCH_TERM, SearchTerms.AUTHOR.toString());
+            intent.putExtra(Constants.EXTRA_TITLE, author.getName());
+            intent.putExtra(Constants.EXTRA_LINK, author.getLink());
            context.startActivity(intent);
         });
     }

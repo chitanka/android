@@ -10,6 +10,7 @@ public class Category {
     private int id;
     private int parent;
     private int nrOfBooks;
+    private int level;
 
     private List<Category> children;
 
@@ -35,5 +36,13 @@ public class Category {
 
     public List<Category> getChildren() {
         return children;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }
