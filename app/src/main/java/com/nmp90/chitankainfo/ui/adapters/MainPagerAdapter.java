@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.nmp90.chitankainfo.ui.fragments.AuthorsFragment;
-import com.nmp90.chitankainfo.ui.fragments.BooksFragment;
+import com.nmp90.chitankainfo.ui.fragments.books.BooksFragment;
 import com.nmp90.chitankainfo.ui.fragments.CategoriesFragment;
 
 /**

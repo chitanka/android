@@ -13,8 +13,8 @@ import com.nmp90.chitankainfo.di.presenters.DaggerPresenterComponent;
 import com.nmp90.chitankainfo.di.presenters.PresenterComponent;
 import com.nmp90.chitankainfo.di.presenters.PresenterModule;
 import com.nmp90.chitankainfo.mvp.models.SearchTerms;
-import com.nmp90.chitankainfo.ui.fragments.AuthorBooksFragment;
-import com.nmp90.chitankainfo.ui.fragments.BooksFragment;
+import com.nmp90.chitankainfo.ui.fragments.books.AuthorBooksFragment;
+import com.nmp90.chitankainfo.ui.fragments.books.BooksFragment;
 
 public class BooksActivity extends BaseActivity implements HasComponent<PresenterComponent> {
 
@@ -36,9 +36,9 @@ public class BooksActivity extends BaseActivity implements HasComponent<Presente
 
         Fragment fragment;
         if(searchTerm.equals(SearchTerms.AUTHOR.toString())) {
-         fragment = AuthorBooksFragment.newInstance(link);
+            fragment = AuthorBooksFragment.newInstance(link);
         } else {
-            fragment = BooksFragment.newInstance(searchTerm, link);
+            fragment = BooksFragment.newInstance();
         }
 
         getSupportFragmentManager().beginTransaction().add( R.id.container, fragment).commit();

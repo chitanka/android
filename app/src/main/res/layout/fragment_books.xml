@@ -10,7 +10,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".ui.fragments.BooksFragment"
+    tools:context=".ui.fragments.books.BooksFragment"
     tools:showIn="@layout/activity_main">
 
     <fr.castorflex.android.circularprogressbar.CircularProgressBar

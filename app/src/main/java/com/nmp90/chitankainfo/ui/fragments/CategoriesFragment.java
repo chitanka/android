@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.nmp90.chitankainfo.R;
 import com.nmp90.chitankainfo.di.presenters.PresenterComponent;
@@ -52,7 +51,6 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
         categoriesPresenter.setView(this);
         categoriesPresenter.loadCategories();
 
-        Toast.makeText(getActivity(), "Test", Toast.LENGTH_SHORT).show();
         return view;
     }
 

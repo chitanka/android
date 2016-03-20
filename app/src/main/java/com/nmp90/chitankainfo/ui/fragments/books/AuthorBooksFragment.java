@@ -1,4 +1,4 @@
-package com.nmp90.chitankainfo.ui.fragments;
+package com.nmp90.chitankainfo.ui.fragments.books;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,13 +11,9 @@ import android.widget.RelativeLayout;
 import com.nmp90.chitankainfo.R;
 import com.nmp90.chitankainfo.di.presenters.PresenterComponent;
 import com.nmp90.chitankainfo.events.SearchBookEvent;
-import com.nmp90.chitankainfo.mvp.models.Book;
 import com.nmp90.chitankainfo.mvp.presenters.author_books.AuthorBooksPresenter;
 import com.nmp90.chitankainfo.mvp.views.BooksView;
-import com.nmp90.chitankainfo.ui.adapters.BooksAdapter;
 import com.nmp90.chitankainfo.utils.RxBus;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -29,11 +25,9 @@ import rx.Subscription;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class AuthorBooksFragment extends BaseFragment implements BooksView {
+public class AuthorBooksFragment extends BaseBooksFragment implements BooksView {
 
-    private static final String KEY_QUERY = "query";
     private static final String KEY_LINK = "link";
-    private static final String KEY_SEARCH_TERM = "link";
 
     @Inject
     AuthorBooksPresenter authorBooksPresenter;
@@ -51,7 +45,7 @@ public class AuthorBooksFragment extends BaseFragment implements BooksView {
     CircularProgressBar loading;
 
     private Subscription subscription;
-    private String query, link;
+    private String link;
 
     public AuthorBooksFragment() {
     }
@@ -76,7 +70,9 @@ public class AuthorBooksFragment extends BaseFragment implements BooksView {
             if (event instanceof SearchBookEvent) {
                 containerEmpty.setVisibility(View.GONE);
                 rvBooks.setVisibility(View.GONE);
-                query = ((SearchBookEvent) event).getName();
+                link = ((SearchBookEvent) event).getName();
+
+                authorBooksPresenter.searchAuthorBooks(link);
             }
         });
     }
@@ -96,40 +92,10 @@ public class AuthorBooksFragment extends BaseFragment implements BooksView {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(KEY_QUERY, query);
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
         subscription.unsubscribe();
         authorBooksPresenter.setView(null);
-    }
-
-    @Override
-    public void loadBooks(List<Book> books) {
-        if(books.size() == 0) {
-            rvBooks.setVisibility(View.GONE);
-            containerEmpty.setVisibility(View.VISIBLE);
-        } else {
-            rvBooks.setVisibility(View.VISIBLE);
-            containerEmpty.setVisibility(View.GONE);
-        }
-
-        rvBooks.setAdapter(new BooksAdapter(getActivity(), books));
-    }
-
-    @Override
-    public void hideLoading() {
-        loading.progressiveStop();
-        loading.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showLoading() {
-        loading.setVisibility(View.VISIBLE);
     }
 }
