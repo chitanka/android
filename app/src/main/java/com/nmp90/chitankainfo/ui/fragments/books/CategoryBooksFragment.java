@@ -115,7 +115,7 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
         }
 
         if(adapter.getItemCount() >= totalItemCount) {
-            Snackbar.make(rvBooks, "Зареден е целият списък!", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(rvBooks, getString(R.string.list_loaded), Snackbar.LENGTH_SHORT).show();
         }
     }
 
