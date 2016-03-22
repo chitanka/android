@@ -1,18 +1,21 @@
 package com.nmp90.chitankainfo.mvp.models;
 
+import org.parceler.Parcel;
+
 import java.util.List;
 
 /**
  * Created by nmp on 16-3-15.
  */
+@Parcel
 public class Category {
-    private String slug, name;
-    private int id;
-    private int parent;
-    private int nrOfBooks;
-    private int level;
+    String slug, name;
+    int id;
+    int parent;
+    int nrOfBooks;
+    int level;
 
-    private List<Category> children;
+    List<Category> children;
 
     public String getSlug() {
         return slug;

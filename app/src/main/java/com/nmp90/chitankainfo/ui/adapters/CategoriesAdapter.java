@@ -70,7 +70,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
                 snackbar.show();
             } else {
                 Intent intent = new Intent(context, BooksActivity.class);
-                intent.putExtra(Constants.EXTRA_SEARCH_TERM, SearchTerms.CATEGORY);
+                intent.putExtra(Constants.EXTRA_SEARCH_TERM, SearchTerms.CATEGORY.toString());
                 intent.putExtra(Constants.EXTRA_TITLE, category.getName());
                 intent.putExtra(Constants.EXTRA_SLUG, category.getSlug());
 

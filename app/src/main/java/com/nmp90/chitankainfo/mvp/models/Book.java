@@ -2,14 +2,23 @@ package com.nmp90.chitankainfo.mvp.models;
 
 import com.nmp90.chitankainfo.Constants;
 
+import org.parceler.Parcel;
+
+import java.util.ArrayList;
+
 /**
  * Created by joro on 16-3-8.
  */
+@Parcel
 public class Book {
-    private int id;
-    private String title, titleAuthor, cover, annotation, downloadUrl;
-    private Category category;
+    int id;
+    String title, titleAuthor, cover, annotation, downloadUrl;
+    Category category;
 
+    public Book() {
+    }
+
+    ArrayList<String> formats;
 
     public int getId() {
         return id;
@@ -28,7 +37,7 @@ public class Book {
     }
 
     public String getCover() {
-        return cover;
+        return Constants.CHITANKA_INFO_API + "/" + cover;
     }
 
     public String getAnnotation() {
@@ -36,6 +45,10 @@ public class Book {
     }
 
     public String getDownloadUrl(String format) {
-        return Constants.CHITANKA_INFO_API + "/book/" + id + "." + format;
+        return Constants.CHITANKA_INFO_API + "book/" + id + "." + format;
+    }
+
+    public ArrayList<String> getFormats() {
+        return formats;
     }
 }

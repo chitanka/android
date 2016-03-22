@@ -1,5 +1,6 @@
 package com.nmp90.chitankainfo.mvp.presenters.authors;
 
+import com.nmp90.chitankainfo.api.ChitankaApi;
 import com.nmp90.chitankainfo.mvp.presenters.BasePresenter;
 import com.nmp90.chitankainfo.mvp.views.AuthorsView;
 
@@ -14,11 +15,11 @@ import timber.log.Timber;
  * Created by nmp on 16-3-11.
  */
 public class AuthorsPresenterImpl extends BasePresenter implements AuthorsPresenter {
-    private final ChitankaParser webParser;
+    private final ChitankaApi chitankaApi;
     private WeakReference<AuthorsView> authorsView;
 
-    public AuthorsPresenterImpl(ChitankaParser webParser) {
-        this.webParser = webParser;
+    public AuthorsPresenterImpl(ChitankaApi chitankaApi) {
+        this.chitankaApi = chitankaApi;
     }
 
     @Override
@@ -30,7 +31,7 @@ public class AuthorsPresenterImpl extends BasePresenter implements AuthorsPresen
     public void searchAuthors(String name) {
         if(viewExists()) {
             authorsView.get().showLoading();
-            webParser.searchAuthors(name)
+            chitankaApi.searchAuthors(name)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe((authors) -> {

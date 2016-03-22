@@ -16,4 +16,6 @@ public class Constants {
     public static final String EXTRA_SEARCH_TERM = "extra_search_term";
     public static final String EXTRA_TITLE = "extra_title";
     public static final String EXTRA_SLUG = "extra_slug";
+    public static final String EXTRA_FORMATS = "extra_formats";
+    public static final String EXTRA_BOOK_ID = "extra_book_id";
 }

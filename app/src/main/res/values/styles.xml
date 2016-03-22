@@ -36,4 +36,6 @@
         <item name="cpb_rotation_speed">@string/cpb_default_rotation_speed</item>
     </style>
 
+    <style name="BorderlessButton" parent="Widget.AppCompat.Button.Borderless"></style>
+
 </resources>

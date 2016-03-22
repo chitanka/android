@@ -1,17 +1,21 @@
 package com.nmp90.chitankainfo.ui.fragments.books;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.nmp90.chitankainfo.R;
 import com.nmp90.chitankainfo.di.presenters.PresenterComponent;
 import com.nmp90.chitankainfo.mvp.models.Book;
-import com.nmp90.chitankainfo.mvp.presenters.books.BooksPresenter;
+import com.nmp90.chitankainfo.mvp.presenters.category_books.CategoryBooksPresenter;
+import com.nmp90.chitankainfo.mvp.views.CategoryBooksView;
 import com.nmp90.chitankainfo.ui.adapters.BooksAdapter;
+import com.nmp90.chitankainfo.ui.fragments.BaseFragment;
+import com.nmp90.chitankainfo.ui.views.containers.ScrollRecyclerView;
 
 import java.util.List;
 
@@ -19,26 +23,32 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.Subscription;
+import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 
 /**
  * Created by joro on 16-3-20.
  */
-public class CategoryBooksFragment extends BaseBooksFragment {
+public class CategoryBooksFragment extends BaseFragment implements CategoryBooksView {
     private static final String KEY_SLUG = "slug";
 
-    private boolean loading = true;
-    int pastVisiblesItems, visibleItemCount, totalItemCount, page;
+    private int totalItemCount, page=1;
 
-    LinearLayoutManager layoutManager;
+    private LinearLayoutManager layoutManager;
+    private BooksAdapter adapter;
 
     @Inject
-    BooksPresenter booksPresenter;
+    CategoryBooksPresenter booksPresenter;
 
     @Bind(R.id.rv_books)
-    RecyclerView rvBooks;
+    ScrollRecyclerView rvBooks;
 
-    private Subscription subscription;
+    @Bind(R.id.loading)
+    CircularProgressBar loadingPb;
+
+    @Bind(R.id.container_empty)
+    RelativeLayout containerEmpty;
+
+
     private String slug;
 
     public CategoryBooksFragment() {
@@ -64,62 +74,61 @@ public class CategoryBooksFragment extends BaseBooksFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_books, container, false);
+        View view = inflater.inflate(R.layout.fragment_category_books, container, false);
         ButterKnife.bind(this, view);
 
         booksPresenter.setView(this);
         booksPresenter.getBooksForCategory(slug, page);
-
-        layoutManager = new LinearLayoutManager(getActivity());
-        rvBooks.setLayoutManager(layoutManager);
-        rvBooks.addOnScrollListener(new RecyclerView.OnScrollListener()
-        {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
-                if(dy > 0) //check for scroll down
-                {
-                    visibleItemCount = layoutManager.getChildCount();
-                    totalItemCount = layoutManager.getItemCount();
-                    pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
-
-                    if (loading)
-                    {
-                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
-                        {
-                            loading = false;
-                            page++;
-                            booksPresenter.getBooksForCategory(slug, page);
-
-                        }
-                    }
-                }
-            }
+        rvBooks.setOnEndReachedListener(() -> {
+            page++;
+            booksPresenter.getBooksForCategory(slug, page);
         });
 
-
         return view;
-    }
-
-    @Override
-    public void loadBooks(List<Book> books) {
-        if(books.size() == 0) {
-            rvBooks.setVisibility(View.GONE);
-            containerEmpty.setVisibility(View.VISIBLE);
-        } else {
-            rvBooks.setVisibility(View.VISIBLE);
-            containerEmpty.setVisibility(View.GONE);
-        }
-
-        rvBooks.setAdapter(new BooksAdapter(getActivity(), books));
-
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
-        subscription.unsubscribe();
         booksPresenter.setView(null);
+    }
+
+    @Override
+    public void loadBooks(List<Book> books, int totalItemCount) {
+        this.totalItemCount = totalItemCount;
+        if(books.size() == 0) {
+            rvBooks.setVisibility(View.GONE);
+            containerEmpty.setVisibility(View.VISIBLE);
+            return;
+        } else {
+            rvBooks.setVisibility(View.VISIBLE);
+            containerEmpty.setVisibility(View.GONE);
+        }
+
+        if(adapter == null) {
+            adapter= new BooksAdapter(getActivity(), books, getActivity().getSupportFragmentManager());
+            rvBooks.setAdapter(adapter, totalItemCount, 20);
+        } else {
+            adapter.addAll(books);
+            rvBooks.getScrollListener().setLoading(false);
+        }
+
+        if(adapter.getItemCount() >= totalItemCount) {
+            Snackbar.make(rvBooks, "Зареден е целият списък!", Snackbar.LENGTH_LONG).show();
+        }
+    }
+
+
+
+    @Override
+    public void hideLoading() {
+        loadingPb.progressiveStop();
+        loadingPb.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showLoading() {
+        loadingPb.setVisibility(View.VISIBLE);
     }
 }

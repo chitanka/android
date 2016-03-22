@@ -29,13 +29,13 @@
             android:value="ec9af5c8c458dba74c36f68603aaf0787dbd95aa" />
 
         <activity
-            android:parentActivityName=".ui.MainActivity"
             android:name=".ui.BooksActivity"
+            android:parentActivityName=".ui.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.nmp90.chitankainfo.ui.MainActivity" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.nmp90.chitankainfo.ui.MainActivity" />
         </activity>
     </application>
 

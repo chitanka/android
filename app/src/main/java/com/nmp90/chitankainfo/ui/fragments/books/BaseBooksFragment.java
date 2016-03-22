@@ -39,7 +39,7 @@ public abstract class BaseBooksFragment extends BaseFragment implements BooksVie
             containerEmpty.setVisibility(View.GONE);
         }
 
-        rvBooks.setAdapter(new BooksAdapter(getActivity(), books));
+        rvBooks.setAdapter(new BooksAdapter(getActivity(), books, getActivity().getSupportFragmentManager()));
     }
 
     @Override

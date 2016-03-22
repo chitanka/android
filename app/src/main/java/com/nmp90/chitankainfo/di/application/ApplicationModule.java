@@ -52,12 +52,6 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    public ChitankaParser providesGsonInstance() {
-        return new ChitankaParser();
-    }
-
-    @Provides
-    @Singleton
     public RxBus providesEventBus() {
         return new RxBus();
     }

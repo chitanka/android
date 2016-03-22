@@ -8,4 +8,12 @@ import java.util.List;
 public class CategoryBooks {
     private List<Book> books;
     private Pagination pager;
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public Pagination getPager() {
+        return pager;
+    }
 }

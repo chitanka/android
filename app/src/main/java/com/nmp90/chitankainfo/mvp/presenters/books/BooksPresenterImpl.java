@@ -1,5 +1,6 @@
 package com.nmp90.chitankainfo.mvp.presenters.books;
 
+import com.nmp90.chitankainfo.api.ChitankaApi;
 import com.nmp90.chitankainfo.mvp.presenters.BasePresenter;
 import com.nmp90.chitankainfo.mvp.views.BooksView;
 
@@ -14,11 +15,11 @@ import timber.log.Timber;
  * Created by nmp on 16-3-8.
  */
 public class BooksPresenterImpl extends BasePresenter implements BooksPresenter {
-    private ChitankaParser webParser;
+    private ChitankaApi chitankaApi;
     private WeakReference<BooksView> view;
 
-    public BooksPresenterImpl(ChitankaParser webParser) {
-        this.webParser = webParser;
+    public BooksPresenterImpl(ChitankaApi chitankaApi) {
+        this.chitankaApi = chitankaApi;
     }
 
     @Override
@@ -27,11 +28,11 @@ public class BooksPresenterImpl extends BasePresenter implements BooksPresenter 
             return;
 
         view.get().showLoading();
-        webParser.searchBooks(q).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe((books) -> {
+        chitankaApi.searchBooks(q).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe((books) -> {
             if (!viewExists(view))
                 return;
             view.get().hideLoading();
-            view.get().loadBooks(books);
+            view.get().loadBooks(books.getBooks());
         }, (error) -> {
             Timber.e(error, "Error receiving books!");
             if (!viewExists(view))
@@ -41,10 +42,6 @@ public class BooksPresenterImpl extends BasePresenter implements BooksPresenter 
         });
     }
 
-    @Override
-    public void loadBooksForCategory(String categorySlug, int page) {
-
-    }
 
     @Override
     public void setView(BooksView view) {

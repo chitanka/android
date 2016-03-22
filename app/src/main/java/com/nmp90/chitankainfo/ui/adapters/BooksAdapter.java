@@ -2,7 +2,7 @@ package com.nmp90.chitankainfo.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.nmp90.chitankainfo.R;
 import com.nmp90.chitankainfo.mvp.models.Book;
+import com.nmp90.chitankainfo.ui.dialogs.DownloadDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +26,13 @@ import butterknife.ButterKnife;
  */
 public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> {
     private final Context context;
+    private final FragmentManager fragmentManager;
     private List<Book> books = new ArrayList<>();
 
-    public BooksAdapter(Context context, List<Book> books) {
+    public BooksAdapter(Context context, List<Book> books, FragmentManager fragmentManager) {
         this.context = context;
         this.books = books;
+        this.fragmentManager = fragmentManager;
     }
 
     @Override
@@ -42,26 +45,31 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         Book book = books.get(position);
         holder.tvBookName.setText(book.getTitle());
-        holder.tvBookCategory.setText(book.getCategory());
-        holder.tvBookAuthor.setText(book.getAuthor());
-        Glide.with(context).load(book.getCover()).fitCenter().crossFade().into(holder.ivCover);
+        holder.tvBookCategory.setText(book.getCategory().getName());
+        holder.tvBookAuthor.setText(book.getTitleAuthor());
+        Glide.with(context).load(book.getCover()).fitCenter().crossFade().placeholder(R.drawable.ic_no_cover).into(holder.ivCover);
 
         holder.tvShare.setOnClickListener((view) -> {
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, String.format(context.getResources().getString(R.string.share_text), book.getTitle(), book.getAuthor()));
+            sendIntent.putExtra(Intent.EXTRA_TEXT, String.format(context.getResources().getString(R.string.share_text), book.getTitle(), book.getTitleAuthor()));
             sendIntent.setType("text/plain");
             context.startActivity(sendIntent);
         });
 
         holder.tvDownload.setOnClickListener((view) -> {
-            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(book.getDownloadUrl())));
+            DownloadDialog.newInstance(book).show(fragmentManager, DownloadDialog.TAG);
         });
     }
 
     @Override
     public int getItemCount() {
         return books.size();
+    }
+
+    public void addAll(List<Book> books) {
+        this.books.addAll(books);
+        notifyDataSetChanged();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

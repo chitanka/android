@@ -10,6 +10,8 @@ import com.nmp90.chitankainfo.mvp.presenters.books.BooksPresenter;
 import com.nmp90.chitankainfo.mvp.presenters.books.BooksPresenterImpl;
 import com.nmp90.chitankainfo.mvp.presenters.categories.CategoriesPresenter;
 import com.nmp90.chitankainfo.mvp.presenters.categories.CategoriesPresenterImpl;
+import com.nmp90.chitankainfo.mvp.presenters.category_books.CategoryBooksPresenter;
+import com.nmp90.chitankainfo.mvp.presenters.category_books.CategoryBooksPresenterImpl;
 
 import dagger.Module;
 import dagger.Provides;
@@ -22,25 +24,31 @@ public class PresenterModule {
 
     @Provides
     @ActivityScope
-    public BooksPresenter providesBooksPresenter(ChitankaParser webParser) {
-        return new BooksPresenterImpl(webParser);
+    public BooksPresenter providesBooksPresenter(ChitankaApi chitankaApi) {
+        return new BooksPresenterImpl(chitankaApi);
     }
 
     @Provides
     @ActivityScope
-    public AuthorsPresenter providesAuthorsPresenter(ChitankaParser webParser) {
-        return new AuthorsPresenterImpl(webParser);
+    public AuthorsPresenter providesAuthorsPresenter(ChitankaApi chitankaApi) {
+        return new AuthorsPresenterImpl(chitankaApi);
     }
 
     @Provides
     @ActivityScope
-    public AuthorBooksPresenter providesAuthorBooksPresenter(ChitankaParser webParser) {
-        return new AuthorBooksPresenterImpl(webParser);
+    public AuthorBooksPresenter providesAuthorBooksPresenter(ChitankaApi chitankaApi) {
+        return new AuthorBooksPresenterImpl(chitankaApi);
     }
 
     @Provides
     @ActivityScope
     public CategoriesPresenter providesCategoriesPresenter(ChitankaApi chitankaApi) {
         return new CategoriesPresenterImpl(chitankaApi);
+    }
+
+    @Provides
+    @ActivityScope
+    public CategoryBooksPresenter providesCategoryBooksPresenter(ChitankaApi chitankaApi) {
+        return new CategoryBooksPresenterImpl(chitankaApi);
     }
 }

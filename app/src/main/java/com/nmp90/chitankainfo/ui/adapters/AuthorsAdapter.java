@@ -48,7 +48,7 @@ public class AuthorsAdapter extends RecyclerView.Adapter<AuthorsAdapter.ViewHold
             Intent intent = new Intent(context, BooksActivity.class);
             intent.putExtra(Constants.EXTRA_SEARCH_TERM, SearchTerms.AUTHOR.toString());
             intent.putExtra(Constants.EXTRA_TITLE, author.getName());
-            intent.putExtra(Constants.EXTRA_LINK, author.getLink());
+            intent.putExtra(Constants.EXTRA_SLUG, author.getSlug());
            context.startActivity(intent);
         });
     }

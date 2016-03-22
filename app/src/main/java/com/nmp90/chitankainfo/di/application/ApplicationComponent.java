@@ -24,7 +24,6 @@ public interface ApplicationComponent {
     SharedPreferences getSharedPreferences();
     Resources getResources();
     RxBus getRxBus();
-    ChitankaParser getUrlParser();
     ChitankaApi getChitankaApi();
 
     void inject(BaseActivity baseActivity);

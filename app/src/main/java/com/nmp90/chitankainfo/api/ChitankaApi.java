@@ -10,6 +10,7 @@ import java.util.List;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -22,11 +23,11 @@ public interface ChitankaApi {
     @GET("/books/category/{slug}.json/{page}")
     Observable<CategoryBooks> getBooksForCategory(@Path("slug") String slugName, @Path("page") int page);
 
-    @GET("/books/search.json?q={title}")
-    Observable<SearchBooks> searchBooks(@Path("title") String title);
+    @GET("/books/search.json")
+    Observable<SearchBooks> searchBooks(@Query("q") String title);
 
-    @GET("/authors/search.json?q={name}")
-    Observable<List<Author>> searchAuthors(@Path("name") String name);
+    @GET("/authors/search.json")
+    Observable<List<Author>> searchAuthors(@Query("q") String name);
 
     @GET("/author/{slug}/books.json")
     Observable<AuthorBooks> getAuthorBooks(@Path("slug") String slug);

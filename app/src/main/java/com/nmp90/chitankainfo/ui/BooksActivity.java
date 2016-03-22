@@ -32,13 +32,12 @@ public class BooksActivity extends BaseActivity implements HasComponent<Presente
 
         String searchTerm = getIntent().getStringExtra(Constants.EXTRA_SEARCH_TERM);
         String title = getIntent().getStringExtra(Constants.EXTRA_TITLE);
+        String slug = getIntent().getStringExtra(Constants.EXTRA_SLUG);
 
         Fragment fragment;
         if(searchTerm.equals(SearchTerms.AUTHOR.toString())) {
-            String link = getIntent().getStringExtra(Constants.EXTRA_LINK);
-            fragment = AuthorBooksFragment.newInstance(link);
+            fragment = AuthorBooksFragment.newInstance(slug);
         } else {
-            String slug = getIntent().getStringExtra(Constants.EXTRA_SLUG);
             fragment = CategoryBooksFragment.newInstance(slug);
         }
 
