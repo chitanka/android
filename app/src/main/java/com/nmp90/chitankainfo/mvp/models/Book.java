@@ -1,41 +1,41 @@
 package com.nmp90.chitankainfo.mvp.models;
 
+import com.nmp90.chitankainfo.Constants;
+
 /**
  * Created by joro on 16-3-8.
  */
 public class Book {
-    private String title, author, category, image, description, downloadUrl;
+    private int id;
+    private String title, titleAuthor, cover, annotation, downloadUrl;
+    private Category category;
 
-    public Book(String title, String author, String category, String image, String description, String downloadUrl) {
-        this.title = title;
-        this.author = author;
-        this.category = category;
-        this.image = image;
-        this.description = description;
-        this.downloadUrl = downloadUrl;
+
+    public int getId() {
+        return id;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getTitleAuthor() {
+        return titleAuthor;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public String getImage() {
-        return image;
+    public String getCover() {
+        return cover;
     }
 
-    public String getDescription() {
-        return description;
+    public String getAnnotation() {
+        return annotation;
     }
 
-    public String getDownloadUrl() {
-        return downloadUrl;
+    public String getDownloadUrl(String format) {
+        return Constants.CHITANKA_INFO_API + "/book/" + id + "." + format;
     }
 }

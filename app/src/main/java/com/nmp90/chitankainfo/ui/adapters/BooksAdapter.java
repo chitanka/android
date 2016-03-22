@@ -44,7 +44,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         holder.tvBookName.setText(book.getTitle());
         holder.tvBookCategory.setText(book.getCategory());
         holder.tvBookAuthor.setText(book.getAuthor());
-        Glide.with(context).load(book.getImage()).fitCenter().crossFade().into(holder.ivCover);
+        Glide.with(context).load(book.getCover()).fitCenter().crossFade().into(holder.ivCover);
 
         holder.tvShare.setOnClickListener((view) -> {
             Intent sendIntent = new Intent();

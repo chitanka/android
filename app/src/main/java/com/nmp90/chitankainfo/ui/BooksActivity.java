@@ -14,7 +14,7 @@ import com.nmp90.chitankainfo.di.presenters.PresenterComponent;
 import com.nmp90.chitankainfo.di.presenters.PresenterModule;
 import com.nmp90.chitankainfo.mvp.models.SearchTerms;
 import com.nmp90.chitankainfo.ui.fragments.books.AuthorBooksFragment;
-import com.nmp90.chitankainfo.ui.fragments.books.BooksFragment;
+import com.nmp90.chitankainfo.ui.fragments.books.CategoryBooksFragment;
 
 public class BooksActivity extends BaseActivity implements HasComponent<PresenterComponent> {
 
@@ -32,13 +32,14 @@ public class BooksActivity extends BaseActivity implements HasComponent<Presente
 
         String searchTerm = getIntent().getStringExtra(Constants.EXTRA_SEARCH_TERM);
         String title = getIntent().getStringExtra(Constants.EXTRA_TITLE);
-        String link = getIntent().getStringExtra(Constants.EXTRA_LINK);
 
         Fragment fragment;
         if(searchTerm.equals(SearchTerms.AUTHOR.toString())) {
+            String link = getIntent().getStringExtra(Constants.EXTRA_LINK);
             fragment = AuthorBooksFragment.newInstance(link);
         } else {
-            fragment = BooksFragment.newInstance();
+            String slug = getIntent().getStringExtra(Constants.EXTRA_SLUG);
+            fragment = CategoryBooksFragment.newInstance(slug);
         }
 
         getSupportFragmentManager().beginTransaction().add( R.id.container, fragment).commit();

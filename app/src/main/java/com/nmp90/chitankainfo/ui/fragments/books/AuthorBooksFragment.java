@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import com.nmp90.chitankainfo.R;
 import com.nmp90.chitankainfo.di.presenters.PresenterComponent;
@@ -19,7 +18,6 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import rx.Subscription;
 
 /**
@@ -37,12 +35,6 @@ public class AuthorBooksFragment extends BaseBooksFragment implements BooksView 
 
     @Bind(R.id.rv_books)
     RecyclerView rvBooks;
-
-    @Bind(R.id.container_empty)
-    RelativeLayout containerEmpty;
-
-    @Bind(R.id.loading)
-    CircularProgressBar loading;
 
     private Subscription subscription;
     private String link;

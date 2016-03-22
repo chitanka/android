@@ -10,7 +10,6 @@ import com.nmp90.chitankainfo.mvp.presenters.books.BooksPresenter;
 import com.nmp90.chitankainfo.mvp.presenters.books.BooksPresenterImpl;
 import com.nmp90.chitankainfo.mvp.presenters.categories.CategoriesPresenter;
 import com.nmp90.chitankainfo.mvp.presenters.categories.CategoriesPresenterImpl;
-import com.nmp90.chitankainfo.utils.ChitankaParser;
 
 import dagger.Module;
 import dagger.Provides;

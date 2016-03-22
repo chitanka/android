@@ -8,4 +8,5 @@ import com.nmp90.chitankainfo.mvp.views.BooksView;
  */
 public interface BooksPresenter extends BaseViewPresenter<BooksView> {
     void searchBooks(String q);
+    void getBooksForCategory(String categorySlug, int page);
 }

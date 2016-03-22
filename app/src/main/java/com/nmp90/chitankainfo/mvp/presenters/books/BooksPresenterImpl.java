@@ -2,7 +2,6 @@ package com.nmp90.chitankainfo.mvp.presenters.books;
 
 import com.nmp90.chitankainfo.mvp.presenters.BasePresenter;
 import com.nmp90.chitankainfo.mvp.views.BooksView;
-import com.nmp90.chitankainfo.utils.ChitankaParser;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -40,6 +39,11 @@ public class BooksPresenterImpl extends BasePresenter implements BooksPresenter 
             view.get().hideLoading();
             view.get().loadBooks(new ArrayList<>());
         });
+    }
+
+    @Override
+    public void loadBooksForCategory(String categorySlug, int page) {
+
     }
 
     @Override

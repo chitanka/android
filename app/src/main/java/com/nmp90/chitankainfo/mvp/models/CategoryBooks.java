@@ -1,0 +1,11 @@
+package com.nmp90.chitankainfo.mvp.models;
+
+import java.util.List;
+
+/**
+ * Created by nmp on 16-3-22.
+ */
+public class CategoryBooks {
+    private List<Book> books;
+    private Pagination pager;
+}

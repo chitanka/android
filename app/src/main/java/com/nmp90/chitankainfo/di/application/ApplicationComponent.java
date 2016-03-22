@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 
 import com.nmp90.chitankainfo.api.ChitankaApi;
-import com.nmp90.chitankainfo.utils.ChitankaParser;
 import com.nmp90.chitankainfo.ui.BaseActivity;
 import com.nmp90.chitankainfo.utils.RxBus;
 

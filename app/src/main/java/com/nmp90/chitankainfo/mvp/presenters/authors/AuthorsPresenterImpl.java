@@ -2,7 +2,6 @@ package com.nmp90.chitankainfo.mvp.presenters.authors;
 
 import com.nmp90.chitankainfo.mvp.presenters.BasePresenter;
 import com.nmp90.chitankainfo.mvp.views.AuthorsView;
-import com.nmp90.chitankainfo.utils.ChitankaParser;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
