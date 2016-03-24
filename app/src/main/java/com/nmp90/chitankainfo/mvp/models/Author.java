@@ -1,15 +1,16 @@
 package com.nmp90.chitankainfo.mvp.models;
 
+import org.parceler.Parcel;
+
 /**
  * Created by nmp on 16-3-11.
  */
-public class Author {
-    private String name, country, slug;
 
-    public Author(String name, String country, String slug) {
-        this.name = name;
-        this.slug = slug;
-        this.country = country;
+@Parcel
+public class Author {
+    String name, country, slug;
+
+    public Author() {
     }
 
     public String getName() {

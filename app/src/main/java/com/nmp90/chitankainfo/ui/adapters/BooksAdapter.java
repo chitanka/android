@@ -3,6 +3,7 @@ package com.nmp90.chitankainfo.ui.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.nmp90.chitankainfo.Constants;
 import com.nmp90.chitankainfo.R;
 import com.nmp90.chitankainfo.mvp.models.Book;
+import com.nmp90.chitankainfo.ui.BookDetailsActivity;
 import com.nmp90.chitankainfo.ui.dialogs.DownloadDialog;
 
 import java.util.ArrayList;
@@ -45,6 +48,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         Book book = books.get(position);
         holder.tvBookName.setText(book.getTitle());
+        holder.tvDescription.setText((book.getAnnotation() != null ? book.getAnnotation() : ""));
         holder.tvBookCategory.setText(book.getCategory().getName());
         holder.tvBookAuthor.setText(book.getTitleAuthor());
         Glide.with(context).load(book.getCover()).fitCenter().crossFade().placeholder(R.drawable.ic_no_cover).into(holder.ivCover);
@@ -60,6 +64,12 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         holder.tvDownload.setOnClickListener((view) -> {
             DownloadDialog.newInstance(book).show(fragmentManager, DownloadDialog.TAG);
         });
+
+        holder.cardView.setOnClickListener(v -> {
+            Intent sendIntent = new Intent(context, BookDetailsActivity.class);
+            sendIntent.putExtra(Constants.EXTRA_BOOK_ID, book.getId());
+            context.startActivity(sendIntent);
+        });
     }
 
     @Override
@@ -73,6 +83,9 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
+
+        @Bind(R.id.card_view)
+        CardView cardView;
 
         @Bind(R.id.tv_name)
         TextView tvBookName;
@@ -88,6 +101,9 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
 
         @Bind(R.id.tv_share)
         TextView tvShare;
+
+        @Bind(R.id.tv_description)
+        TextView tvDescription;
 
         @Bind(R.id.tv_download)
         TextView tvDownload;

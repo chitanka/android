@@ -42,9 +42,6 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
 
         getComponent().inject(this);
 

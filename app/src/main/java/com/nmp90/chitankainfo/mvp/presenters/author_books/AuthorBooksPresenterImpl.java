@@ -32,14 +32,14 @@ public class AuthorBooksPresenterImpl extends BasePresenter implements AuthorBoo
             if (!viewExists(view))
                 return;
             view.get().hideLoading();
-            view.get().loadBooks(books.getBooks());
+            view.get().presentAuthorBooks(books.getBooks());
 
         }, (error) -> {
             Timber.e(error, "Error receiving books!");
             if (!viewExists(view))
                 return;
             view.get().hideLoading();
-            view.get().loadBooks(new ArrayList<>());
+            view.get().presentAuthorBooks(new ArrayList<>());
 
         });
     }

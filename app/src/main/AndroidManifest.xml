@@ -37,6 +37,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nmp90.chitankainfo.ui.MainActivity" />
         </activity>
+        <activity
+            android:name=".ui.BookDetailsActivity"
+            android:label="@string/title_activity_book_details"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -32,13 +32,13 @@ public class BooksPresenterImpl extends BasePresenter implements BooksPresenter 
             if (!viewExists(view))
                 return;
             view.get().hideLoading();
-            view.get().loadBooks(books.getBooks());
+            view.get().presentAuthorBooks(books.getBooks());
         }, (error) -> {
             Timber.e(error, "Error receiving books!");
             if (!viewExists(view))
                 return;
             view.get().hideLoading();
-            view.get().loadBooks(new ArrayList<>());
+            view.get().presentAuthorBooks(new ArrayList<>());
         });
     }
 

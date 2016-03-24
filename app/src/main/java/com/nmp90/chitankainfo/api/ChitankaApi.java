@@ -2,6 +2,7 @@ package com.nmp90.chitankainfo.api;
 
 import com.nmp90.chitankainfo.mvp.models.Author;
 import com.nmp90.chitankainfo.mvp.models.AuthorBooks;
+import com.nmp90.chitankainfo.mvp.models.BookDetails;
 import com.nmp90.chitankainfo.mvp.models.Categories;
 import com.nmp90.chitankainfo.mvp.models.CategoryBooks;
 import com.nmp90.chitankainfo.mvp.models.SearchBooks;
@@ -32,4 +33,6 @@ public interface ChitankaApi {
     @GET("/author/{slug}/books.json")
     Observable<AuthorBooks> getAuthorBooks(@Path("slug") String slug);
 
+    @GET("/book/{id}.json")
+    Observable<BookDetails> getBookDetails(@Path("id") int id);
 }

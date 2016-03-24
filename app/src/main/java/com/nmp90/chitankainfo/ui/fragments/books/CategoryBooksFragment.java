@@ -95,7 +95,7 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
     }
 
     @Override
-    public void loadBooks(List<Book> books, int totalItemCount) {
+    public void presentCategoryBooks(List<Book> books, int totalItemCount) {
         this.totalItemCount = totalItemCount;
         if(books.size() == 0) {
             rvBooks.setVisibility(View.GONE);

@@ -6,6 +6,8 @@ import com.nmp90.chitankainfo.mvp.presenters.author_books.AuthorBooksPresenterIm
 import com.nmp90.chitankainfo.mvp.presenters.author_books.AuthorBooksPresenter;
 import com.nmp90.chitankainfo.mvp.presenters.authors.AuthorsPresenter;
 import com.nmp90.chitankainfo.mvp.presenters.authors.AuthorsPresenterImpl;
+import com.nmp90.chitankainfo.mvp.presenters.book.BookPresenter;
+import com.nmp90.chitankainfo.mvp.presenters.book.BookPresenterImpl;
 import com.nmp90.chitankainfo.mvp.presenters.books.BooksPresenter;
 import com.nmp90.chitankainfo.mvp.presenters.books.BooksPresenterImpl;
 import com.nmp90.chitankainfo.mvp.presenters.categories.CategoriesPresenter;
@@ -29,7 +31,6 @@ public class PresenterModule {
     }
 
     @Provides
-    @ActivityScope
     public AuthorsPresenter providesAuthorsPresenter(ChitankaApi chitankaApi) {
         return new AuthorsPresenterImpl(chitankaApi);
     }
@@ -50,5 +51,10 @@ public class PresenterModule {
     @ActivityScope
     public CategoryBooksPresenter providesCategoryBooksPresenter(ChitankaApi chitankaApi) {
         return new CategoryBooksPresenterImpl(chitankaApi);
+    }
+
+    @Provides
+    public BookPresenter providesBookPresenter(ChitankaApi chitankaApi) {
+        return new BookPresenterImpl(chitankaApi);
     }
 }
