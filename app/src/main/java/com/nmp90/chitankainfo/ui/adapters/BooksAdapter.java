@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
  * Created by nmp on 16-3-8.
  */
 public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> {
-    private final Context context;
+    private Context context;
     private final FragmentManager fragmentManager;
     private List<Book> books = new ArrayList<>();
 
@@ -60,6 +60,12 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         holder.tvDownload.setOnClickListener((view) -> {
             DownloadDialog.newInstance(book).show(fragmentManager, DownloadDialog.TAG);
         });
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        context = null;
     }
 
     @Override
