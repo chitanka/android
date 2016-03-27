@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
  * Created by nmp on 16-3-8.
  */
 public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> {
-    private final Context context;
+    private Context context;
     private final FragmentManager fragmentManager;
     private List<Book> books = new ArrayList<>();
 
@@ -70,6 +70,12 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
             sendIntent.putExtra(Constants.EXTRA_BOOK_ID, book.getId());
             context.startActivity(sendIntent);
         });
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        context = null;
     }
 
     @Override
