@@ -24,6 +24,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class BookDetailsActivity extends BaseActivity implements HasComponent<PresenterComponent>,BookView {
 
@@ -44,6 +45,9 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
 
     @Bind(R.id.tv_year)
     TextView tvYear;
+
+    @Bind(R.id.tv_description)
+    TextView tvDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +97,9 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
         tvTitle.setText(book.getTitle());
         tvYear.setText(book.getYear() + "");
         tvAuthors.setText(book.getTitleAuthor());
-        Glide.with(this).load(book.getCover()).fitCenter().crossFade().placeholder(R.drawable.ic_no_cover).into(ivCover);
+        tvDescription.setText(book.getAnnotation());
+        Timber.d(book.getCover());
+        Glide.with(this).load(book.getCover()).crossFade().placeholder(R.drawable.ic_no_cover).into(ivCover);
     }
 
     @Override
