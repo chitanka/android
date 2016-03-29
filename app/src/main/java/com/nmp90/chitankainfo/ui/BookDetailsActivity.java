@@ -3,6 +3,7 @@ package com.nmp90.chitankainfo.ui;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -19,12 +20,12 @@ import com.nmp90.chitankainfo.mvp.models.Book;
 import com.nmp90.chitankainfo.mvp.models.BookDetails;
 import com.nmp90.chitankainfo.mvp.presenters.book.BookPresenter;
 import com.nmp90.chitankainfo.mvp.views.BookView;
+import com.nmp90.chitankainfo.ui.dialogs.DownloadDialog;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 public class BookDetailsActivity extends BaseActivity implements HasComponent<PresenterComponent>,BookView {
 
@@ -49,6 +50,9 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
     @Bind(R.id.tv_description)
     TextView tvDescription;
 
+    @Bind(R.id.container_book)
+    NestedScrollView containerBook;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,10 +68,6 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
 
         int bookId = getIntent().getIntExtra(Constants.EXTRA_BOOK_ID, 0);
         bookPresenter.loadBooksDetails(bookId);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
     }
 
     @Override
@@ -95,15 +95,19 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
         setTitle(book.getTitle());
 
         tvTitle.setText(book.getTitle());
-        tvYear.setText(book.getYear() + "");
+        tvYear.setText(book.getYear() == 0 ? "" : (book.getYear() + ""));
         tvAuthors.setText(book.getTitleAuthor());
         tvDescription.setText(book.getAnnotation());
-        Timber.d(book.getCover());
+        tvCategory.setText(book.getCategory().getName());
         Glide.with(this).load(book.getCover()).crossFade().placeholder(R.drawable.ic_no_cover).into(ivCover);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(view -> DownloadDialog.newInstance(book).show(getSupportFragmentManager(), DownloadDialog.TAG));
     }
 
     @Override
     public void showError() {
-
+        Snackbar.make(containerBook, "Възникна проблем със зареждането на книга!", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView
+    android:id="@+id/container_book"
     android:layout_below="@+id/app_bar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -44,6 +45,9 @@
 
                 <TextView
                     android:id="@+id/tv_title"
+                    android:paddingLeft="@dimen/details_padding_left"
+                    android:textSize="22sp"
+                    android:textColor="@color/primary_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/iv_cover"
@@ -51,6 +55,9 @@
 
                 <TextView
                     android:id="@+id/tv_authors"
+                    android:paddingLeft="@dimen/details_padding_left"
+                    android:textSize="18sp"
+                    android:textColor="@color/secondary_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_title"
@@ -59,6 +66,8 @@
 
                 <TextView
                     android:id="@+id/tv_category"
+                    android:textSize="14sp"
+                    android:paddingLeft="@dimen/details_padding_left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_authors"
@@ -67,6 +76,8 @@
 
                 <TextView
                     android:id="@+id/tv_year"
+                    android:textSize="14sp"
+                    android:paddingLeft="@dimen/details_padding_left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_category"
