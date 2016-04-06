@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -92,17 +93,25 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
     @Override
     public void presentBookDetails(BookDetails bookDetails) {
         Book book = bookDetails.getBook();
-        setTitle(book.getTitle());
+        setTitle(getText(book.getTitle()));
 
-        tvTitle.setText(book.getTitle());
+        tvTitle.setText(getText(book.getTitle()));
         tvYear.setText(book.getYear() == 0 ? "" : (book.getYear() + ""));
-        tvAuthors.setText(book.getTitleAuthor());
-        tvDescription.setText(book.getAnnotation());
-        tvCategory.setText(book.getCategory().getName());
+        tvAuthors.setText(getText(book.getTitleAuthor()));
+        tvDescription.setText(getText(book.getAnnotation()));
+        tvCategory.setText(getText(book.getCategory().getName()));
         Glide.with(this).load(book.getCover()).crossFade().placeholder(R.drawable.ic_no_cover).into(ivCover);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(view -> DownloadDialog.newInstance(book).show(getSupportFragmentManager(), DownloadDialog.TAG));
+    }
+
+    private String getText(String text) {
+        if(TextUtils.isEmpty(text)) {
+            return "";
+        }
+
+        return text;
     }
 
     @Override

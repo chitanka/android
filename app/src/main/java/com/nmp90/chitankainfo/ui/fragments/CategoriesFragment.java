@@ -65,6 +65,8 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
     private void populateCategoriesLevel(List<Category> categories, int level) {
         level++;
         for(Category category : categories) {
+            if(category.getNrOfBooks() == 0)
+                continue;
             category.setLevel(level);
             flatCategories.add(category);
             if(category.getChildren() != null && category.getChildren().size() > 0) {

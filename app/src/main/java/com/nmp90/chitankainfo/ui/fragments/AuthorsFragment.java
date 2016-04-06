@@ -63,8 +63,7 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
         }
 
         getComponent(PresenterComponent.class).inject(this);
-
-
+        
         subscription = rxBus.toObserverable().subscribe((event) -> {
             if(event instanceof SearchBookEvent) {
                 containerEmpty.setVisibility(View.GONE);
@@ -118,12 +117,16 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
 
     @Override
     public void hideLoading() {
-        loading.progressiveStop();
-        loading.setVisibility(View.GONE);
+        if(loading != null) {
+            loading.progressiveStop();
+            loading.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void showLoading() {
-        loading.setVisibility(View.VISIBLE);
+        if(loading != null) {
+            loading.setVisibility(View.VISIBLE);
+        }
     }
 }
