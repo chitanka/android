@@ -31,7 +31,7 @@ public abstract class BaseBooksFragment extends BaseFragment implements BooksVie
 
     @Override
     public void presentAuthorBooks(List<Book> books) {
-        if(books.size() == 0) {
+        if(books == null || books.size() == 0) {
             rvBooks.setVisibility(View.GONE);
             containerEmpty.setVisibility(View.VISIBLE);
         } else {

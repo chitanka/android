@@ -2,8 +2,8 @@ package com.nmp90.chitankainfo.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +63,7 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
         }
 
         getComponent(PresenterComponent.class).inject(this);
-        
+
         subscription = rxBus.toObserverable().subscribe((event) -> {
             if(event instanceof SearchBookEvent) {
                 containerEmpty.setVisibility(View.GONE);
@@ -84,7 +84,7 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
         authorsPresenter.setView(this);
         authorsPresenter.searchAuthors(query);
 
-        rvAuthors.setLayoutManager(new StaggeredGridLayoutManager(Constants.AUTHORS_PER_ROW, StaggeredGridLayoutManager.VERTICAL));
+        rvAuthors.setLayoutManager(new GridLayoutManager(getActivity(), Constants.AUTHORS_PER_ROW));
         return view;
     }
 

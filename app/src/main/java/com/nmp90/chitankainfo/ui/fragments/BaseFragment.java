@@ -1,14 +1,17 @@
 package com.nmp90.chitankainfo.ui.fragments;
 
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.view.View;
 import android.widget.Toast;
 
 import com.nmp90.chitankainfo.di.HasComponent;
+import com.nmp90.chitankainfo.mvp.views.BaseView;
 
 /**
  * Created by joro on 16-3-8.
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements BaseView {
 
     /**
      * Shows a {@link android.widget.Toast} message.
@@ -25,5 +28,16 @@ public abstract class BaseFragment extends Fragment {
     @SuppressWarnings("unchecked")
     protected <C> C getComponent(Class<C> componentType) {
         return componentType.cast(((HasComponent<C>) getActivity()).getComponent());
+    }
+
+    @Override
+    public void showError() {
+        View view = getView();
+        if(view == null) {
+            Toast.makeText(getActivity(), "Възникна проблем със зареждането на данните!", Toast.LENGTH_LONG).show();
+        } else {
+            Snackbar.make(getView(), "Възникна проблем със зареждането на данните!", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }
     }
 }

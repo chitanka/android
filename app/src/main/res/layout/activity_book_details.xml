@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:background="@color/colorAccent"
+        app:backgroundTint="@color/colorPrimaryDark"
         app:layout_behavior="com.nmp90.chitankainfo.ui.views.material.behaviour.ScrollAwareFABBehavior"
         android:src="@drawable/ic_cloud_download_white_24dp" />
 

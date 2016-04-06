@@ -28,7 +28,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class BookDetailsActivity extends BaseActivity implements HasComponent<PresenterComponent>,BookView {
+public class BookDetailsActivity extends BaseActivity implements HasComponent<PresenterComponent>, BookView {
 
     @Inject
     BookPresenter bookPresenter;
@@ -112,6 +112,16 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
         }
 
         return text;
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void showLoading() {
+
     }
 
     @Override

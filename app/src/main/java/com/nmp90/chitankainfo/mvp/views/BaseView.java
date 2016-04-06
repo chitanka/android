@@ -6,4 +6,5 @@ package com.nmp90.chitankainfo.mvp.views;
 public interface BaseView {
     void hideLoading();
     void showLoading();
+    void showError();
 }

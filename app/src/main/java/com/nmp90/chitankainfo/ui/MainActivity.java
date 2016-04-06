@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
         getComponent().inject(this);
 
         pager.setAdapter(new MainPagerAdapter(getSupportFragmentManager()));
+        pager.setOffscreenPageLimit(3);
         tabs.setupWithViewPager(pager);
     }
 
