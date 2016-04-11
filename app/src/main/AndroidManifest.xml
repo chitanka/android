@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.nmp90.chitankainfo">
+    package="info.chitanka.android">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -26,7 +26,7 @@
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="ec9af5c8c458dba74c36f68603aaf0787dbd95aa" />
+            android:value="35ab927175205a27bcaafc128d07c106a6bd6e8b" />
 
         <activity
             android:name=".ui.BooksActivity"
@@ -35,7 +35,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.nmp90.chitankainfo.ui.MainActivity" />
+                android:value=".ui.MainActivity" />
         </activity>
         <activity
             android:name=".ui.BookDetailsActivity"

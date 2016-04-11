@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.nmp90.chitankainfo.ui.BookDetailsActivity">
+    tools:context="info.chitanka.android.ui.BookDetailsActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -36,7 +36,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@color/colorPrimaryDark"
-        app:layout_behavior="com.nmp90.chitankainfo.ui.views.material.behaviour.ScrollAwareFABBehavior"
+        app:layout_behavior="info.chitanka.android.ui.views.material.behaviour.ScrollAwareFABBehavior"
         android:src="@drawable/ic_cloud_download_white_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>
