@@ -24,10 +24,6 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="35ab927175205a27bcaafc128d07c106a6bd6e8b" />
-
         <activity
             android:name=".ui.BooksActivity"
             android:parentActivityName=".ui.MainActivity"
@@ -41,6 +37,9 @@
             android:name=".ui.BookDetailsActivity"
             android:label="@string/title_activity_book_details"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="35ab927175205a27bcaafc128d07c106a6bd6e8b" />
     </application>
 
 </manifest>
