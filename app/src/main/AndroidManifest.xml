@@ -23,7 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.BooksActivity"
             android:parentActivityName=".ui.MainActivity"
@@ -36,10 +35,13 @@
         <activity
             android:name=".ui.BookDetailsActivity"
             android:label="@string/title_activity_book_details"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="35ab927175205a27bcaafc128d07c106a6bd6e8b" />
+
+        <activity android:name=".ui.ReadersActivity"></activity>
     </application>
 
 </manifest>

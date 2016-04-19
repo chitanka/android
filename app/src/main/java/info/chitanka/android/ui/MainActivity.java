@@ -1,5 +1,6 @@
 package info.chitanka.android.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -52,7 +53,8 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        selectNavigationItem(R.id.nav_authors);
+        navigationView.getMenu().getItem(0).setChecked(true);
+        onNavigationItemSelected(navigationView.getMenu().getItem(0));
     }
 
 
@@ -140,7 +142,11 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
             fragment = new BooksFragment();
         }
 
-        navigationView.setCheckedItem(id);
+        if(id == R.id.nav_readers) {
+            startActivity(new Intent(this, ReadersActivity.class));
+            return;
+        }
+
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment, fragment.getTitle()).commit();
     }
 

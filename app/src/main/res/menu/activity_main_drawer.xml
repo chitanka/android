@@ -15,4 +15,16 @@
             android:id="@+id/nav_works"
             android:title="Произведения" />
     </group>
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_readers"
+                android:title="Четци на книги" />
+
+            <item
+                android:id="@+id/nav_about"
+                android:title="Уебсайт" />
+        </menu>
+    </item>
+
 </menu>
