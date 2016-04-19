@@ -1,12 +1,13 @@
 package info.chitanka.android.mvp.presenters.authors;
 
-import info.chitanka.android.api.ChitankaApi;
-import info.chitanka.android.mvp.presenters.BasePresenter;
-import info.chitanka.android.mvp.views.AuthorsView;
+import com.annimon.stream.Stream;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
+import info.chitanka.android.api.ChitankaApi;
+import info.chitanka.android.mvp.models.Authors;
+import info.chitanka.android.mvp.presenters.BasePresenter;
+import info.chitanka.android.mvp.views.AuthorsView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
@@ -27,11 +28,37 @@ public class AuthorsPresenterImpl extends BasePresenter implements AuthorsPresen
         this.authorsView = new WeakReference<>(authorsViewWeakReference);
     }
 
+
+//    public void searchAuthors(String name) {
+//        if(viewExists()) {
+//            authorsView.get().showLoading();
+//            chitankaApi.searchAuthors(name)
+//                    .subscribeOn(Schedulers.newThread())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe((authors) -> {
+//                        if (!viewExists(authorsView))
+//                            return;
+//                        authorsView.get().hideLoading();
+//                        authorsView.get().presentAuthors(authors);
+//                    }, (error) -> {
+//                        Timber.e(error, "Error printing authors!");
+//                        if (!viewExists(authorsView))
+//                            return;
+//                        authorsView.get().hideLoading();
+//                        authorsView.get().presentAuthors(new ArrayList<>());
+//                    });
+//        }
+//    }
+
+    private boolean viewExists() {
+        return authorsView != null && authorsView.get() != null;
+    }
+
     @Override
-    public void searchAuthors(String name) {
+    public void loadAuthors(int page, int pageSize) {
         if(viewExists()) {
             authorsView.get().showLoading();
-            chitankaApi.searchAuthors(name)
+            chitankaApi.getAuthors(page, pageSize)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe((authors) -> {
@@ -44,12 +71,8 @@ public class AuthorsPresenterImpl extends BasePresenter implements AuthorsPresen
                         if (!viewExists(authorsView))
                             return;
                         authorsView.get().hideLoading();
-                        authorsView.get().presentAuthors(new ArrayList<>());
+                        authorsView.get().presentAuthors(new Authors());
                     });
         }
-    }
-
-    private boolean viewExists() {
-        return authorsView != null && authorsView.get() != null;
     }
 }

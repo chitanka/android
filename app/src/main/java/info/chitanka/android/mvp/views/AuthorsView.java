@@ -1,12 +1,10 @@
 package info.chitanka.android.mvp.views;
 
-import info.chitanka.android.mvp.models.Author;
-
-import java.util.List;
+import info.chitanka.android.mvp.models.Authors;
 
 /**
  * Created by nmp on 16-3-11.
  */
 public interface AuthorsView extends BaseView {
-    void presentAuthors(List<Author> authors);
+    void presentAuthors(Authors authors);
 }

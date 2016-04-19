@@ -20,10 +20,11 @@
 
     <include layout="@layout/view_empty"  />
 
-    <android.support.v7.widget.RecyclerView
+    <info.chitanka.android.ui.views.containers.ScrollRecyclerView
         android:id="@+id/rv_authors"
+        android:background="@color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

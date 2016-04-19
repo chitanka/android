@@ -2,30 +2,25 @@ package info.chitanka.android.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-
-import info.chitanka.android.Constants;
-import info.chitanka.android.R;
-import info.chitanka.android.di.presenters.PresenterComponent;
-import info.chitanka.android.events.SearchBookEvent;
-import info.chitanka.android.mvp.models.Author;
-import info.chitanka.android.mvp.presenters.authors.AuthorsPresenter;
-import info.chitanka.android.mvp.views.AuthorsView;
-import info.chitanka.android.ui.adapters.AuthorsAdapter;
-import info.chitanka.android.utils.RxBus;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
+import info.chitanka.android.R;
+import info.chitanka.android.di.presenters.PresenterComponent;
+import info.chitanka.android.events.SearchBookEvent;
+import info.chitanka.android.mvp.models.Authors;
+import info.chitanka.android.mvp.presenters.authors.AuthorsPresenter;
+import info.chitanka.android.mvp.views.AuthorsView;
+import info.chitanka.android.ui.adapters.AuthorsAdapter;
+import info.chitanka.android.ui.views.containers.ScrollRecyclerView;
+import info.chitanka.android.utils.RxBus;
 import rx.Subscription;
 
 /**
@@ -34,6 +29,9 @@ import rx.Subscription;
 public class AuthorsFragment extends BaseFragment implements AuthorsView {
 
     private static final String KEY_QUERY = "QUERY";
+    private int currentPage = 1, pageSize = 35;
+
+    private AuthorsAdapter adapter;
 
     @Inject
     AuthorsPresenter authorsPresenter;
@@ -42,7 +40,7 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
     RxBus rxBus;
 
     @Bind(R.id.rv_authors)
-    RecyclerView rvAuthors;
+    ScrollRecyclerView rvAuthors;
 
     @Bind(R.id.container_empty)
     RelativeLayout containerEmpty;
@@ -56,11 +54,7 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(savedInstanceState != null) {
-            query = savedInstanceState.getString(KEY_QUERY);
-        } else {
-            query = Constants.INITIAL_SEARCH_AUTHOR_NAME;
-        }
+
 
         getComponent(PresenterComponent.class).inject(this);
 
@@ -69,7 +63,7 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
                 containerEmpty.setVisibility(View.GONE);
                 rvAuthors.setVisibility(View.GONE);
                 query = ((SearchBookEvent)event).getName();
-                authorsPresenter.searchAuthors(query);
+
             }
         });
 
@@ -82,9 +76,12 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
         ButterKnife.bind(this, view);
 
         authorsPresenter.setView(this);
-        authorsPresenter.searchAuthors(query);
+        authorsPresenter.loadAuthors(currentPage, pageSize);
+        rvAuthors.setOnEndReachedListener(() -> {
+            currentPage++;
+            authorsPresenter.loadAuthors(currentPage, pageSize);
+        });
 
-        rvAuthors.setLayoutManager(new GridLayoutManager(getActivity(), Constants.AUTHORS_PER_ROW));
         return view;
     }
 
@@ -103,16 +100,22 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
     }
 
     @Override
-    public void presentAuthors(List<Author> authors) {
-        if(authors.size() == 0) {
+    public void presentAuthors(Authors authors) {
+        if(authors.getPersons() == null || authors.getPersons().size() == 0) {
             rvAuthors.setVisibility(View.GONE);
             containerEmpty.setVisibility(View.VISIBLE);
+            return;
         } else {
             rvAuthors.setVisibility(View.VISIBLE);
             containerEmpty.setVisibility(View.GONE);
         }
 
-        rvAuthors.setAdapter(new AuthorsAdapter(getActivity(), authors));
+        if(adapter == null) {
+            adapter = new AuthorsAdapter(getActivity(), authors.getPersons());
+            rvAuthors.setAdapter(adapter, authors.getPager().getTotalCount());
+        } else {
+            adapter.addAll(authors.getPersons());
+        }
     }
 
     @Override

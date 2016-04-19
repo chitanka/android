@@ -2,24 +2,23 @@ package info.chitanka.android.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import info.chitanka.android.Constants;
-import info.chitanka.android.R;
-import info.chitanka.android.mvp.models.Author;
-import info.chitanka.android.mvp.models.SearchTerms;
-import info.chitanka.android.ui.BooksActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import info.chitanka.android.Constants;
+import info.chitanka.android.R;
+import info.chitanka.android.mvp.models.Author;
+import info.chitanka.android.mvp.models.SearchTerms;
+import info.chitanka.android.ui.BooksActivity;
 
 /**
  * Created by nmp on 16-3-13.
@@ -58,10 +57,15 @@ public class AuthorsAdapter extends RecyclerView.Adapter<AuthorsAdapter.ViewHold
         return authors.size();
     }
 
+    public void addAll(List<Author> authors) {
+        this.authors.addAll(authors);
+        notifyDataSetChanged();
+    }
+
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.card_view)
-        CardView cardView;
+        @Bind(R.id.container_authors)
+        LinearLayout cardView;
 
         @Bind(R.id.tv_author_country)
         TextView tvAuthorCountry;
