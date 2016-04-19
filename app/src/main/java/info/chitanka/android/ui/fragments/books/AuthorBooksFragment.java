@@ -7,24 +7,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import info.chitanka.android.R;
 import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.events.SearchBookEvent;
 import info.chitanka.android.mvp.presenters.author_books.AuthorBooksPresenter;
 import info.chitanka.android.mvp.views.BooksView;
 import info.chitanka.android.utils.RxBus;
-
-import javax.inject.Inject;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import rx.Subscription;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class AuthorBooksFragment extends BaseBooksFragment implements BooksView {
-
+    public static final String TAG = AuthorBooksFragment.class.getSimpleName();
     private static final String KEY_LINK = "link";
 
     @Inject
@@ -89,5 +88,10 @@ public class AuthorBooksFragment extends BaseBooksFragment implements BooksView 
         ButterKnife.unbind(this);
         subscription.unsubscribe();
         authorBooksPresenter.setView(null);
+    }
+
+    @Override
+    public String getTitle() {
+        return TAG;
     }
 }

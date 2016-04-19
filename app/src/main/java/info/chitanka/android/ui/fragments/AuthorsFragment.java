@@ -27,7 +27,7 @@ import rx.Subscription;
  * Created by nmp on 16-3-11.
  */
 public class AuthorsFragment extends BaseFragment implements AuthorsView {
-
+    public static final String TAG = AuthorsFragment.class.getSimpleName();
     private static final String KEY_QUERY = "QUERY";
     private int currentPage = 1, pageSize = 35;
 
@@ -131,5 +131,10 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
         if(loading != null) {
             loading.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public String getTitle() {
+        return TAG;
     }
 }

@@ -30,6 +30,6 @@ public interface ChitankaApi {
     @GET("/book/{id}.json")
     Observable<BookDetails> getBookDetails(@Path("id") int id);
 
-    @GET("/authors/last-name/-.json/{page}")
+    @GET("/authors/first-name/-.json/{page}")
     Observable<Authors> getAuthors(@Path("page") int page, @Query("pageSize") int pageSize);
 }

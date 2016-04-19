@@ -8,6 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import info.chitanka.android.R;
 import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.mvp.models.Book;
@@ -17,18 +24,11 @@ import info.chitanka.android.ui.adapters.BooksAdapter;
 import info.chitanka.android.ui.fragments.BaseFragment;
 import info.chitanka.android.ui.views.containers.ScrollRecyclerView;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import fr.castorflex.android.circularprogressbar.CircularProgressBar;
-
 /**
  * Created by joro on 16-3-20.
  */
 public class CategoryBooksFragment extends BaseFragment implements CategoryBooksView {
+    public static final String TAG = CategoryBooksFragment.class.getSimpleName();
     private static final String KEY_SLUG = "slug";
 
     private int totalItemCount, page=1;
@@ -130,5 +130,10 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
     @Override
     public void showLoading() {
         loadingPb.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public String getTitle() {
+        return TAG;
     }
 }

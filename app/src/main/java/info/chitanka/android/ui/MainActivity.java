@@ -1,53 +1,58 @@
 package info.chitanka.android.ui;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import info.chitanka.android.ChitankaApplication;
 import info.chitanka.android.R;
 import info.chitanka.android.di.HasComponent;
 import info.chitanka.android.di.presenters.DaggerPresenterComponent;
 import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.events.SearchBookEvent;
-import info.chitanka.android.ui.adapters.MainPagerAdapter;
+import info.chitanka.android.ui.fragments.AuthorsFragment;
+import info.chitanka.android.ui.fragments.BaseFragment;
+import info.chitanka.android.ui.fragments.CategoriesFragment;
+import info.chitanka.android.ui.fragments.books.BooksFragment;
 import info.chitanka.android.utils.RxBus;
 
-import javax.inject.Inject;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
-
-public class MainActivity extends AppCompatActivity implements HasComponent<PresenterComponent> {
-
+public class MainActivity extends AppCompatActivity implements HasComponent<PresenterComponent>, NavigationView.OnNavigationItemSelectedListener {
     @Inject
     RxBus rxBus;
 
-    @Bind(R.id.pager)
-    ViewPager pager;
-
-    @Bind(R.id.tabs)
-    TabLayout tabs;
+    @Bind(R.id.nav_view)
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getComponent().inject(this);
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getComponent().inject(this);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
-        pager.setAdapter(new MainPagerAdapter(getSupportFragmentManager()));
-        pager.setOffscreenPageLimit(3);
-        tabs.setupWithViewPager(pager);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        selectNavigationItem(R.id.nav_authors);
     }
 
 
@@ -97,6 +102,46 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        BaseFragment fragment = null;
+        int id = item.getItemId();
+
+        selectNavigationItem(id);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+
+
+        return true;
+    }
+
+    private void selectNavigationItem(int id) {
+        BaseFragment fragment;
+        if (id == R.id.nav_authors) {
+            fragment = new AuthorsFragment();
+        } else if (id == R.id.nav_categories) {
+            fragment = new CategoriesFragment();
+        } else {
+            fragment = new BooksFragment();
+        }
+
+        navigationView.setCheckedItem(id);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment, fragment.getTitle()).commit();
     }
 
     @Override

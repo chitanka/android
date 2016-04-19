@@ -8,13 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import info.chitanka.android.R;
-import info.chitanka.android.di.presenters.PresenterComponent;
-import info.chitanka.android.mvp.models.Category;
-import info.chitanka.android.mvp.presenters.categories.CategoriesPresenter;
-import info.chitanka.android.mvp.views.CategoriesView;
-import info.chitanka.android.ui.adapters.CategoriesAdapter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,11 +15,18 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import info.chitanka.android.R;
+import info.chitanka.android.di.presenters.PresenterComponent;
+import info.chitanka.android.mvp.models.Category;
+import info.chitanka.android.mvp.presenters.categories.CategoriesPresenter;
+import info.chitanka.android.mvp.views.CategoriesView;
+import info.chitanka.android.ui.adapters.CategoriesAdapter;
 
 /**
  * Created by nmp on 16-3-15.
  */
 public class CategoriesFragment extends BaseFragment implements CategoriesView {
+    public static final String TAG = CategoriesFragment.class.getSimpleName();
 
     @Inject
     CategoriesPresenter categoriesPresenter;
@@ -84,5 +84,10 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
     @Override
     public void showLoading() {
 
+    }
+
+    @Override
+    public String getTitle() {
+        return TAG;
     }
 }

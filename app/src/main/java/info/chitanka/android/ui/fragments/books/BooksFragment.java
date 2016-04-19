@@ -6,6 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import javax.inject.Inject;
+
+import butterknife.ButterKnife;
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
 import info.chitanka.android.di.presenters.PresenterComponent;
@@ -13,17 +16,13 @@ import info.chitanka.android.events.SearchBookEvent;
 import info.chitanka.android.mvp.presenters.books.BooksPresenter;
 import info.chitanka.android.mvp.views.BooksView;
 import info.chitanka.android.utils.RxBus;
-
-import javax.inject.Inject;
-
-import butterknife.ButterKnife;
 import rx.Subscription;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class BooksFragment extends BaseBooksFragment implements BooksView {
-
+    public static final String TAG = BooksFragment.class.getSimpleName();
     private static final String KEY_QUERY = "query";
 
     @Inject
@@ -90,5 +89,10 @@ public class BooksFragment extends BaseBooksFragment implements BooksView {
         subscription.unsubscribe();
         booksPresenter.setView(null);
         booksPresenter = null;
+    }
+
+    @Override
+    public String getTitle() {
+        return TAG;
     }
 }

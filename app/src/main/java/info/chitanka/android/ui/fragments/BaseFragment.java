@@ -40,4 +40,6 @@ public abstract class BaseFragment extends Fragment implements BaseView {
                     .setAction("Action", null).show();
         }
     }
+
+    public abstract String getTitle();
 }
