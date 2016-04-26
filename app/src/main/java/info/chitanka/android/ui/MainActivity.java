@@ -1,6 +1,7 @@
 package info.chitanka.android.ui;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -120,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        BaseFragment fragment = null;
         int id = item.getItemId();
 
         selectNavigationItem(id);
@@ -133,17 +133,22 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
     }
 
     private void selectNavigationItem(int id) {
-        BaseFragment fragment;
+        BaseFragment fragment = null;
         if (id == R.id.nav_authors) {
             fragment = new AuthorsFragment();
         } else if (id == R.id.nav_categories) {
             fragment = new CategoriesFragment();
-        } else {
+        } else if (id == R.id.nav_books) {
             fragment = new BooksFragment();
+        } else if(id == R.id.nav_readers) {
+            startActivity(new Intent(this, ReadersActivity.class));
+            return;
+        } else if (id == R.id.nav_site) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.chitanka.info")));
+            return;
         }
 
-        if(id == R.id.nav_readers) {
-            startActivity(new Intent(this, ReadersActivity.class));
+        if(fragment == null) {
             return;
         }
 
