@@ -41,7 +41,10 @@
             android:name="io.fabric.ApiKey"
             android:value="35ab927175205a27bcaafc128d07c106a6bd6e8b" />
 
-        <activity android:name=".ui.ReadersActivity"></activity>
+        <activity
+            android:label="Четци на книги"
+            android:name=".ui.ReadersActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

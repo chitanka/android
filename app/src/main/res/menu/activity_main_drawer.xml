@@ -15,7 +15,7 @@
             android:id="@+id/nav_works"
             android:title="Произведения" />
     </group>
-    <item android:title="Communicate">
+    <item android:title="Помощ">
         <menu>
             <item
                 android:id="@+id/nav_readers"

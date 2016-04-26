@@ -24,7 +24,7 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
 
     <style name="CircularThemeProgressBar" parent="android:Widget.Holo.ProgressBar">
         <item name="cpb_colors">@array/colors</item>
@@ -37,5 +37,11 @@
     </style>
 
     <style name="BorderlessButton" parent="Widget.AppCompat.Button.Borderless"></style>
+
+    <style name="reader_text">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/primary_title</item>
+        <item name="android:gravity">center</item>
+    </style>
 
 </resources>
