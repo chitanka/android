@@ -8,4 +8,5 @@ import info.chitanka.android.mvp.views.AuthorsView;
  */
 public interface AuthorsPresenter extends BaseViewPresenter<AuthorsView> {
     void loadAuthors(int page, int pageSize);
+    void searchAuthors(String query);
 }

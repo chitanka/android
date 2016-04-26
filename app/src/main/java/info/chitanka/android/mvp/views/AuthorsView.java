@@ -7,4 +7,5 @@ import info.chitanka.android.mvp.models.Authors;
  */
 public interface AuthorsView extends BaseView {
     void presentAuthors(Authors authors);
+    void presentSearch(Authors authors);
 }

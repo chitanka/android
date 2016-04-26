@@ -146,6 +146,12 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
         } else if (id == R.id.nav_site) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.chitanka.info")));
             return;
+        } else if (id == R.id.nav_email) {
+            final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+            emailIntent.setType("plain/text");
+            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"contact@chitanka.info"});
+            startActivity(Intent.createChooser(emailIntent, "Изпрати имейл"));
+            return;
         }
 
         if(fragment == null) {

@@ -3,6 +3,7 @@ package info.chitanka.android.ui.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,8 +72,8 @@ public class AuthorsAdapter extends RecyclerView.Adapter<AuthorsAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         Author author = authors.get(position);
 
-        String countryAbbr = author.getCountry().toUpperCase();
-        if(countries != null && countries.has(countryAbbr)) {
+        String countryAbbr = TextUtils.isEmpty(author.getCountry()) ? "" : author.getCountry().toUpperCase();
+        if(!TextUtils.isEmpty(countryAbbr) && countries != null && countries.has(countryAbbr)) {
             try {
                 holder.tvAuthorCountry.setText(countries.getString(countryAbbr));
             } catch (JSONException e) {

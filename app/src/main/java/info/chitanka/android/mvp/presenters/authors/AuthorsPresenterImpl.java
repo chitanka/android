@@ -1,11 +1,11 @@
 package info.chitanka.android.mvp.presenters.authors;
 
-import com.annimon.stream.Stream;
-
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import info.chitanka.android.api.ChitankaApi;
 import info.chitanka.android.mvp.models.Authors;
+import info.chitanka.android.mvp.models.Pagination;
 import info.chitanka.android.mvp.presenters.BasePresenter;
 import info.chitanka.android.mvp.views.AuthorsView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -28,27 +28,27 @@ public class AuthorsPresenterImpl extends BasePresenter implements AuthorsPresen
         this.authorsView = new WeakReference<>(authorsViewWeakReference);
     }
 
-
-//    public void searchAuthors(String name) {
-//        if(viewExists()) {
-//            authorsView.get().showLoading();
-//            chitankaApi.searchAuthors(name)
-//                    .subscribeOn(Schedulers.newThread())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe((authors) -> {
-//                        if (!viewExists(authorsView))
-//                            return;
-//                        authorsView.get().hideLoading();
-//                        authorsView.get().presentAuthors(authors);
-//                    }, (error) -> {
-//                        Timber.e(error, "Error printing authors!");
-//                        if (!viewExists(authorsView))
-//                            return;
-//                        authorsView.get().hideLoading();
-//                        authorsView.get().presentAuthors(new ArrayList<>());
-//                    });
-//        }
-//    }
+    @Override
+    public void searchAuthors(String name) {
+        if(viewExists()) {
+            authorsView.get().showLoading();
+            chitankaApi.searchAuthors(name)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe((authors) -> {
+                        if (!viewExists(authorsView))
+                            return;
+                        authorsView.get().hideLoading();
+                        authorsView.get().presentSearch(new Authors(new Pagination(), authors));
+                    }, (error) -> {
+                        Timber.e(error, "Error printing authors!");
+                        if (!viewExists(authorsView))
+                            return;
+                        authorsView.get().hideLoading();
+                        authorsView.get().presentSearch(new Authors(new Pagination(), new ArrayList<>()));
+                    });
+        }
+    }
 
     private boolean viewExists() {
         return authorsView != null && authorsView.get() != null;

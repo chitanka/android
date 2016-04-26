@@ -5,6 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -33,11 +36,13 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
 
     @Bind(R.id.rv_categories)
     RecyclerView rvCategories;
+    private MenuItem menuSearch;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getComponent(PresenterComponent.class).inject(this);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -52,6 +57,23 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
         categoriesPresenter.loadCategories();
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menuSearch = menu.findItem(R.id.action_search);
+        if(menuSearch != null)
+            menuSearch.setVisible(false);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(menuSearch != null)
+            menuSearch.setVisible(true);
+
+        ButterKnife.unbind(this);
     }
 
     List<Category> flatCategories = new ArrayList<>();

@@ -15,6 +15,7 @@ import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import info.chitanka.android.R;
 import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.events.SearchBookEvent;
+import info.chitanka.android.events.SearchClosedEvent;
 import info.chitanka.android.mvp.models.Authors;
 import info.chitanka.android.mvp.presenters.authors.AuthorsPresenter;
 import info.chitanka.android.mvp.views.AuthorsView;
@@ -63,7 +64,10 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
                 containerEmpty.setVisibility(View.GONE);
                 rvAuthors.setVisibility(View.GONE);
                 query = ((SearchBookEvent)event).getName();
-
+                authorsPresenter.searchAuthors(query);
+            } else if (event instanceof SearchClosedEvent) {
+                currentPage = 1;
+                authorsPresenter.loadAuthors(currentPage, pageSize);
             }
         });
 
@@ -116,6 +120,22 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
         } else {
             adapter.addAll(authors.getPersons());
         }
+    }
+
+    @Override
+    public void presentSearch(Authors authors) {
+        if(authors.getPersons() == null || authors.getPersons().size() == 0) {
+            rvAuthors.setVisibility(View.GONE);
+            containerEmpty.setVisibility(View.VISIBLE);
+            return;
+        } else {
+            rvAuthors.setVisibility(View.VISIBLE);
+            containerEmpty.setVisibility(View.GONE);
+        }
+
+        adapter = new AuthorsAdapter(getActivity(), authors.getPersons());
+        rvAuthors.setAdapter(adapter, authors.getPager().getTotalCount());
+
     }
 
     @Override

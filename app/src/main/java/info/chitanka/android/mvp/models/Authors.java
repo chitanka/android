@@ -12,6 +12,11 @@ public class Authors {
     public Authors() {
     }
 
+    public Authors(Pagination pager, List<Author> persons) {
+        this.pager = pager;
+        this.persons = persons;
+    }
+
     public Pagination getPager() {
         return pager;
     }

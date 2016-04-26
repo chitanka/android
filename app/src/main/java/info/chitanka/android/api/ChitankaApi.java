@@ -1,5 +1,8 @@
 package info.chitanka.android.api;
 
+import java.util.List;
+
+import info.chitanka.android.mvp.models.Author;
 import info.chitanka.android.mvp.models.AuthorBooks;
 import info.chitanka.android.mvp.models.Authors;
 import info.chitanka.android.mvp.models.BookDetails;
@@ -32,4 +35,7 @@ public interface ChitankaApi {
 
     @GET("/authors/first-name/-.json/{page}")
     Observable<Authors> getAuthors(@Path("page") int page, @Query("pageSize") int pageSize);
+
+    @GET("/authors/search.json")
+    Observable<List<Author>> searchAuthors(@Query("q") String name);
 }
