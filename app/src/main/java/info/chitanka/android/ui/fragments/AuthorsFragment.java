@@ -23,6 +23,7 @@ import info.chitanka.android.ui.adapters.AuthorsAdapter;
 import info.chitanka.android.ui.views.containers.ScrollRecyclerView;
 import info.chitanka.android.utils.RxBus;
 import rx.Subscription;
+import timber.log.Timber;
 
 /**
  * Created by nmp on 16-3-11.
@@ -96,8 +97,8 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDetach() {
+        super.onDetach();
         ButterKnife.unbind(this);
         subscription.unsubscribe();
         authorsPresenter = null;
@@ -105,6 +106,11 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
 
     @Override
     public void presentAuthors(Authors authors) {
+        if(rvAuthors == null || containerEmpty == null) {
+            Timber.e(new Exception("rvAuthors view is null"), "Null rvAuthors");
+            return;
+        }
+
         if(authors.getPersons() == null || authors.getPersons().size() == 0) {
             rvAuthors.setVisibility(View.GONE);
             containerEmpty.setVisibility(View.VISIBLE);
@@ -124,6 +130,11 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
 
     @Override
     public void presentSearch(Authors authors) {
+        if(rvAuthors == null || containerEmpty == null) {
+            Timber.e(new Exception("rvAuthors view is null search"), "Null rvAuthors search");
+            return;
+        }
+
         if(authors.getPersons() == null || authors.getPersons().size() == 0) {
             rvAuthors.setVisibility(View.GONE);
             containerEmpty.setVisibility(View.VISIBLE);

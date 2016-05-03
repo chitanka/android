@@ -24,6 +24,7 @@ import info.chitanka.android.mvp.models.Category;
 import info.chitanka.android.mvp.presenters.categories.CategoriesPresenter;
 import info.chitanka.android.mvp.views.CategoriesView;
 import info.chitanka.android.ui.adapters.CategoriesAdapter;
+import timber.log.Timber;
 
 /**
  * Created by nmp on 16-3-15.
@@ -68,8 +69,8 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDetach() {
+        super.onDetach();
         if(menuSearch != null)
             menuSearch.setVisible(true);
 
@@ -80,6 +81,11 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
 
     @Override
     public void presentCategories(List<Category> categories, int level) {
+        if(rvCategories == null) {
+            Timber.e(new Exception("Recycler view is null"), "Null categories recycler view");
+            return;
+        }
+
         populateCategoriesLevel(categories, level);
         rvCategories.setAdapter(new CategoriesAdapter(getActivity(), flatCategories));
     }

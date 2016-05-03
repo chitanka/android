@@ -11,6 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
 import info.chitanka.android.di.HasComponent;
@@ -22,11 +27,7 @@ import info.chitanka.android.mvp.models.BookDetails;
 import info.chitanka.android.mvp.presenters.book.BookPresenter;
 import info.chitanka.android.mvp.views.BookView;
 import info.chitanka.android.ui.dialogs.DownloadDialog;
-
-import javax.inject.Inject;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class BookDetailsActivity extends BaseActivity implements HasComponent<PresenterComponent>, BookView {
 
@@ -126,7 +127,13 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
 
     @Override
     public void showError() {
+        if (containerBook == null){
+            Timber.e(new Exception("containerBook view is null"), "Null containerBook");
+            return;
+        }
+
         Snackbar.make(containerBook, "Възникна проблем със зареждането на книга!", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
+
     }
 }
