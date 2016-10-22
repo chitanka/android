@@ -66,7 +66,8 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getComponent(PresenterComponent.class).inject(this);
+        getComponent(PresenterComponent.class).inject(this);
+        booksPresenter.onStart();
 
         slug = getArguments().getString(KEY_SLUG);
     }
@@ -92,6 +93,7 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
         super.onDestroy();
         ButterKnife.unbind(this);
         booksPresenter.setView(null);
+        booksPresenter.onDestroy();
     }
 
     @Override

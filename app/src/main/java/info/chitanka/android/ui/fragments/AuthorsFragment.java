@@ -57,9 +57,8 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         getComponent(PresenterComponent.class).inject(this);
-
+        authorsPresenter.onStart();
         subscription = rxBus.toObserverable().subscribe((event) -> {
             if(event instanceof SearchBookEvent) {
                 containerEmpty.setVisibility(View.GONE);
@@ -101,6 +100,7 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
         super.onDetach();
         ButterKnife.unbind(this);
         subscription.unsubscribe();
+        authorsPresenter.onDestroy();
         authorsPresenter = null;
     }
 

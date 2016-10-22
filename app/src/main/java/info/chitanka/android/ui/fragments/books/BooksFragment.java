@@ -44,7 +44,8 @@ public class BooksFragment extends BaseBooksFragment implements BooksView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getComponent(PresenterComponent.class).inject(this);
+        getComponent(PresenterComponent.class).inject(this);
+        booksPresenter.onStart();
 
         if(savedInstanceState != null) {
             query = savedInstanceState.getString(KEY_QUERY);
@@ -88,6 +89,7 @@ public class BooksFragment extends BaseBooksFragment implements BooksView {
         ButterKnife.unbind(this);
         subscription.unsubscribe();
         booksPresenter.setView(null);
+        booksPresenter.onDestroy();
         booksPresenter = null;
     }
 

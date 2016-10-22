@@ -43,6 +43,7 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getComponent(PresenterComponent.class).inject(this);
+        categoriesPresenter.onStart();
         setHasOptionsMenu(true);
     }
 
@@ -71,9 +72,11 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
     @Override
     public void onDetach() {
         super.onDetach();
-        if(menuSearch != null)
+        if(menuSearch != null) {
             menuSearch.setVisible(true);
+        }
 
+        categoriesPresenter.onDestroy();
         ButterKnife.unbind(this);
     }
 

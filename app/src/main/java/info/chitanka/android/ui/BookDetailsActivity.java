@@ -66,6 +66,7 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
         getSupportActionBar().setHomeButtonEnabled(true);
 
         getComponent().inject(this);
+        bookPresenter.onStart();
         bookPresenter.setView(this);
 
         int bookId = getIntent().getIntExtra(Constants.EXTRA_BOOK_ID, 0);
@@ -84,6 +85,7 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
+        bookPresenter.onDestroy();
     }
 
     @Override

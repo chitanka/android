@@ -1,12 +1,12 @@
 package info.chitanka.android.mvp.presenters.categories;
 
-import info.chitanka.android.api.ChitankaApi;
-import info.chitanka.android.mvp.presenters.BasePresenter;
-import info.chitanka.android.mvp.views.CategoriesView;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import info.chitanka.android.api.ChitankaApi;
+import info.chitanka.android.mvp.presenters.BasePresenter;
+import info.chitanka.android.mvp.views.CategoriesView;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
@@ -18,9 +18,22 @@ public class CategoriesPresenterImpl extends BasePresenter implements Categories
 
     private WeakReference<CategoriesView> categoriesView;
     private ChitankaApi chitankaApi;
+    private Subscription subscription;
 
     public CategoriesPresenterImpl(ChitankaApi chitankaApi) {
         this.chitankaApi = chitankaApi;
+    }
+
+    @Override
+    public void onStart() {
+
+    }
+
+    @Override
+    public void onDestroy() {
+        if (subscription != null) {
+            subscription.unsubscribe();
+        }
     }
 
     @Override
@@ -30,10 +43,11 @@ public class CategoriesPresenterImpl extends BasePresenter implements Categories
 
     @Override
     public void loadCategories() {
-        if(viewExists(categoriesView))
+        if(viewExists(categoriesView)) {
             categoriesView.get().showLoading();
+        }
 
-        chitankaApi
+        subscription = chitankaApi
                 .getCategories()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())

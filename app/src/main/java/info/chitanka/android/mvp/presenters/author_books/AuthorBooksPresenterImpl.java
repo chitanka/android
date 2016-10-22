@@ -1,12 +1,12 @@
 package info.chitanka.android.mvp.presenters.author_books;
 
-import info.chitanka.android.api.ChitankaApi;
-import info.chitanka.android.mvp.presenters.BasePresenter;
-import info.chitanka.android.mvp.views.BooksView;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import info.chitanka.android.api.ChitankaApi;
+import info.chitanka.android.mvp.presenters.BasePresenter;
+import info.chitanka.android.mvp.views.BooksView;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
@@ -17,6 +17,7 @@ import timber.log.Timber;
 public class AuthorBooksPresenterImpl extends BasePresenter implements AuthorBooksPresenter {
     private ChitankaApi chitankaApi;
     private WeakReference<BooksView> view;
+    private Subscription subscription;
 
     public AuthorBooksPresenterImpl(ChitankaApi chitankaApi) {
         this.chitankaApi = chitankaApi;
@@ -28,7 +29,7 @@ public class AuthorBooksPresenterImpl extends BasePresenter implements AuthorBoo
             return;
 
         view.get().showLoading();
-        chitankaApi.getAuthorBooks(slug).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe((books) -> {
+        subscription = chitankaApi.getAuthorBooks(slug).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe((books) -> {
             if (!viewExists(view))
                 return;
             view.get().hideLoading();
@@ -42,6 +43,18 @@ public class AuthorBooksPresenterImpl extends BasePresenter implements AuthorBoo
             view.get().presentAuthorBooks(new ArrayList<>());
 
         });
+    }
+
+    @Override
+    public void onStart() {
+
+    }
+
+    @Override
+    public void onDestroy() {
+        if (subscription != null) {
+            subscription.unsubscribe();
+        }
     }
 
     @Override

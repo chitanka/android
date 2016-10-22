@@ -1,12 +1,12 @@
 package info.chitanka.android.mvp.presenters.category_books;
 
-import info.chitanka.android.api.ChitankaApi;
-import info.chitanka.android.mvp.presenters.BasePresenter;
-import info.chitanka.android.mvp.views.CategoryBooksView;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import info.chitanka.android.api.ChitankaApi;
+import info.chitanka.android.mvp.presenters.BasePresenter;
+import info.chitanka.android.mvp.views.CategoryBooksView;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
@@ -17,6 +17,7 @@ import timber.log.Timber;
 public class CategoryBooksPresenterImpl extends BasePresenter implements CategoryBooksPresenter {
     private ChitankaApi chitankaApi;
     private WeakReference<CategoryBooksView> view;
+    private Subscription subscription;
 
     public CategoryBooksPresenterImpl(ChitankaApi chitankaApi) {
         this.chitankaApi = chitankaApi;
@@ -27,7 +28,7 @@ public class CategoryBooksPresenterImpl extends BasePresenter implements Categor
         if(viewExists(view))
             view.get().showLoading();
 
-        chitankaApi.getBooksForCategory(categorySlug, page).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
+        subscription = chitankaApi.getBooksForCategory(categorySlug, page).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
                     if(!viewExists(view))
                         return;
@@ -41,6 +42,18 @@ public class CategoryBooksPresenterImpl extends BasePresenter implements Categor
                     view.get().hideLoading();
                     view.get().presentCategoryBooks(new ArrayList<>(), 0);
                 });
+    }
+
+    @Override
+    public void onStart() {
+
+    }
+
+    @Override
+    public void onDestroy() {
+        if (subscription != null) {
+            subscription.unsubscribe();
+        }
     }
 
     @Override
