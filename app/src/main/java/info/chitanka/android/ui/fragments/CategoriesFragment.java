@@ -108,6 +108,11 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
 
 
     @Override
+    public boolean isActive() {
+        return isAdded();
+    }
+
+    @Override
     public void hideLoading() {
 
     }

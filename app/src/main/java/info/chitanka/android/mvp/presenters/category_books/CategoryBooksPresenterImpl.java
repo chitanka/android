@@ -14,9 +14,8 @@ import timber.log.Timber;
 /**
  * Created by nmp on 16-3-13.
  */
-public class CategoryBooksPresenterImpl extends BasePresenter implements CategoryBooksPresenter {
+public class CategoryBooksPresenterImpl extends BasePresenter<CategoryBooksView> implements CategoryBooksPresenter {
     private ChitankaApi chitankaApi;
-    private WeakReference<CategoryBooksView> view;
     private Subscription subscription;
 
     public CategoryBooksPresenterImpl(ChitankaApi chitankaApi) {
@@ -25,22 +24,21 @@ public class CategoryBooksPresenterImpl extends BasePresenter implements Categor
 
     @Override
     public void getBooksForCategory(String categorySlug, int page) {
-        if(viewExists(view))
-            view.get().showLoading();
+        getView().showLoading();
 
         subscription = chitankaApi.getBooksForCategory(categorySlug, page).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(model -> {
-                    if(!viewExists(view))
+                    if(!viewExists())
                         return;
 
-                    view.get().hideLoading();
-                    view.get().presentCategoryBooks(model.getBooks(), model.getPager().getTotalCount());
+                    getView().hideLoading();
+                    getView().presentCategoryBooks(model.getBooks(), model.getPager().getTotalCount());
                 }, err -> {
                     Timber.e(err, "Error loading category books!");
-                    if (!viewExists(view))
+                    if (!viewExists())
                         return;
-                    view.get().hideLoading();
-                    view.get().presentCategoryBooks(new ArrayList<>(), 0);
+                    getView().hideLoading();
+                    getView().presentCategoryBooks(new ArrayList<>(), 0);
                 });
     }
 

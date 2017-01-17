@@ -13,9 +13,8 @@ import timber.log.Timber;
 /**
  * Created by nmp on 16-3-24.
  */
-public class BookPresenterImpl extends BasePresenter implements BookPresenter {
+public class BookPresenterImpl extends BasePresenter<BookView> implements BookPresenter {
 
-    WeakReference<BookView> view;
     ChitankaApi chitankaApi;
     private Subscription subscription;
 
@@ -29,14 +28,14 @@ public class BookPresenterImpl extends BasePresenter implements BookPresenter {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(book -> {
-                    if(viewExists(view))
-                        view.get().presentBookDetails(book);
+                    if(viewExists())
+                        getView().presentBookDetails(book);
                 }, err -> {
                     Timber.e(err, "Error with loading book!");
-                    if (!viewExists(view))
+                    if (!viewExists())
                         return;
 
-                    view.get().showError();
+                    getView().showError();
                 });
     }
 

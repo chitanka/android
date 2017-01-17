@@ -14,9 +14,8 @@ import timber.log.Timber;
 /**
  * Created by nmp on 16-3-8.
  */
-public class BooksPresenterImpl extends BasePresenter implements BooksPresenter {
+public class BooksPresenterImpl extends BasePresenter<BooksView> implements BooksPresenter {
     private ChitankaApi chitankaApi;
-    private WeakReference<BooksView> view;
     private Subscription subscription;
 
     public BooksPresenterImpl(ChitankaApi chitankaApi) {
@@ -25,21 +24,21 @@ public class BooksPresenterImpl extends BasePresenter implements BooksPresenter 
 
     @Override
     public void searchBooks(String q) {
-        if (!viewExists(view))
+        if (!viewExists())
             return;
 
-        view.get().showLoading();
+        getView().showLoading();
         subscription = chitankaApi.searchBooks(q).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe((books) -> {
-            if (!viewExists(view))
+            if (!viewExists())
                 return;
-            view.get().hideLoading();
-            view.get().presentAuthorBooks(books.getBooks());
+            getView().hideLoading();
+            getView().presentAuthorBooks(books.getBooks());
         }, (error) -> {
             Timber.e(error, "Error receiving books!");
-            if (!viewExists(view))
+            if (!viewExists())
                 return;
-            view.get().hideLoading();
-            view.get().presentAuthorBooks(new ArrayList<>());
+            getView().hideLoading();
+            getView().presentAuthorBooks(new ArrayList<>());
         });
     }
 
@@ -57,6 +56,6 @@ public class BooksPresenterImpl extends BasePresenter implements BooksPresenter 
 
     @Override
     public void setView(BooksView view) {
-        this.view = new WeakReference<>(view);
+        this.view = new WeakReference<BooksView>(view);
     }
 }

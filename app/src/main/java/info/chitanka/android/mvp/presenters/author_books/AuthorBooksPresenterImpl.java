@@ -14,9 +14,8 @@ import timber.log.Timber;
 /**
  * Created by nmp on 16-3-13.
  */
-public class AuthorBooksPresenterImpl extends BasePresenter implements AuthorBooksPresenter {
+public class AuthorBooksPresenterImpl extends BasePresenter<BooksView> implements AuthorBooksPresenter {
     private ChitankaApi chitankaApi;
-    private WeakReference<BooksView> view;
     private Subscription subscription;
 
     public AuthorBooksPresenterImpl(ChitankaApi chitankaApi) {
@@ -25,22 +24,22 @@ public class AuthorBooksPresenterImpl extends BasePresenter implements AuthorBoo
 
     @Override
     public void searchAuthorBooks(String slug) {
-        if(!viewExists(view))
+        if(!viewExists())
             return;
 
-        view.get().showLoading();
+        getView().showLoading();
         subscription = chitankaApi.getAuthorBooks(slug).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe((books) -> {
-            if (!viewExists(view))
+            if (!viewExists())
                 return;
-            view.get().hideLoading();
-            view.get().presentAuthorBooks(books.getBooks());
+            getView().hideLoading();
+            getView().presentAuthorBooks(books.getBooks());
 
         }, (error) -> {
             Timber.e(error, "Error receiving books!");
-            if (!viewExists(view))
+            if (!viewExists())
                 return;
-            view.get().hideLoading();
-            view.get().presentAuthorBooks(new ArrayList<>());
+            getView().hideLoading();
+            getView().presentAuthorBooks(new ArrayList<>());
 
         });
     }
@@ -59,6 +58,6 @@ public class AuthorBooksPresenterImpl extends BasePresenter implements AuthorBoo
 
     @Override
     public void setView(BooksView view) {
-        this.view = new WeakReference<>(view);
+        this.view = new WeakReference<BooksView>(view);
     }
 }

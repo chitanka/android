@@ -122,6 +122,10 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
     }
 
 
+    @Override
+    public boolean isActive() {
+        return isAdded();
+    }
 
     @Override
     public void hideLoading() {

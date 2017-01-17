@@ -14,9 +14,8 @@ import timber.log.Timber;
 /**
  * Created by nmp on 16-3-15.
  */
-public class CategoriesPresenterImpl extends BasePresenter implements CategoriesPresenter {
+public class CategoriesPresenterImpl extends BasePresenter<CategoriesView> implements CategoriesPresenter {
 
-    private WeakReference<CategoriesView> categoriesView;
     private ChitankaApi chitankaApi;
     private Subscription subscription;
 
@@ -38,13 +37,13 @@ public class CategoriesPresenterImpl extends BasePresenter implements Categories
 
     @Override
     public void setView(CategoriesView view) {
-        this.categoriesView = new WeakReference<>(view);
+        this.view = new WeakReference<>(view);
     }
 
     @Override
     public void loadCategories() {
-        if(viewExists(categoriesView)) {
-            categoriesView.get().showLoading();
+        if(viewExists()) {
+            getView().showLoading();
         }
 
         subscription = chitankaApi
@@ -52,15 +51,15 @@ public class CategoriesPresenterImpl extends BasePresenter implements Categories
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(categories -> {
-                    if(viewExists(categoriesView)) {
-                        categoriesView.get().presentCategories(categories.getCategories(), 0);
+                    if(viewExists()) {
+                        getView().presentCategories(categories.getCategories(), 0);
                     }
                 }, (error) -> {
                     Timber.e(error, "Error loading categories!");
-                    if (!viewExists(categoriesView))
+                    if (!viewExists())
                         return;
-                    categoriesView.get().hideLoading();
-                    categoriesView.get().presentCategories(new ArrayList<>(), 0);
+                    getView().hideLoading();
+                    getView().presentCategories(new ArrayList<>(), 0);
                 });
     }
 }

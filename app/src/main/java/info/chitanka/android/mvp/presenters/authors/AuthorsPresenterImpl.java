@@ -16,9 +16,8 @@ import timber.log.Timber;
 /**
  * Created by nmp on 16-3-11.
  */
-public class AuthorsPresenterImpl extends BasePresenter implements AuthorsPresenter {
+public class AuthorsPresenterImpl extends BasePresenter<AuthorsView> implements AuthorsPresenter {
     private final ChitankaApi chitankaApi;
-    private WeakReference<AuthorsView> authorsView;
     private CompositeSubscription compositeSubscription;
 
     public AuthorsPresenterImpl(ChitankaApi chitankaApi) {
@@ -39,55 +38,51 @@ public class AuthorsPresenterImpl extends BasePresenter implements AuthorsPresen
 
     @Override
     public void setView(AuthorsView authorsViewWeakReference) {
-        this.authorsView = new WeakReference<>(authorsViewWeakReference);
+        this.view = new WeakReference<>(authorsViewWeakReference);
     }
 
     @Override
     public void searchAuthors(String name) {
         if (viewExists()) {
-            authorsView.get().showLoading();
+            getView().showLoading();
             compositeSubscription.add(
                     chitankaApi.searchAuthors(name)
                             .subscribeOn(Schedulers.newThread())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe((authors) -> {
-                                if (!viewExists(authorsView))
+                                if (!viewExists())
                                     return;
-                                authorsView.get().hideLoading();
-                                authorsView.get().presentSearch(new Authors(new Pagination(), authors));
+                                getView().hideLoading();
+                                getView().presentSearch(new Authors(new Pagination(), authors));
                             }, (error) -> {
                                 Timber.e(error, "Error printing authors!");
-                                if (!viewExists(authorsView))
+                                if (!viewExists())
                                     return;
-                                authorsView.get().hideLoading();
-                                authorsView.get().presentSearch(new Authors(new Pagination(), new ArrayList<>()));
+                                getView().hideLoading();
+                                getView().presentSearch(new Authors(new Pagination(), new ArrayList<>()));
                             })
             );
         }
     }
 
-    private boolean viewExists() {
-        return authorsView != null && authorsView.get() != null;
-    }
-
     @Override
     public void loadAuthors(int page, int pageSize) {
         if (viewExists()) {
-            authorsView.get().showLoading();
+            getView().showLoading();
             compositeSubscription.add(chitankaApi.getAuthors(page, pageSize)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe((authors) -> {
-                        if (!viewExists(authorsView))
+                        if (!viewExists())
                             return;
-                        authorsView.get().hideLoading();
-                        authorsView.get().presentAuthors(authors);
+                        getView().hideLoading();
+                        getView().presentAuthors(authors);
                     }, (error) -> {
                         Timber.e(error, "Error printing authors!");
-                        if (!viewExists(authorsView))
+                        if (!viewExists())
                             return;
-                        authorsView.get().hideLoading();
-                        authorsView.get().presentAuthors(new Authors());
+                        getView().hideLoading();
+                        getView().presentAuthors(new Authors());
                     })
             );
         }

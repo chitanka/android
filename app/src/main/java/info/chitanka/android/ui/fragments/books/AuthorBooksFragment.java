@@ -96,4 +96,9 @@ public class AuthorBooksFragment extends BaseBooksFragment implements BooksView 
     public String getTitle() {
         return TAG;
     }
+
+    @Override
+    public boolean isActive() {
+        return isAdded();
+    }
 }

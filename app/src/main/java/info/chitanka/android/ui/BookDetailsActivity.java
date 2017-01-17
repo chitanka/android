@@ -118,6 +118,11 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
     }
 
     @Override
+    public boolean isActive() {
+        return !isFinishing();
+    }
+
+    @Override
     public void hideLoading() {
 
     }

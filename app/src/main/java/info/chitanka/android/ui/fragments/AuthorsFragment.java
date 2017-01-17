@@ -150,6 +150,11 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
     }
 
     @Override
+    public boolean isActive() {
+        return isAdded();
+    }
+
+    @Override
     public void hideLoading() {
         if(loading != null) {
             loading.progressiveStop();
