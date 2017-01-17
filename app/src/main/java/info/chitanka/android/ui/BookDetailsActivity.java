@@ -7,6 +7,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,7 +28,6 @@ import info.chitanka.android.mvp.models.BookDetails;
 import info.chitanka.android.mvp.presenters.book.BookPresenter;
 import info.chitanka.android.mvp.views.BookView;
 import info.chitanka.android.ui.dialogs.DownloadDialog;
-import timber.log.Timber;
 
 public class BookDetailsActivity extends BaseActivity implements HasComponent<PresenterComponent>, BookView {
 
@@ -107,6 +107,20 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(view -> DownloadDialog.newInstance(book).show(getSupportFragmentManager(), DownloadDialog.TAG));
+        containerBook.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                View view = v.getChildAt(v.getChildCount() - 1);
+                int diff = (view.getBottom()-(v.getHeight()+v.getScrollY()));
+
+                // if diff is zero, then the bottom has been reached
+                if(diff <= 0 && fab.getVisibility() == View.VISIBLE) {
+                    fab.hide();
+                } else if (fab.getVisibility() != View.VISIBLE) {
+                    fab.show();
+                }
+            }
+        });
     }
 
     private String getText(String text) {
@@ -134,11 +148,6 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
 
     @Override
     public void showError() {
-        if (containerBook == null){
-            Timber.e(new Exception("containerBook view is null"), "Null containerBook");
-            return;
-        }
-
         Snackbar.make(containerBook, "Възникна проблем със зареждането на книга!", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
 
