@@ -34,7 +34,6 @@
         </activity>
         <activity
             android:name=".ui.BookDetailsActivity"
-            android:label="@string/title_activity_book_details"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data

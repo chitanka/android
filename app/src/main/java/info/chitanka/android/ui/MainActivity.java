@@ -24,13 +24,19 @@ import info.chitanka.android.di.HasComponent;
 import info.chitanka.android.di.presenters.DaggerPresenterComponent;
 import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.events.SearchBookEvent;
+import info.chitanka.android.ui.dialogs.NetworkRequiredDialog;
 import info.chitanka.android.ui.fragments.AuthorsFragment;
 import info.chitanka.android.ui.fragments.BaseFragment;
 import info.chitanka.android.ui.fragments.CategoriesFragment;
 import info.chitanka.android.ui.fragments.books.BooksFragment;
+import info.chitanka.android.utils.ConnectivityUtils;
 import info.chitanka.android.utils.RxBus;
 
 public class MainActivity extends AppCompatActivity implements HasComponent<PresenterComponent>, NavigationView.OnNavigationItemSelectedListener {
+    public static final String NETWORK_REQUIRED_DIALOG_FRAGMENT = "NetworkRequiredDialogFragment";
+
+    private NetworkRequiredDialog networkRequiredDialog;
+
     @Inject
     RxBus rxBus;
 
@@ -52,13 +58,18 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        if(!ConnectivityUtils.isNetworkAvailable(this)) {
+            if (networkRequiredDialog == null && getSupportFragmentManager().findFragmentByTag(NETWORK_REQUIRED_DIALOG_FRAGMENT) == null) {
+                networkRequiredDialog = new NetworkRequiredDialog();
+                networkRequiredDialog.show(getSupportFragmentManager(), NETWORK_REQUIRED_DIALOG_FRAGMENT);
+            }
+        }
+
         navigationView.setNavigationItemSelectedListener(this);
 
         navigationView.getMenu().getItem(0).setChecked(true);
         onNavigationItemSelected(navigationView.getMenu().getItem(0));
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
