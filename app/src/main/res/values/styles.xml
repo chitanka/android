@@ -17,7 +17,7 @@
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
@@ -35,8 +35,6 @@
         <item name="cpb_sweep_speed">@string/cpb_default_sweep_speed</item>
         <item name="cpb_rotation_speed">@string/cpb_default_rotation_speed</item>
     </style>
-
-    <style name="BorderlessButton" parent="Widget.AppCompat.Button.Borderless"></style>
 
     <style name="reader_text">
         <item name="android:textSize">22sp</item>
