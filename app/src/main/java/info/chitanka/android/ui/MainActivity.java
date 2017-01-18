@@ -42,13 +42,17 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
 
     @Bind(R.id.nav_view)
     NavigationView navigationView;
+    private PresenterComponent presenterComponent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        presenterComponent = DaggerPresenterComponent.builder().applicationComponent(ChitankaApplication.getApplicationComponent()).build();
         getComponent().inject(this);
         ButterKnife.bind(this);
+        
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -174,6 +178,6 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
 
     @Override
     public PresenterComponent getComponent() {
-        return DaggerPresenterComponent.builder().applicationComponent(ChitankaApplication.getApplicationComponent()).build();
+        return presenterComponent;
     }
 }

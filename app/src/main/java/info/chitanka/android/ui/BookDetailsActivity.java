@@ -54,6 +54,7 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
 
     @Bind(R.id.container_book)
     NestedScrollView containerBook;
+    private PresenterComponent presenterComponent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,9 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        presenterComponent = DaggerPresenterComponent.builder().presenterModule(new PresenterModule()).applicationComponent(getApplicationComponent()).build();
         getComponent().inject(this);
+
         bookPresenter.onStart();
         bookPresenter.setView(this);
 
@@ -90,7 +93,7 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
 
     @Override
     public PresenterComponent getComponent() {
-        return DaggerPresenterComponent.builder().presenterModule(new PresenterModule()).applicationComponent(getApplicationComponent()).build();
+        return presenterComponent;
     }
 
     @Override

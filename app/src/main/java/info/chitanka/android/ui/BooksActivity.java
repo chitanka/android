@@ -18,6 +18,8 @@ import info.chitanka.android.ui.fragments.books.CategoryBooksFragment;
 
 public class BooksActivity extends BaseActivity implements HasComponent<PresenterComponent> {
 
+    private PresenterComponent presenterComponent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +30,7 @@ public class BooksActivity extends BaseActivity implements HasComponent<Presente
 
         setupActionBar();
 
+        presenterComponent = DaggerPresenterComponent.builder().applicationComponent(getApplicationComponent()).presenterModule(new PresenterModule()).build();
         getComponent().inject(this);
 
         String searchTerm = getIntent().getStringExtra(Constants.EXTRA_SEARCH_TERM);
@@ -42,13 +45,12 @@ public class BooksActivity extends BaseActivity implements HasComponent<Presente
         }
 
         getSupportFragmentManager().beginTransaction().add( R.id.container, fragment).commit();
-
         setTitle(title);
     }
 
     @Override
     public PresenterComponent getComponent() {
-        return DaggerPresenterComponent.builder().applicationComponent(getApplicationComponent()).presenterModule(new PresenterModule()).build();
+        return presenterComponent;
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
