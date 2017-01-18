@@ -9,6 +9,7 @@ import info.chitanka.android.mvp.models.BookDetails;
 import info.chitanka.android.mvp.models.Categories;
 import info.chitanka.android.mvp.models.CategoryBooks;
 import info.chitanka.android.mvp.models.SearchBooks;
+import info.chitanka.android.mvp.models.SearchItems;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -38,4 +39,7 @@ public interface ChitankaApi {
 
     @GET("/authors/search.json")
     Observable<List<Author>> searchAuthors(@Query("q") String name);
+
+    @GET("/search.json")
+    Observable<List<SearchItems>> search(@Query("q") String term);
 }
