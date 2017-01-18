@@ -12,4 +12,7 @@
     <string name="navigation_drawer_open">Отвори</string>
     <string name="navigation_drawer_close">Затвори</string>
     <string name="OK">OK</string>
+    <string name="title_textworks">Произведения</string>
+    <string name="title_authors">Автори</string>
+    <string name="title_books">Книги</string>
 </resources>

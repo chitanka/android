@@ -17,6 +17,8 @@ import info.chitanka.android.mvp.presenters.category_books.CategoryBooksPresente
 
 import dagger.Module;
 import dagger.Provides;
+import info.chitanka.android.mvp.presenters.search.SearchPresenter;
+import info.chitanka.android.mvp.presenters.search.SearchPresenterImpl;
 
 /**
  * Created by joro on 16-3-8.
@@ -54,7 +56,14 @@ public class PresenterModule {
     }
 
     @Provides
+    @ActivityScope
     public BookPresenter providesBookPresenter(ChitankaApi chitankaApi) {
         return new BookPresenterImpl(chitankaApi);
+    }
+
+    @Provides
+    @ActivityScope
+    public SearchPresenter providesSearchPresenter(ChitankaApi chitankaApi) {
+        return new SearchPresenterImpl(chitankaApi);
     }
 }

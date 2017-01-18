@@ -41,9 +41,17 @@
             android:value="35ab927175205a27bcaafc128d07c106a6bd6e8b" />
 
         <activity
-            android:label="Четци на книги"
             android:name=".ui.ReadersActivity"
+            android:label="Четци на книги"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.SearchActivity"
+            android:parentActivityName=".ui.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="info.chitanka.android.ui.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
