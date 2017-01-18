@@ -41,6 +41,15 @@ public class BooksFragment extends BaseBooksFragment implements BooksView {
         return new BooksFragment();
     }
 
+    public static BooksFragment newInstance(String searchTerm) {
+
+        Bundle args = new Bundle();
+        args.putString(Constants.EXTRA_SEARCH_TERM, searchTerm);
+        BooksFragment fragment = new BooksFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +59,11 @@ public class BooksFragment extends BaseBooksFragment implements BooksView {
         if(savedInstanceState != null) {
             query = savedInstanceState.getString(KEY_QUERY);
         } else {
-            query = Constants.INITIAL_SEARCH_BOOK_NAME;
+            if (getArguments() != null && getArguments().containsKey(Constants.EXTRA_SEARCH_TERM)) {
+                query = getArguments().getString(Constants.EXTRA_SEARCH_TERM);
+            } else {
+                query = Constants.INITIAL_SEARCH_BOOK_NAME;
+            }
         }
 
         subscription = rxBus.toObserverable().subscribe((event) -> {

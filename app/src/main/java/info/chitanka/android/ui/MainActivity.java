@@ -19,11 +19,11 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import info.chitanka.android.ChitankaApplication;
+import info.chitanka.android.Constants;
 import info.chitanka.android.R;
 import info.chitanka.android.di.HasComponent;
 import info.chitanka.android.di.presenters.DaggerPresenterComponent;
 import info.chitanka.android.di.presenters.PresenterComponent;
-import info.chitanka.android.events.SearchBookEvent;
 import info.chitanka.android.ui.dialogs.NetworkRequiredDialog;
 import info.chitanka.android.ui.fragments.AuthorsFragment;
 import info.chitanka.android.ui.fragments.BaseFragment;
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
         presenterComponent = DaggerPresenterComponent.builder().applicationComponent(ChitankaApplication.getApplicationComponent()).build();
         getComponent().inject(this);
         ButterKnife.bind(this);
-        
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -86,7 +86,9 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
             @Override
             public boolean onQueryTextSubmit(String s) {
                 if (!isFinishing()) {
-                    rxBus.send(new SearchBookEvent(s));
+                    Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                    intent.putExtra(Constants.EXTRA_SEARCH_TERM, s);
+                    startActivity(intent);
                 }
 
                 searchView.clearFocus();

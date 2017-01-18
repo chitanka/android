@@ -24,6 +24,7 @@ import info.chitanka.android.di.presenters.DaggerPresenterComponent;
 import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.di.presenters.PresenterModule;
 import info.chitanka.android.mvp.presenters.search.SearchPresenter;
+import info.chitanka.android.ui.fragments.books.BooksFragment;
 
 public class SearchActivity extends BaseActivity implements HasComponent<PresenterComponent> {
 
@@ -35,6 +36,7 @@ public class SearchActivity extends BaseActivity implements HasComponent<Present
 
     private ViewPager mViewPager;
     private PresenterComponent presenterComponent;
+    private String searchTerm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +47,7 @@ public class SearchActivity extends BaseActivity implements HasComponent<Present
         getComponent().inject(this);
         ButterKnife.bind(this);
 
-        String searchTerm = getIntent().getStringExtra(Constants.EXTRA_SEARCH_TERM);
+        searchTerm = getIntent().getStringExtra(Constants.EXTRA_SEARCH_TERM);
         setTitle(searchTerm);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -54,11 +56,19 @@ public class SearchActivity extends BaseActivity implements HasComponent<Present
 
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setOffscreenPageLimit(mSectionsPagerAdapter.getCount());
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+        searchPresenter.onStart();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        searchPresenter.onDestroy();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -116,7 +126,7 @@ public class SearchActivity extends BaseActivity implements HasComponent<Present
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_search, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            textView.setText(getArguments().getInt(ARG_SECTION_NUMBER) + "");
             return rootView;
         }
     }
@@ -133,6 +143,10 @@ public class SearchActivity extends BaseActivity implements HasComponent<Present
 
         @Override
         public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return BooksFragment.newInstance(searchTerm);
+            }
             return PlaceholderFragment.newInstance(position + 1);
         }
 
