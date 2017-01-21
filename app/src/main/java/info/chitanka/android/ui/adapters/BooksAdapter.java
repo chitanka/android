@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -58,7 +59,12 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         viewHolder.tvWeb.setOnClickListener(v2 -> {
             Book book = books.get(viewHolder.getAdapterPosition());
             Intent sendIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(book.getChitankaUrl()));
-            context.startActivity(sendIntent);
+            Intent chooser = Intent.createChooser(sendIntent, context.getString(R.string.title_open_with));
+            if (chooser.resolveActivity(context.getPackageManager()) != null) {
+                context.startActivity(chooser);
+            } else {
+                Toast.makeText(context, context.getString(R.string.web_no_app), Toast.LENGTH_SHORT).show();
+            }
         });
 
         return viewHolder;

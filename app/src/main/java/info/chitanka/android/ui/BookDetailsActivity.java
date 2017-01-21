@@ -22,7 +22,6 @@ import info.chitanka.android.R;
 import info.chitanka.android.di.HasComponent;
 import info.chitanka.android.di.presenters.DaggerPresenterComponent;
 import info.chitanka.android.di.presenters.PresenterComponent;
-import info.chitanka.android.di.presenters.PresenterModule;
 import info.chitanka.android.mvp.models.Book;
 import info.chitanka.android.mvp.models.BookDetails;
 import info.chitanka.android.mvp.presenters.book.BookPresenter;
@@ -66,7 +65,7 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        presenterComponent = DaggerPresenterComponent.builder().presenterModule(new PresenterModule()).applicationComponent(getApplicationComponent()).build();
+        presenterComponent = DaggerPresenterComponent.builder().applicationComponent(getApplicationComponent()).build();
         getComponent().inject(this);
 
         bookPresenter.onStart();

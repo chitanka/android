@@ -55,7 +55,7 @@ public class TextWorksAdapter extends RecyclerView.Adapter<TextWorksAdapter.View
             if (chooser.resolveActivity(activity.getPackageManager()) != null) {
                 activity.startActivity(intent);
             } else {
-                Toast.makeText(activity, activity.getString(R.string.download_no_app), Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, activity.getString(R.string.web_no_app), Toast.LENGTH_SHORT).show();
             }
 
         });

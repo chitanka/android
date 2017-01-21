@@ -10,7 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuItem;
 
 import javax.inject.Inject;
 
@@ -91,21 +90,6 @@ public class SearchActivity extends BaseActivity implements HasComponent<Present
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public PresenterComponent getComponent() {
         return presenterComponent;
     }
@@ -125,7 +109,7 @@ public class SearchActivity extends BaseActivity implements HasComponent<Present
                 case 1:
                     return AuthorsFragment.newInstance(searchTerm);
                 case 2:
-                    return TextWorksFragment.newInstance(searchTerm);
+                    return TextWorksFragment.newInstance(searchTerm, null);
             }
             return BooksFragment.newInstance(searchTerm);
         }
