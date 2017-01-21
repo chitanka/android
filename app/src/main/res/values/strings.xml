@@ -33,7 +33,12 @@
     <string name="downloading">Сваля се …</string>
 
     <!-- Searchable Spinner -->
-    <string name="search">Потърси...</string>
-    <string name="empty_list">Няма резултати!</string>
     <string name="categories_pick">Избери категория</string>
+
+    <!-- Rating dialog -->
+    <string name="erd_title">Оцени приложението ни :)</string>
+    <string name="erd_message">Здравей, ще отделиш ли минута, за да оцениш приложението ни? Така заедно ще го направим по-добро! ;)</string>
+    <string name="erd_no_thanks">Не, благодаря.</string>
+    <string name="erd_remind_me_later">По-късно.</string>
+    <string name="erd_rate_now">Оцени.</string>
 </resources>

@@ -15,6 +15,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.kobakei.ratethisapp.RateThisApp;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import info.chitanka.android.ChitankaApplication;
@@ -76,6 +78,13 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
             navigationView.getMenu().getItem(0).setChecked(true);
             onNavigationItemSelected(navigationView.getMenu().getItem(0));
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        RateThisApp.onStart(this);
+        RateThisApp.showRateDialogIfNeeded(this);
     }
 
     @Override
