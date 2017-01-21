@@ -1,5 +1,6 @@
 package info.chitanka.android.ui.fragments;
 
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -39,6 +40,18 @@ public abstract class BaseFragment extends Fragment implements BaseView {
             Snackbar.make(getView(), "Възникна проблем със зареждането на данните!", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         }
+    }
+
+    public String getArgument(String key, Bundle savedInstanceState) {
+        if (savedInstanceState != null && savedInstanceState.containsKey(key)) {
+            return savedInstanceState.getString(key);
+        }
+
+        if (getArguments().containsKey(key)) {
+            return getArguments().getString(key);
+        }
+
+        return null;
     }
 
     public abstract String getTitle();

@@ -1,7 +1,10 @@
 package info.chitanka.android.ui.fragments;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,7 +58,6 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
     private String query;
 
     public static AuthorsFragment newInstance(String searchTerm) {
-
         Bundle args = new Bundle();
         args.putString(Constants.EXTRA_SEARCH_TERM, searchTerm);
         AuthorsFragment fragment = new AuthorsFragment();
@@ -64,11 +66,13 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         getComponent(PresenterComponent.class).inject(this);
+
+        authorsPresenter.setView(this);
         authorsPresenter.onStart();
+
         subscription = rxBus.toObserverable().subscribe((event) -> {
             if(event instanceof SearchBookEvent) {
                 containerEmpty.setVisibility(View.GONE);
@@ -81,6 +85,17 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
             }
         });
 
+        if (savedInstanceState != null) {
+            query = savedInstanceState.getString(KEY_QUERY);
+        } else {
+            query = getArguments().getString(Constants.EXTRA_SEARCH_TERM);
+        }
+
+        if (TextUtils.isEmpty(query)) {
+            authorsPresenter.loadAuthors(currentPage, pageSize);
+        } else {
+            authorsPresenter.searchAuthors(query);
+        }
     }
 
     @Nullable
@@ -89,18 +104,16 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
         View view = inflater.inflate(R.layout.fragment_authors, container, false);
         ButterKnife.bind(this, view);
 
-        authorsPresenter.setView(this);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            rvAuthors.getRecyclerView().setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        } else {
+            rvAuthors.getRecyclerView().setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
+        }
+
         rvAuthors.setOnEndReachedListener(() -> {
             currentPage++;
             authorsPresenter.loadAuthors(currentPage, pageSize);
         });
-
-        query = getArguments().getString(Constants.EXTRA_SEARCH_TERM);
-        if (TextUtils.isEmpty(query)) {
-            authorsPresenter.loadAuthors(currentPage, pageSize);
-        } else {
-            authorsPresenter.searchAuthors(query);
-        }
 
         return view;
     }

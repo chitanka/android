@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -34,14 +35,17 @@ import info.chitanka.android.utils.RxBus;
 
 public class MainActivity extends AppCompatActivity implements HasComponent<PresenterComponent>, NavigationView.OnNavigationItemSelectedListener {
     public static final String NETWORK_REQUIRED_DIALOG_FRAGMENT = "NetworkRequiredDialogFragment";
-
-    private NetworkRequiredDialog networkRequiredDialog;
+    private static final String KEY_SELECTED_ITEM = "selected_item";
 
     @Inject
     RxBus rxBus;
 
     @Bind(R.id.nav_view)
     NavigationView navigationView;
+
+    private int selectedNavItemId;
+
+    private NetworkRequiredDialog networkRequiredDialog;
     private PresenterComponent presenterComponent;
 
     @Override
@@ -71,8 +75,20 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        navigationView.getMenu().getItem(0).setChecked(true);
-        onNavigationItemSelected(navigationView.getMenu().getItem(0));
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_SELECTED_ITEM)) {
+            selectedNavItemId = savedInstanceState.getInt(KEY_SELECTED_ITEM);
+            MenuItem item = navigationView.getMenu().findItem(selectedNavItemId);
+            onNavigationItemSelected(item);
+        } else {
+            navigationView.getMenu().getItem(0).setChecked(true);
+            onNavigationItemSelected(navigationView.getMenu().getItem(0));
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_SELECTED_ITEM, selectedNavItemId);
     }
 
     @Override
@@ -138,9 +154,9 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        selectedNavItemId = item.getItemId();
 
-        selectNavigationItem(id);
+        selectNavigationItem(selectedNavItemId);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -171,7 +187,12 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
             return;
         }
 
-        if(fragment == null) {
+        if (fragment == null) {
+            return;
+        }
+
+        Fragment fragmentByTag = getSupportFragmentManager().findFragmentByTag(fragment.getTitle());
+        if(fragmentByTag != null && fragmentByTag.isVisible()) {
             return;
         }
 

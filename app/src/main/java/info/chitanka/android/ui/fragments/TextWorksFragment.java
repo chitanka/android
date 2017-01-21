@@ -1,7 +1,9 @@
 package info.chitanka.android.ui.fragments;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,7 +24,7 @@ import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.mvp.models.TextWork;
 import info.chitanka.android.mvp.presenters.textworks.TextWorksPresenter;
 import info.chitanka.android.mvp.views.TextWorksView;
-import info.chitanka.android.ui.fragments.books.TextWorksAdapter;
+import info.chitanka.android.ui.adapters.TextWorksAdapter;
 
 /**
  * Created by nmp on 21.01.17.
@@ -30,8 +32,6 @@ import info.chitanka.android.ui.fragments.books.TextWorksAdapter;
 
 public class TextWorksFragment extends BaseFragment implements TextWorksView {
     public static final String TAG = TextWorksFragment.class.getSimpleName();
-
-    private static final String KEY_SEARCH_TERM = "search_term";
 
     private String searchTerm;
 
@@ -57,16 +57,14 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            searchTerm = savedInstanceState.getString(KEY_SEARCH_TERM);
-        } else {
-            searchTerm = getArguments().getString(Constants.EXTRA_SEARCH_TERM);
-        }
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        searchTerm = getArgument(Constants.EXTRA_SEARCH_TERM, savedInstanceState);
 
         getComponent(PresenterComponent.class).inject(this);
+        presenter.setView(this);
         presenter.onStart();
+        presenter.searchTextWorks(searchTerm);
     }
 
     @Nullable
@@ -74,23 +72,20 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_text_works, container, false);
         ButterKnife.bind(this, view);
-        presenter.setView(this);
 
-        rvTextWorks.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            rvTextWorks.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        } else {
+            rvTextWorks.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
+        }
 
         return view;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        presenter.searchTextWorks(searchTerm);
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(KEY_SEARCH_TERM, searchTerm);
+        outState.putString(Constants.EXTRA_SEARCH_TERM, searchTerm);
     }
 
     @Override
@@ -131,6 +126,6 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
 
         rvTextWorks.setVisibility(View.VISIBLE);
         containerEmpty.setVisibility(View.GONE);
-        rvTextWorks.setAdapter(new TextWorksAdapter(texts));
+        rvTextWorks.setAdapter(new TextWorksAdapter(texts, getResources()));
     }
 }

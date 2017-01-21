@@ -1,6 +1,7 @@
 package info.chitanka.android.ui.fragments.books;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -64,12 +65,14 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         getComponent(PresenterComponent.class).inject(this);
+        booksPresenter.setView(this);
         booksPresenter.onStart();
 
-        slug = getArguments().getString(KEY_SLUG);
+        slug = getArgument(KEY_SLUG, savedInstanceState);
+        booksPresenter.getBooksForCategory(slug, page);
     }
 
     @Override
@@ -78,14 +81,18 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
         View view = inflater.inflate(R.layout.fragment_category_books, container, false);
         ButterKnife.bind(this, view);
 
-        booksPresenter.setView(this);
-        booksPresenter.getBooksForCategory(slug, page);
         rvBooks.setOnEndReachedListener(() -> {
             page++;
             booksPresenter.getBooksForCategory(slug, page);
         });
 
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_SLUG, slug);
     }
 
     @Override
