@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,34 +15,41 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.kobakei.ratethisapp.RateThisApp;
+
+import java.util.HashMap;
+
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import info.chitanka.android.ChitankaApplication;
+import info.chitanka.android.Constants;
 import info.chitanka.android.R;
+import info.chitanka.android.TrackingConstants;
+import info.chitanka.android.components.AnalyticsService;
 import info.chitanka.android.di.HasComponent;
 import info.chitanka.android.di.presenters.DaggerPresenterComponent;
 import info.chitanka.android.di.presenters.PresenterComponent;
-import info.chitanka.android.events.SearchBookEvent;
 import info.chitanka.android.ui.dialogs.NetworkRequiredDialog;
 import info.chitanka.android.ui.fragments.AuthorsFragment;
 import info.chitanka.android.ui.fragments.BaseFragment;
 import info.chitanka.android.ui.fragments.CategoriesFragment;
-import info.chitanka.android.ui.fragments.books.BooksFragment;
 import info.chitanka.android.utils.ConnectivityUtils;
-import info.chitanka.android.utils.RxBus;
 
 public class MainActivity extends AppCompatActivity implements HasComponent<PresenterComponent>, NavigationView.OnNavigationItemSelectedListener {
     public static final String NETWORK_REQUIRED_DIALOG_FRAGMENT = "NetworkRequiredDialogFragment";
-
-    private NetworkRequiredDialog networkRequiredDialog;
-
-    @Inject
-    RxBus rxBus;
+    private static final String KEY_SELECTED_ITEM = "selected_item";
 
     @Bind(R.id.nav_view)
     NavigationView navigationView;
+
+    @Inject
+    AnalyticsService analyticsService;
+
+    private int selectedNavItemId;
+
+    private NetworkRequiredDialog networkRequiredDialog;
     private PresenterComponent presenterComponent;
 
     @Override
@@ -52,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
         presenterComponent = DaggerPresenterComponent.builder().applicationComponent(ChitankaApplication.getApplicationComponent()).build();
         getComponent().inject(this);
         ButterKnife.bind(this);
-        
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -66,13 +74,33 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
             if (networkRequiredDialog == null && getSupportFragmentManager().findFragmentByTag(NETWORK_REQUIRED_DIALOG_FRAGMENT) == null) {
                 networkRequiredDialog = new NetworkRequiredDialog();
                 networkRequiredDialog.show(getSupportFragmentManager(), NETWORK_REQUIRED_DIALOG_FRAGMENT);
+                analyticsService.logEvent(TrackingConstants.VIEW_NO_NETWORK);
             }
         }
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        navigationView.getMenu().getItem(0).setChecked(true);
-        onNavigationItemSelected(navigationView.getMenu().getItem(0));
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_SELECTED_ITEM)) {
+            selectedNavItemId = savedInstanceState.getInt(KEY_SELECTED_ITEM);
+            MenuItem item = navigationView.getMenu().findItem(selectedNavItemId);
+            onNavigationItemSelected(item);
+        } else {
+            navigationView.getMenu().getItem(0).setChecked(true);
+            onNavigationItemSelected(navigationView.getMenu().getItem(0));
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        RateThisApp.onStart(this);
+        RateThisApp.showRateDialogIfNeeded(this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_SELECTED_ITEM, selectedNavItemId);
     }
 
     @Override
@@ -81,12 +109,17 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-        searchView.setQueryHint("Търси книга");
+        searchView.setQueryHint(getString(R.string.action_search));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 if (!isFinishing()) {
-                    rxBus.send(new SearchBookEvent(s));
+                    analyticsService.logEvent(TrackingConstants.SEARCHED, new HashMap<String, String>() {{
+                        put("term", s);
+                    }});
+                    Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                    intent.putExtra(Constants.EXTRA_SEARCH_TERM, s);
+                    startActivity(intent);
                 }
 
                 searchView.clearFocus();
@@ -136,9 +169,9 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        selectedNavItemId = item.getItemId();
 
-        selectNavigationItem(id);
+        selectNavigationItem(selectedNavItemId);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -150,18 +183,18 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
     private void selectNavigationItem(int id) {
         BaseFragment fragment = null;
         if (id == R.id.nav_authors) {
-            fragment = new AuthorsFragment();
-        } else if (id == R.id.nav_categories) {
-            fragment = new CategoriesFragment();
+            fragment = AuthorsFragment.newInstance("");
         } else if (id == R.id.nav_books) {
-            fragment = new BooksFragment();
+            fragment = CategoriesFragment.newInstance();
         } else if(id == R.id.nav_readers) {
             startActivity(new Intent(this, ReadersActivity.class));
             return;
         } else if (id == R.id.nav_site) {
+            analyticsService.logEvent(TrackingConstants.CLICK_WEBSITE);
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.chitanka.info")));
             return;
         } else if (id == R.id.nav_email) {
+            analyticsService.logEvent(TrackingConstants.CLICK_WRITE_US);
             final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
             emailIntent.setType("plain/text");
             emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"contact@chitanka.info"});
@@ -169,7 +202,12 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
             return;
         }
 
-        if(fragment == null) {
+        if (fragment == null) {
+            return;
+        }
+
+        Fragment fragmentByTag = getSupportFragmentManager().findFragmentByTag(fragment.getTitle());
+        if(fragmentByTag != null) {
             return;
         }
 

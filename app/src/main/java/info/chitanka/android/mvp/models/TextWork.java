@@ -2,7 +2,10 @@ package info.chitanka.android.mvp.models;
 
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import info.chitanka.android.Constants;
 
 /**
  * Created by nmp on 18.01.17.
@@ -10,9 +13,22 @@ import java.util.List;
 
 @Parcel
 public class TextWork {
-    int id;
+    int id, votes;
+    double rating;
     String slug, title, subtitle;
-    List<String> formats;
+    ArrayList<String> formats;
+    List<Author> authors;
+
+    public TextWork() {
+        // TODO: Replace with data from server
+        // When server guys just don't want to add a single object field
+        this.formats = new ArrayList<String>() {{
+            add("fb2.zip");
+            add("epub");
+            add("txt.zip");
+            add("sfb.zip");
+        }};
+    }
 
     public int getId() {
         return id;
@@ -30,7 +46,27 @@ public class TextWork {
         return subtitle;
     }
 
-    public List<String> getFormats() {
+    public List<Author> getAuthors() {
+        return authors;
+    }
+
+    public ArrayList<String> getFormats() {
         return formats;
+    }
+
+    public int getVotes() {
+        return votes;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public String getDownloadUrl() {
+        return Constants.CHITANKA_INFO_API + "text/" + id + ".%s";
+    }
+
+    public String getChitankaUrl() {
+        return Constants.CHITANKA_INFO_API + "text/" + id + "-" + slug;
     }
 }

@@ -12,17 +12,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import info.chitanka.android.Constants;
-import info.chitanka.android.R;
-import info.chitanka.android.mvp.models.Book;
-import info.chitanka.android.ui.BookDetailsActivity;
-import info.chitanka.android.ui.dialogs.DownloadDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import info.chitanka.android.Constants;
+import info.chitanka.android.R;
+import info.chitanka.android.mvp.models.Book;
+import info.chitanka.android.ui.BookDetailsActivity;
+import info.chitanka.android.ui.dialogs.DownloadDialog;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by nmp on 16-3-8.
@@ -31,6 +32,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
     private Context context;
     private final FragmentManager fragmentManager;
     private List<Book> books = new ArrayList<>();
+    private PublishSubject<Book> onWebClick = PublishSubject.create();
 
     public BooksAdapter(Context context, List<Book> books, FragmentManager fragmentManager) {
         this.context = context;
@@ -41,7 +43,29 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_book, null, false);
-        return new ViewHolder(view);
+        ViewHolder viewHolder = new ViewHolder(view);
+        viewHolder.tvDownload.setOnClickListener(view1 -> {
+            Book book = books.get(viewHolder.getAdapterPosition());
+            DownloadDialog.newInstance(book.getTitle(), book.getDownloadUrl(), book.getFormats()).show(fragmentManager, DownloadDialog.TAG);
+        });
+
+        viewHolder.cardView.setOnClickListener(v -> {
+            Book book = books.get(viewHolder.getAdapterPosition());
+            Intent sendIntent = new Intent(context, BookDetailsActivity.class);
+            sendIntent.putExtra(Constants.EXTRA_BOOK_ID, book.getId());
+            context.startActivity(sendIntent);
+        });
+
+        viewHolder.tvWeb.setOnClickListener(v2 -> {
+            Book book = books.get(viewHolder.getAdapterPosition());
+            onWebClick.onNext(book);
+        });
+
+        return viewHolder;
+    }
+
+    public rx.Observable<Book> getOnWebClick() {
+        return onWebClick.asObservable();
     }
 
     @Override
@@ -51,25 +75,13 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         holder.tvDescription.setText((book.getAnnotation() != null ? book.getAnnotation() : ""));
         holder.tvBookCategory.setText(book.getCategory().getName());
         holder.tvBookAuthor.setText(book.getTitleAuthor());
+
+        if (book.getFormats() == null || book.getFormats().size() == 0) {
+            holder.tvDownload.setVisibility(View.GONE);
+        } else {
+            holder.tvDownload.setVisibility(View.VISIBLE);
+        }
         Glide.with(context).load(book.getCover()).fitCenter().crossFade().placeholder(R.drawable.ic_no_cover).into(holder.ivCover);
-
-        holder.tvShare.setOnClickListener((view) -> {
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, String.format(context.getResources().getString(R.string.share_text), book.getTitle(), book.getTitleAuthor()));
-            sendIntent.setType("text/plain");
-            context.startActivity(sendIntent);
-        });
-
-        holder.tvDownload.setOnClickListener((view) -> {
-            DownloadDialog.newInstance(book).show(fragmentManager, DownloadDialog.TAG);
-        });
-
-        holder.cardView.setOnClickListener(v -> {
-            Intent sendIntent = new Intent(context, BookDetailsActivity.class);
-            sendIntent.putExtra(Constants.EXTRA_BOOK_ID, book.getId());
-            context.startActivity(sendIntent);
-        });
     }
 
     @Override
@@ -105,8 +117,8 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         @Bind(R.id.iv_cover)
         ImageView ivCover;
 
-        @Bind(R.id.tv_share)
-        TextView tvShare;
+        @Bind(R.id.tv_web)
+        TextView tvWeb;
 
         @Bind(R.id.tv_description)
         TextView tvDescription;

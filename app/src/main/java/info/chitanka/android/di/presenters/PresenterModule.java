@@ -1,9 +1,11 @@
 package info.chitanka.android.di.presenters;
 
+import dagger.Module;
+import dagger.Provides;
 import info.chitanka.android.api.ChitankaApi;
 import info.chitanka.android.di.scopes.ActivityScope;
-import info.chitanka.android.mvp.presenters.author_books.AuthorBooksPresenterImpl;
 import info.chitanka.android.mvp.presenters.author_books.AuthorBooksPresenter;
+import info.chitanka.android.mvp.presenters.author_books.AuthorBooksPresenterImpl;
 import info.chitanka.android.mvp.presenters.authors.AuthorsPresenter;
 import info.chitanka.android.mvp.presenters.authors.AuthorsPresenterImpl;
 import info.chitanka.android.mvp.presenters.book.BookPresenter;
@@ -14,11 +16,8 @@ import info.chitanka.android.mvp.presenters.categories.CategoriesPresenter;
 import info.chitanka.android.mvp.presenters.categories.CategoriesPresenterImpl;
 import info.chitanka.android.mvp.presenters.category_books.CategoryBooksPresenter;
 import info.chitanka.android.mvp.presenters.category_books.CategoryBooksPresenterImpl;
-
-import dagger.Module;
-import dagger.Provides;
-import info.chitanka.android.mvp.presenters.search.SearchPresenter;
-import info.chitanka.android.mvp.presenters.search.SearchPresenterImpl;
+import info.chitanka.android.mvp.presenters.textworks.TextWorksPresenter;
+import info.chitanka.android.mvp.presenters.textworks.TextWorksPresenterImpl;
 
 /**
  * Created by joro on 16-3-8.
@@ -63,7 +62,7 @@ public class PresenterModule {
 
     @Provides
     @ActivityScope
-    public SearchPresenter providesSearchPresenter(ChitankaApi chitankaApi) {
-        return new SearchPresenterImpl(chitankaApi);
+    public TextWorksPresenter providesTextWorksPresenter(ChitankaApi chitankaApi) {
+        return new TextWorksPresenterImpl(chitankaApi);
     }
 }

@@ -1,48 +1,49 @@
 package info.chitanka.android.ui.adapters;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import info.chitanka.android.R;
-import info.chitanka.android.mvp.models.Book;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import info.chitanka.android.R;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by nmp on 16-3-22.
  */
 public class DownloadActionsAdapter extends RecyclerView.Adapter<DownloadActionsAdapter.ViewHolder> {
-    private final Context context;
-    private final Book book;
     private List<String> formats = new ArrayList<>();
+    private PublishSubject<String> onClick = PublishSubject.create();
 
-    public DownloadActionsAdapter(Context context, Book book) {
-        this.context = context;
-        this.formats = book.getFormats();
-        this.book = book;
+    public DownloadActionsAdapter(List<String> formats) {
+        this.formats = formats;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_download, parent, false);
-        return new ViewHolder(view);
+        ViewHolder viewHolder = new ViewHolder(view);
+        viewHolder.btnFlat.setOnClickListener(view1 -> {
+            String format = formats.get(viewHolder.getAdapterPosition());
+            onClick.onNext(format);
+        });
+        return viewHolder;
+    }
+
+    public rx.Observable<String> getOnDownloadClick() {
+        return onClick.asObservable();
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         String format = formats.get(position);
         holder.btnFlat.setText(format);
-        holder.btnFlat.setOnClickListener(v -> context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(book.getDownloadUrl(format)))));
     }
 
     @Override

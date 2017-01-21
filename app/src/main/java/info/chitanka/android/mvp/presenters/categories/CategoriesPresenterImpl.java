@@ -2,8 +2,10 @@ package info.chitanka.android.mvp.presenters.categories;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.List;
 
 import info.chitanka.android.api.ChitankaApi;
+import info.chitanka.android.mvp.models.Category;
 import info.chitanka.android.mvp.presenters.BasePresenter;
 import info.chitanka.android.mvp.views.CategoriesView;
 import rx.Subscription;
@@ -18,6 +20,7 @@ public class CategoriesPresenterImpl extends BasePresenter<CategoriesView> imple
 
     private ChitankaApi chitankaApi;
     private Subscription subscription;
+    private List<Category> flatCategories;
 
     public CategoriesPresenterImpl(ChitankaApi chitankaApi) {
         this.chitankaApi = chitankaApi;
@@ -42,17 +45,22 @@ public class CategoriesPresenterImpl extends BasePresenter<CategoriesView> imple
 
     @Override
     public void loadCategories() {
+        flatCategories = new ArrayList<>();
         if(viewExists()) {
             getView().showLoading();
         }
 
         subscription = chitankaApi
                 .getCategories()
+                .map(x -> {
+                    populateCategoriesLevel(x.getCategories(), 0);
+                    return flatCategories;
+                })
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(categories -> {
                     if(viewExists()) {
-                        getView().presentCategories(categories.getCategories(), 0);
+                        getView().presentCategories(categories, 0);
                     }
                 }, (error) -> {
                     Timber.e(error, "Error loading categories!");
@@ -61,5 +69,18 @@ public class CategoriesPresenterImpl extends BasePresenter<CategoriesView> imple
                     getView().hideLoading();
                     getView().presentCategories(new ArrayList<>(), 0);
                 });
+    }
+
+    private void populateCategoriesLevel(List<Category> categories, int level) {
+        level++;
+        for(Category category : categories) {
+            if(category.getNrOfBooks() == 0)
+                continue;
+            category.setLevel(level);
+            flatCategories.add(category);
+            if(category.getChildren() != null && category.getChildren().size() > 0) {
+                populateCategoriesLevel(category.getChildren(), level);
+            }
+        }
     }
 }

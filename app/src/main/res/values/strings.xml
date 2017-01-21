@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">chitanka.info Моята Библиотека</string>
-    <string name="action_search">Търси книга</string>
+    <string name="action_search">Търси в chitanka</string>
     <string name="download">СВАЛИ</string>
-    <string name="share">СПОДЕЛИ</string>
+    <string name="open_chitanka">УЕБ</string>
     <string name="share_text">%1$s от %2$s</string>
 
     <string name="list_loaded">Целият списък е зареден!</string>
@@ -15,4 +15,31 @@
     <string name="title_textworks">Произведения</string>
     <string name="title_authors">Автори</string>
     <string name="title_books">Книги</string>
+    <string name="title_download">Свали с</string>
+    <string name="item_text_work_author" formatted="false">от %s</string>
+    <string name="item_text_work_rating" formatted="false">Оценка %1$.2f от %2$d гласа</string>
+    <string name="item_book_no_annotation">Няма описание</string>
+
+    <!-- Drawer -->
+    <string name="drawer_website">Уебсайт</string>
+    <string name="drawer_readers">Четци на книги</string>
+    <string name="drawer_email">Пиши ни</string>
+    <string name="drawer_help">Помощ</string>
+    <string name="drawer_books">Книги</string>
+    <string name="drawer_authors">Автори</string>
+    <string name="title_open_with">Отвори с</string>
+    <string name="download_no_app">Нямате приложения за сваляне на ресурси!</string>
+    <string name="web_no_app">Нямате приложения за отваряне на линкове!</string>
+    <string name="downloading">Сваля се …</string>
+
+    <!-- Searchable Spinner -->
+    <string name="categories_pick">Избери категория</string>
+
+    <!-- Rating dialog -->
+    <string name="erd_title">Оцени приложението ни :)</string>
+    <string name="erd_message">Здравей, ще отделиш ли минута, за да оцениш приложението ни? Така заедно ще го направим по-добро! ;)</string>
+    <string name="erd_no_thanks">Не, благодаря.</string>
+    <string name="erd_remind_me_later">По-късно.</string>
+    <string name="erd_rate_now">Оцени.</string>
+    <string name="title_readers">Четци на книги</string>
 </resources>

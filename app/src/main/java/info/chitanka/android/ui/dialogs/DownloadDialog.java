@@ -2,6 +2,10 @@ package info.chitanka.android.ui.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.DownloadManager;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,15 +17,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import info.chitanka.android.R;
-import info.chitanka.android.mvp.models.Book;
-import info.chitanka.android.ui.adapters.DownloadActionsAdapter;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-import org.parceler.Parcels;
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import info.chitanka.android.R;
+import info.chitanka.android.TrackingConstants;
+import info.chitanka.android.components.AnalyticsService;
+import info.chitanka.android.di.HasComponent;
+import info.chitanka.android.di.presenters.PresenterComponent;
+import info.chitanka.android.ui.adapters.DownloadActionsAdapter;
+import rx.Subscription;
 
 /**
  * Created by nmp on 16-3-22.
@@ -29,11 +40,12 @@ import butterknife.ButterKnife;
 public class DownloadDialog extends DialogFragment {
 
     public static final String TAG = DownloadDialog.class.getName();
-    private static final String KEY_BOOK = "key_book";
+    private static final String KEY_TITLE = "title";
+    private static final String KEY_FORMATS = "formats";
+    private static final String KEY_DOWNLOAD_URL = "download_url";
 
-    private AppCompatActivity activity;
-
-    private Book book;
+    @Inject
+    AnalyticsService analyticsService;
 
     @Bind(R.id.tv_title)
     TextView tvTitle;
@@ -41,10 +53,19 @@ public class DownloadDialog extends DialogFragment {
     @Bind(R.id.container_actions)
     RecyclerView rvContainerActions;
 
-    public static DownloadDialog newInstance(Book book) {
+    private String title;
+    private String downloadUrl;
+    private ArrayList<String> formats;
+    private AppCompatActivity activity;
+    private Subscription subscription;
+
+    public static DownloadDialog newInstance(String title, String downloadUrl, ArrayList<String> formats) {
 
         Bundle args = new Bundle();
-        args.putParcelable(KEY_BOOK, Parcels.wrap(book));
+        args.putString(KEY_TITLE, title);
+        args.putString(KEY_DOWNLOAD_URL, downloadUrl);
+        args.putStringArrayList(KEY_FORMATS, formats);
+
         DownloadDialog fragment = new DownloadDialog();
         fragment.setArguments(args);
         return fragment;
@@ -53,7 +74,9 @@ public class DownloadDialog extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        book = Parcels.unwrap(getArguments().getParcelable(KEY_BOOK));
+        title = getArguments().getString(KEY_TITLE);
+        formats = getArguments().getStringArrayList(KEY_FORMATS);
+        downloadUrl = getArguments().getString(KEY_DOWNLOAD_URL);
     }
 
     @Override
@@ -69,21 +92,59 @@ public class DownloadDialog extends DialogFragment {
         ButterKnife.bind(this, view);
         builder.setView(view);
         rvContainerActions.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
-        rvContainerActions.setAdapter(new DownloadActionsAdapter(activity, book));
-        tvTitle.setText(book.getTitle());
+        DownloadActionsAdapter adapter = new DownloadActionsAdapter(formats);
+        subscription = adapter.getOnDownloadClick().subscribe(format -> {
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format(downloadUrl, format)));
+            Intent chooser = Intent.createChooser(intent, activity.getString(R.string.title_download));
+            if (intent.resolveActivity(activity.getPackageManager()) != null) {
+                activity.startActivity(chooser);
+            } else {
+                downloadWithManager(format);
+                analyticsService.logEvent(TrackingConstants.NO_ACTIVITY_DOWNLOAD);
+            }
+
+            analyticsService.logEvent(TrackingConstants.CLICK_DOWNLOAD_BOOK, new HashMap<String, String>() {{
+                put("title", title);
+                put("format", format);
+            }});
+
+            DownloadDialog.this.dismiss();
+            Toast.makeText(activity, getString(R.string.downloading), Toast.LENGTH_SHORT).show();
+        });
+        rvContainerActions.setAdapter(adapter);
+        tvTitle.setText(title);
 
         return builder.create();
     }
 
+    private void downloadWithManager(String format) {
+        Uri parse = Uri.parse(String.format(downloadUrl, format));
+        DownloadManager.Request downloadRequest = new DownloadManager.Request(parse);
+        downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        downloadRequest.setVisibleInDownloadsUi(true);
+        downloadRequest.allowScanningByMediaScanner();
+
+        DownloadManager downloadManager = (DownloadManager) activity.getSystemService(Activity.DOWNLOAD_SERVICE);
+        downloadManager.enqueue(downloadRequest);
+    }
+
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.activity = (AppCompatActivity) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.activity = (AppCompatActivity) context;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((HasComponent<PresenterComponent>)getActivity()).getComponent().inject(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        subscription.unsubscribe();
         ButterKnife.unbind(this);
     }
 }

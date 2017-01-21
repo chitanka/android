@@ -4,12 +4,13 @@ import java.util.List;
 
 import info.chitanka.android.mvp.models.Author;
 import info.chitanka.android.mvp.models.AuthorBooks;
+import info.chitanka.android.mvp.models.AuthorTextWorks;
 import info.chitanka.android.mvp.models.Authors;
 import info.chitanka.android.mvp.models.BookDetails;
 import info.chitanka.android.mvp.models.Categories;
 import info.chitanka.android.mvp.models.CategoryBooks;
 import info.chitanka.android.mvp.models.SearchBooks;
-import info.chitanka.android.mvp.models.SearchItems;
+import info.chitanka.android.mvp.models.TextWorksSearchResult;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -31,6 +32,9 @@ public interface ChitankaApi {
     @GET("/author/{slug}/books.json")
     Observable<AuthorBooks> getAuthorBooks(@Path("slug") String slug);
 
+    @GET("/author/{slug}/texts.json")
+    Observable<AuthorTextWorks> getAuthorTextWorks(@Path("slug") String slug);
+
     @GET("/book/{id}.json")
     Observable<BookDetails> getBookDetails(@Path("id") int id);
 
@@ -40,6 +44,6 @@ public interface ChitankaApi {
     @GET("/authors/search.json")
     Observable<List<Author>> searchAuthors(@Query("q") String name);
 
-    @GET("/search.json")
-    Observable<List<SearchItems>> search(@Query("q") String term);
+    @GET("/texts/search.json")
+    Observable<TextWorksSearchResult> searchTextWorks(@Query("q") String searchTerm);
 }

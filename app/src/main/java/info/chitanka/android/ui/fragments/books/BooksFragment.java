@@ -1,7 +1,11 @@
 package info.chitanka.android.ui.fragments.books;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,21 +41,24 @@ public class BooksFragment extends BaseBooksFragment implements BooksView {
     public BooksFragment() {
     }
 
-    public static BooksFragment newInstance() {
-        return new BooksFragment();
+    public static BooksFragment newInstance(String searchTerm) {
+
+        Bundle args = new Bundle();
+        args.putString(Constants.EXTRA_SEARCH_TERM, searchTerm);
+        BooksFragment fragment = new BooksFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getComponent(PresenterComponent.class).inject(this);
-        booksPresenter.onStart();
-
-        if(savedInstanceState != null) {
-            query = savedInstanceState.getString(KEY_QUERY);
-        } else {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        query = getArgument(KEY_QUERY, savedInstanceState);
+        if (TextUtils.isEmpty(query)) {
             query = Constants.INITIAL_SEARCH_BOOK_NAME;
         }
+
+        getComponent(PresenterComponent.class).inject(this);
 
         subscription = rxBus.toObserverable().subscribe((event) -> {
             if (event instanceof SearchBookEvent) {
@@ -61,7 +68,12 @@ public class BooksFragment extends BaseBooksFragment implements BooksView {
                 booksPresenter.searchBooks(query);
             }
         });
+
+        booksPresenter.onStart();
+        booksPresenter.setView(this);
+        booksPresenter.searchBooks(query);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,10 +81,11 @@ public class BooksFragment extends BaseBooksFragment implements BooksView {
         View view = inflater.inflate(R.layout.fragment_books, container, false);
         ButterKnife.bind(this, view);
 
-        booksPresenter.setView(this);
-        booksPresenter.searchBooks(query);
-
-        rvBooks.setLayoutManager(new LinearLayoutManager(getActivity()));
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            rvBooks.setLayoutManager(new LinearLayoutManager(getActivity()));
+        } else {
+            rvBooks.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
+        }
 
         return view;
     }
@@ -84,13 +97,16 @@ public class BooksFragment extends BaseBooksFragment implements BooksView {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        booksPresenter.onDestroy();
+        subscription.unsubscribe();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
-        subscription.unsubscribe();
-        booksPresenter.setView(null);
-        booksPresenter.onDestroy();
-        booksPresenter = null;
     }
 
     @Override

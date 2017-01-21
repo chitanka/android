@@ -5,13 +5,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 
-import info.chitanka.android.api.ChitankaApi;
-import info.chitanka.android.ui.BaseActivity;
-import info.chitanka.android.utils.RxBus;
-
 import javax.inject.Singleton;
 
 import dagger.Component;
+import info.chitanka.android.api.ChitankaApi;
+import info.chitanka.android.components.AnalyticsService;
+import info.chitanka.android.ui.BaseActivity;
+import info.chitanka.android.utils.RxBus;
 
 /**
  * Created by joro on 16-3-8.
@@ -25,6 +25,7 @@ public interface ApplicationComponent {
     Resources getResources();
     RxBus getRxBus();
     ChitankaApi getChitankaApi();
+    AnalyticsService getAnalyticsService();
 
     void inject(BaseActivity baseActivity);
 }

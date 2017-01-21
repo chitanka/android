@@ -1,6 +1,9 @@
 package info.chitanka.android.ui.fragments.books;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -51,12 +54,10 @@ public class AuthorBooksFragment extends BaseBooksFragment implements BooksView 
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         getComponent(PresenterComponent.class).inject(this);
         authorBooksPresenter.onStart();
-
-        link = getArguments().getString(KEY_LINK);
 
         subscription = rxBus.toObserverable().subscribe((event) -> {
             if (event instanceof SearchBookEvent) {
@@ -67,6 +68,17 @@ public class AuthorBooksFragment extends BaseBooksFragment implements BooksView 
                 authorBooksPresenter.searchAuthorBooks(link);
             }
         });
+
+        link = getArgument(KEY_LINK, savedInstanceState);
+
+        authorBooksPresenter.setView(this);
+        authorBooksPresenter.searchAuthorBooks(link);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_LINK, link);
     }
 
     @Override
@@ -75,10 +87,11 @@ public class AuthorBooksFragment extends BaseBooksFragment implements BooksView 
         View view = inflater.inflate(R.layout.fragment_books, container, false);
         ButterKnife.bind(this, view);
 
-        authorBooksPresenter.setView(this);
-        authorBooksPresenter.searchAuthorBooks(link);
-
-        rvBooks.setLayoutManager(new LinearLayoutManager(getActivity()));
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            rvBooks.setLayoutManager(new LinearLayoutManager(getActivity()));
+        } else {
+            rvBooks.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
+        }
 
         return view;
     }
@@ -89,7 +102,6 @@ public class AuthorBooksFragment extends BaseBooksFragment implements BooksView 
         ButterKnife.unbind(this);
         subscription.unsubscribe();
         authorBooksPresenter.onDestroy();
-        authorBooksPresenter.setView(null);
     }
 
     @Override

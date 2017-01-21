@@ -8,7 +8,7 @@ import org.parceler.Parcel;
 
 @Parcel
 public class Author {
-    String name, last_name, country, slug;
+    String name, slug;
 
     public Author() {
     }
@@ -19,13 +19,5 @@ public class Author {
 
     public String getSlug() {
         return slug;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public String getLastName() {
-        return last_name;
     }
 }

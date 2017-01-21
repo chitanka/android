@@ -1,24 +1,32 @@
 package info.chitanka.android.ui;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 
+import java.util.HashMap;
+
+import javax.inject.Inject;
+
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
+import info.chitanka.android.TrackingConstants;
+import info.chitanka.android.components.AnalyticsService;
 import info.chitanka.android.di.HasComponent;
 import info.chitanka.android.di.presenters.DaggerPresenterComponent;
 import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.di.presenters.PresenterModule;
-import info.chitanka.android.mvp.models.SearchTerms;
 import info.chitanka.android.ui.fragments.books.AuthorBooksFragment;
-import info.chitanka.android.ui.fragments.books.CategoryBooksFragment;
 
-public class BooksActivity extends BaseActivity implements HasComponent<PresenterComponent> {
+public class AuthorBooksActivity extends BaseActivity implements HasComponent<PresenterComponent> {
 
     private PresenterComponent presenterComponent;
+
+    @Inject
+    AnalyticsService analyticsService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,19 +41,16 @@ public class BooksActivity extends BaseActivity implements HasComponent<Presente
         presenterComponent = DaggerPresenterComponent.builder().applicationComponent(getApplicationComponent()).presenterModule(new PresenterModule()).build();
         getComponent().inject(this);
 
-        String searchTerm = getIntent().getStringExtra(Constants.EXTRA_SEARCH_TERM);
-        String title = getIntent().getStringExtra(Constants.EXTRA_TITLE);
-        String slug = getIntent().getStringExtra(Constants.EXTRA_SLUG);
+        Intent intent = getIntent();
+        String title = intent.getStringExtra(Constants.EXTRA_TITLE);
+        String slug = intent.getStringExtra(Constants.EXTRA_SLUG);
 
-        Fragment fragment;
-        if(searchTerm.equals(SearchTerms.AUTHOR.toString())) {
-            fragment = AuthorBooksFragment.newInstance(slug);
-        } else {
-            fragment = CategoryBooksFragment.newInstance(slug);
-        }
+        Fragment fragment = AuthorBooksFragment.newInstance(slug);
 
-        getSupportFragmentManager().beginTransaction().add( R.id.container, fragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
         setTitle(title);
+
+        analyticsService.logEvent(TrackingConstants.VIEW_AUTHOR_BOOKS, new HashMap<String, String>() {{ put("authorName", title);}});
     }
 
     @Override
