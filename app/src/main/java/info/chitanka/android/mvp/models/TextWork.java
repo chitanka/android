@@ -19,6 +19,17 @@ public class TextWork {
     ArrayList<String> formats;
     List<Author> authors;
 
+    public TextWork() {
+        // TODO: Replace with data from server
+        // When server guys just don't want to add a single object field
+        this.formats = new ArrayList<String>() {{
+            add("fb2.zip");
+            add("epub");
+            add("txt.zip");
+            add("sfb.zip");
+        }};
+    }
+
     public int getId() {
         return id;
     }
