@@ -9,8 +9,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import java.util.HashMap;
+
+import javax.inject.Inject;
+
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
+import info.chitanka.android.TrackingConstants;
+import info.chitanka.android.components.AnalyticsService;
 import info.chitanka.android.di.HasComponent;
 import info.chitanka.android.di.presenters.DaggerPresenterComponent;
 import info.chitanka.android.di.presenters.PresenterComponent;
@@ -22,6 +28,9 @@ public class AuthorDetailsActivity extends BaseActivity implements HasComponent<
     private ViewPager viewPager;
     private String authorSlug;
     private PresenterComponent presenterComponent;
+
+    @Inject
+    AnalyticsService analyticsService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +56,7 @@ public class AuthorDetailsActivity extends BaseActivity implements HasComponent<
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+        analyticsService.logEvent(TrackingConstants.VIEW_AUTHOR_DETAILS, new HashMap<String, String>() {{ put("slug", authorSlug);}});
     }
 
     @Override

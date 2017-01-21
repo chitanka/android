@@ -13,12 +13,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.HashMap;
+
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
+import info.chitanka.android.TrackingConstants;
+import info.chitanka.android.components.AnalyticsService;
 import info.chitanka.android.di.HasComponent;
 import info.chitanka.android.di.presenters.DaggerPresenterComponent;
 import info.chitanka.android.di.presenters.PresenterComponent;
@@ -32,6 +36,9 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
 
     @Inject
     BookPresenter bookPresenter;
+
+    @Inject
+    AnalyticsService analyticsService;
 
     @Bind(R.id.iv_cover)
     ImageView ivCover;
@@ -73,6 +80,7 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
 
         int bookId = getIntent().getIntExtra(Constants.EXTRA_BOOK_ID, 0);
         bookPresenter.loadBooksDetails(bookId);
+        analyticsService.logEvent(TrackingConstants.View_BOOK_DETAILS, new HashMap<String, String>() {{ put("bookId", String.valueOf(bookId));}});
     }
 
     @Override

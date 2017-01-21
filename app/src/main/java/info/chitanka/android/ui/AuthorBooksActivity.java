@@ -7,17 +7,26 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 
+import java.util.HashMap;
+
+import javax.inject.Inject;
+
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
+import info.chitanka.android.TrackingConstants;
+import info.chitanka.android.components.AnalyticsService;
 import info.chitanka.android.di.HasComponent;
 import info.chitanka.android.di.presenters.DaggerPresenterComponent;
 import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.di.presenters.PresenterModule;
 import info.chitanka.android.ui.fragments.books.AuthorBooksFragment;
 
-public class BooksActivity extends BaseActivity implements HasComponent<PresenterComponent> {
+public class AuthorBooksActivity extends BaseActivity implements HasComponent<PresenterComponent> {
 
     private PresenterComponent presenterComponent;
+
+    @Inject
+    AnalyticsService analyticsService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +47,10 @@ public class BooksActivity extends BaseActivity implements HasComponent<Presente
 
         Fragment fragment = AuthorBooksFragment.newInstance(slug);
 
-        getSupportFragmentManager().beginTransaction().add( R.id.container, fragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
         setTitle(title);
+
+        analyticsService.logEvent(TrackingConstants.VIEW_AUTHOR_BOOKS, new HashMap<String, String>() {{ put("authorName", title);}});
     }
 
     @Override

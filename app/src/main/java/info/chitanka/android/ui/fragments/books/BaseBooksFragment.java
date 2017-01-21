@@ -4,16 +4,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import java.util.HashMap;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import info.chitanka.android.R;
+import info.chitanka.android.TrackingConstants;
+import info.chitanka.android.components.AnalyticsService;
 import info.chitanka.android.mvp.models.Book;
 import info.chitanka.android.mvp.views.BooksView;
 import info.chitanka.android.ui.adapters.BooksAdapter;
 import info.chitanka.android.ui.fragments.BaseFragment;
-
-import java.util.List;
-
-import butterknife.Bind;
-import fr.castorflex.android.circularprogressbar.CircularProgressBar;
+import info.chitanka.android.utils.IntentUtils;
+import rx.Subscription;
 
 /**
  * Created by joro on 16-3-20.
@@ -29,6 +35,11 @@ public abstract class BaseBooksFragment extends BaseFragment implements BooksVie
     @Bind(R.id.container_empty)
     RelativeLayout containerEmpty;
 
+    @Inject
+    AnalyticsService analyticsService;
+
+    private Subscription subscription;
+
     @Override
     public void presentAuthorBooks(List<Book> books) {
         if(books == null || books.size() == 0) {
@@ -39,13 +50,27 @@ public abstract class BaseBooksFragment extends BaseFragment implements BooksVie
             containerEmpty.setVisibility(View.GONE);
         }
 
-        rvBooks.setAdapter(new BooksAdapter(getActivity(), books, getActivity().getSupportFragmentManager()));
+        BooksAdapter adapter = new BooksAdapter(getActivity(), books, getActivity().getSupportFragmentManager());
+        subscription = adapter.getOnWebClick().subscribe(book -> {
+            IntentUtils.openWebUrl(book.getChitankaUrl(), getActivity());
+            analyticsService.logEvent(TrackingConstants.CLICK_WEB_BOOKS, new HashMap<String, String>() {{
+                put("bookTitle", book.getTitle());
+            }});
+        });
+
+        rvBooks.setAdapter(adapter);
     }
 
     @Override
     public void hideLoading() {
         loading.progressiveStop();
         loading.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        subscription.unsubscribe();
     }
 
     @Override

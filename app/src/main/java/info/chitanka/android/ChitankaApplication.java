@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -30,6 +31,10 @@ public class ChitankaApplication extends Application {
             refWatcher = LeakCanary.install(this);
             Timber.plant(new Timber.DebugTree());
         } else {
+            new FlurryAgent.Builder()
+                    .withLogEnabled(false)
+                    .build(this, BuildConfig.FLURRY_KEY);
+
             Fabric.with(this, new Crashlytics());
             Timber.plant(new CrashReportingTree());
         }

@@ -13,6 +13,7 @@ import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -20,6 +21,8 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import info.chitanka.android.R;
+import info.chitanka.android.TrackingConstants;
+import info.chitanka.android.components.AnalyticsService;
 import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.mvp.models.Category;
 import info.chitanka.android.mvp.presenters.categories.CategoriesPresenter;
@@ -35,6 +38,9 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
 
     @Inject
     CategoriesPresenter categoriesPresenter;
+
+    @Inject
+    AnalyticsService analyticsService;
 
     @Bind(R.id.spinner_category)
     SearchableSpinner searchableSpinner;
@@ -56,6 +62,7 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
         categoriesPresenter.onStart();
         categoriesPresenter.setView(this);
         categoriesPresenter.loadCategories();
+        analyticsService.logEvent(TrackingConstants.VIEW_CATEGORIES);
     }
 
     @Override
@@ -111,6 +118,8 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
                 } else {
                     categoryBooksFragment.setSlug(category.getSlug());
                 }
+
+                analyticsService.logEvent(TrackingConstants.CHANGE_CATEGORIES, new HashMap<String, String>() {{put("category", category.getName());}});
             }
 
             @Override

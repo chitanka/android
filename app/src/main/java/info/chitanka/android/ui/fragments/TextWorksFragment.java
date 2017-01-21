@@ -21,14 +21,17 @@ import butterknife.ButterKnife;
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
+import info.chitanka.android.TrackingConstants;
+import info.chitanka.android.components.AnalyticsService;
 import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.events.SearchBookEvent;
 import info.chitanka.android.mvp.models.TextWork;
 import info.chitanka.android.mvp.presenters.textworks.TextWorksPresenter;
 import info.chitanka.android.mvp.views.TextWorksView;
 import info.chitanka.android.ui.adapters.TextWorksAdapter;
+import info.chitanka.android.utils.IntentUtils;
 import info.chitanka.android.utils.RxBus;
-import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by nmp on 21.01.17.
@@ -43,6 +46,9 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
     @Inject
     RxBus rxBus;
 
+    @Inject
+    AnalyticsService analyticsService;
+
     @Bind(R.id.rv_textworks)
     RecyclerView rvTextWorks;
 
@@ -55,7 +61,7 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
     private String searchTerm;
     private String authorSlug;
 
-    private Subscription subscription;
+    private CompositeSubscription subscription;
 
     public static TextWorksFragment newInstance(String searchTerm, String authorSlug) {
 
@@ -76,20 +82,21 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
         getComponent(PresenterComponent.class).inject(this);
         presenter.setView(this);
         presenter.onStart();
-        if(TextUtils.isEmpty(searchTerm)) {
+        if (TextUtils.isEmpty(searchTerm)) {
             presenter.getAuthorTextWorks(authorSlug);
         } else {
             presenter.searchTextWorks(searchTerm);
         }
 
-        subscription = rxBus.toObserverable().subscribe((event) -> {
+        subscription = new CompositeSubscription();
+        subscription.add(rxBus.toObserverable().subscribe((event) -> {
             if (event instanceof SearchBookEvent) {
                 containerEmpty.setVisibility(View.GONE);
                 rvTextWorks.setVisibility(View.GONE);
                 searchTerm = ((SearchBookEvent) event).getName();
                 presenter.searchTextWorks(searchTerm);
             }
-        });
+        }));
     }
 
     @Nullable
@@ -144,7 +151,7 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
 
     @Override
     public void presentTextWorks(List<TextWork> texts) {
-        if(texts.size() == 0) {
+        if (texts.size() == 0) {
             rvTextWorks.setVisibility(View.GONE);
             containerEmpty.setVisibility(View.VISIBLE);
             return;
@@ -152,6 +159,11 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
 
         rvTextWorks.setVisibility(View.VISIBLE);
         containerEmpty.setVisibility(View.GONE);
-        rvTextWorks.setAdapter(new TextWorksAdapter(texts, getActivity()));
+        TextWorksAdapter adapter = new TextWorksAdapter(texts, getActivity());
+        subscription.add(adapter.getOnWebClick().subscribe(textwork -> {
+            IntentUtils.openWebUrl(textwork.getChitankaUrl(), getActivity());
+            analyticsService.logEvent(TrackingConstants.CLICK_WEB_TEXTWORKS);
+        }));
+        rvTextWorks.setAdapter(adapter);
     }
 }

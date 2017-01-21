@@ -17,11 +17,17 @@ import android.view.MenuItem;
 
 import com.kobakei.ratethisapp.RateThisApp;
 
+import java.util.HashMap;
+
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import info.chitanka.android.ChitankaApplication;
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
+import info.chitanka.android.TrackingConstants;
+import info.chitanka.android.components.AnalyticsService;
 import info.chitanka.android.di.HasComponent;
 import info.chitanka.android.di.presenters.DaggerPresenterComponent;
 import info.chitanka.android.di.presenters.PresenterComponent;
@@ -37,6 +43,9 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
 
     @Bind(R.id.nav_view)
     NavigationView navigationView;
+
+    @Inject
+    AnalyticsService analyticsService;
 
     private int selectedNavItemId;
 
@@ -65,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
             if (networkRequiredDialog == null && getSupportFragmentManager().findFragmentByTag(NETWORK_REQUIRED_DIALOG_FRAGMENT) == null) {
                 networkRequiredDialog = new NetworkRequiredDialog();
                 networkRequiredDialog.show(getSupportFragmentManager(), NETWORK_REQUIRED_DIALOG_FRAGMENT);
+                analyticsService.logEvent(TrackingConstants.VIEW_NO_NETWORK);
             }
         }
 
@@ -104,6 +114,9 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
             @Override
             public boolean onQueryTextSubmit(String s) {
                 if (!isFinishing()) {
+                    analyticsService.logEvent(TrackingConstants.SEARCHED, new HashMap<String, String>() {{
+                        put("term", s);
+                    }});
                     Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                     intent.putExtra(Constants.EXTRA_SEARCH_TERM, s);
                     startActivity(intent);
@@ -177,9 +190,11 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
             startActivity(new Intent(this, ReadersActivity.class));
             return;
         } else if (id == R.id.nav_site) {
+            analyticsService.logEvent(TrackingConstants.CLICK_WEBSITE);
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.chitanka.info")));
             return;
         } else if (id == R.id.nav_email) {
+            analyticsService.logEvent(TrackingConstants.CLICK_WRITE_US);
             final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
             emailIntent.setType("plain/text");
             emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"contact@chitanka.info"});

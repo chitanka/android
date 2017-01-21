@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -19,6 +20,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import info.chitanka.android.R;
+import info.chitanka.android.TrackingConstants;
+import info.chitanka.android.components.AnalyticsService;
 import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.mvp.models.Book;
 import info.chitanka.android.mvp.presenters.category_books.CategoryBooksPresenter;
@@ -26,6 +29,8 @@ import info.chitanka.android.mvp.views.CategoryBooksView;
 import info.chitanka.android.ui.adapters.BooksAdapter;
 import info.chitanka.android.ui.fragments.BaseFragment;
 import info.chitanka.android.ui.views.containers.ScrollRecyclerView;
+import info.chitanka.android.utils.IntentUtils;
+import rx.Subscription;
 
 /**
  * Created by joro on 16-3-20.
@@ -41,6 +46,9 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
     @Inject
     CategoryBooksPresenter booksPresenter;
 
+    @Inject
+    AnalyticsService analyticsService;
+
     @Bind(R.id.rv_books)
     ScrollRecyclerView rvBooks;
 
@@ -52,6 +60,7 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
 
 
     private String slug;
+    private Subscription subscription;
 
     public CategoryBooksFragment() {
     }
@@ -102,6 +111,7 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
     public void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
+        subscription.unsubscribe();
         booksPresenter.setView(null);
         booksPresenter.onDestroy();
     }
@@ -118,7 +128,13 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
         }
 
         if(adapter == null) {
-            adapter= new BooksAdapter(getActivity(), books, getActivity().getSupportFragmentManager());
+            adapter = new BooksAdapter(getActivity(), books, getActivity().getSupportFragmentManager());
+            subscription = adapter.getOnWebClick().subscribe(book -> {
+                IntentUtils.openWebUrl(book.getChitankaUrl(), getActivity());
+                analyticsService.logEvent(TrackingConstants.CLICK_WEB_BOOKS, new HashMap<String, String>() {{
+                    put("bookTitle", book.getTitle());
+                }});
+            });
             rvBooks.setAdapter(adapter, totalItemCount, 20);
         } else {
             adapter.addAll(books);
@@ -156,6 +172,7 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
         if (!slug.equals(categorySlug)) {
             slug = categorySlug;
             page = 1;
+            subscription.unsubscribe();
             adapter = null;
             booksPresenter.getBooksForCategory(categorySlug, page);
         }

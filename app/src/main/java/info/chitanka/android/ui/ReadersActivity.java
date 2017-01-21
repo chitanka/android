@@ -6,27 +6,41 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import java.util.HashMap;
+
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import info.chitanka.android.R;
+import info.chitanka.android.TrackingConstants;
+import info.chitanka.android.components.AnalyticsService;
+import info.chitanka.android.di.presenters.DaggerPresenterComponent;
 
 public class ReadersActivity extends BaseActivity {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
+    @Inject
+    AnalyticsService analyticsService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_readers);
+
+        DaggerPresenterComponent.builder().applicationComponent(getApplicationComponent()).build().inject(this);
 
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        setTitle("Четци на книги");
+        setTitle(getString(R.string.title_readers));
+
+        analyticsService.logEvent(TrackingConstants.VIEW_READERS);
     }
 
     @Override
@@ -65,6 +79,9 @@ public class ReadersActivity extends BaseActivity {
 
 
     public void openInMarket(String appPackage) {
+        analyticsService.logEvent(TrackingConstants.CLICK_READER, new HashMap<String, String>() {{
+            put("package", appPackage);
+        }});
         Intent marketIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(appPackage));
         marketIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET | Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         try {

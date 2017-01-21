@@ -5,15 +5,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 
-import info.chitanka.android.Constants;
-import info.chitanka.android.api.ChitankaApi;
-import info.chitanka.android.api.ChitankaApiService;
-import info.chitanka.android.utils.RxBus;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import info.chitanka.android.Constants;
+import info.chitanka.android.api.ChitankaApi;
+import info.chitanka.android.api.ChitankaApiService;
+import info.chitanka.android.components.AnalyticsService;
+import info.chitanka.android.utils.RxBus;
 
 /**
  * Created by joro on 16-3-8.
@@ -60,5 +60,11 @@ public class ApplicationModule {
     @Singleton
     public ChitankaApi providesApi() {
         return ChitankaApiService.createChitankaApiService();
+    }
+
+    @Provides
+    @Singleton
+    public AnalyticsService providesAnalytics() {
+        return new AnalyticsService();
     }
 }

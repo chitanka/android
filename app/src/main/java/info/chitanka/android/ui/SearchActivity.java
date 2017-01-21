@@ -11,11 +11,15 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
+import java.util.HashMap;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
+import info.chitanka.android.TrackingConstants;
+import info.chitanka.android.components.AnalyticsService;
 import info.chitanka.android.di.HasComponent;
 import info.chitanka.android.di.presenters.DaggerPresenterComponent;
 import info.chitanka.android.di.presenters.PresenterComponent;
@@ -30,6 +34,9 @@ public class SearchActivity extends BaseActivity implements HasComponent<Present
 
     @Inject
     RxBus rxBus;
+
+    @Inject
+    AnalyticsService analyticsService;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -59,6 +66,7 @@ public class SearchActivity extends BaseActivity implements HasComponent<Present
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+        analyticsService.logEvent(TrackingConstants.VIEW_SEARCH, new HashMap<String, String>() {{ put("searchTerm", searchTerm);}});
     }
 
     @Override

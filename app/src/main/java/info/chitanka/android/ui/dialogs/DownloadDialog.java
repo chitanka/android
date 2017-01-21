@@ -20,10 +20,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import info.chitanka.android.R;
+import info.chitanka.android.TrackingConstants;
+import info.chitanka.android.components.AnalyticsService;
+import info.chitanka.android.di.HasComponent;
+import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.ui.adapters.DownloadActionsAdapter;
 import rx.Subscription;
 
@@ -36,6 +43,9 @@ public class DownloadDialog extends DialogFragment {
     private static final String KEY_TITLE = "title";
     private static final String KEY_FORMATS = "formats";
     private static final String KEY_DOWNLOAD_URL = "download_url";
+
+    @Inject
+    AnalyticsService analyticsService;
 
     @Bind(R.id.tv_title)
     TextView tvTitle;
@@ -91,7 +101,13 @@ public class DownloadDialog extends DialogFragment {
                 activity.startActivity(chooser);
             } else {
                 downloadWithManager(format);
+                analyticsService.logEvent(TrackingConstants.NO_ACTIVITY_DOWNLOAD);
             }
+
+            analyticsService.logEvent(TrackingConstants.CLICK_DOWNLOAD_BOOK, new HashMap<String, String>() {{
+                put("title", title);
+                put("format", format);
+            }});
 
             DownloadDialog.this.dismiss();
             Toast.makeText(activity, getString(R.string.downloading), Toast.LENGTH_SHORT).show();
@@ -117,6 +133,12 @@ public class DownloadDialog extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.activity = (AppCompatActivity) context;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((HasComponent<PresenterComponent>)getActivity()).getComponent().inject(this);
     }
 
     @Override
