@@ -5,16 +5,16 @@
 
         <LinearLayout
             android:orientation="vertical"
+            android:background="?android:attr/selectableItemBackground"
             android:id="@+id/container_authors"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/tv_author_name"
-                android:textSize="22sp"
+                style="@style/Base.TextAppearance.AppCompat.Title"
                 android:textColor="@color/primary_title"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
+                android:padding="8dp"
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

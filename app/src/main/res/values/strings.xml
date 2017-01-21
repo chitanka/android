@@ -16,4 +16,7 @@
     <string name="title_authors">Автори</string>
     <string name="title_books">Книги</string>
     <string name="title_download">Свали с</string>
+    <string name="item_text_work_author" formatted="false">от %s</string>
+    <string name="item_text_work_rating" formatted="false">Оценка %1$.2f от %2$d гласа</string>
+    <string name="item_book_no_annotation">Няма описание</string>
 </resources>

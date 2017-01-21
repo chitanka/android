@@ -10,9 +10,11 @@ import java.util.List;
 
 @Parcel
 public class TextWork {
-    int id;
+    int id, votes;
+    double rating;
     String slug, title, subtitle;
     List<String> formats;
+    List<Author> authors;
 
     public int getId() {
         return id;
@@ -30,7 +32,19 @@ public class TextWork {
         return subtitle;
     }
 
+    public List<Author> getAuthors() {
+        return authors;
+    }
+
     public List<String> getFormats() {
         return formats;
+    }
+
+    public int getVotes() {
+        return votes;
+    }
+
+    public double getRating() {
+        return rating;
     }
 }
