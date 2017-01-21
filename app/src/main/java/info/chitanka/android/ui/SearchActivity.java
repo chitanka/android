@@ -10,8 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import javax.inject.Inject;
-
 import butterknife.ButterKnife;
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
@@ -19,16 +17,11 @@ import info.chitanka.android.di.HasComponent;
 import info.chitanka.android.di.presenters.DaggerPresenterComponent;
 import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.di.presenters.PresenterModule;
-import info.chitanka.android.mvp.presenters.search.SearchPresenter;
 import info.chitanka.android.ui.fragments.AuthorsFragment;
 import info.chitanka.android.ui.fragments.TextWorksFragment;
 import info.chitanka.android.ui.fragments.books.BooksFragment;
 
 public class SearchActivity extends BaseActivity implements HasComponent<PresenterComponent> {
-
-
-    @Inject
-    SearchPresenter searchPresenter;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -58,14 +51,6 @@ public class SearchActivity extends BaseActivity implements HasComponent<Present
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-
-        searchPresenter.onStart();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        searchPresenter.onDestroy();
     }
 
     @Override
@@ -116,7 +101,6 @@ public class SearchActivity extends BaseActivity implements HasComponent<Present
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
             return 3;
         }
 

@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-        searchView.setQueryHint("Търси книга");
+        searchView.setQueryHint(getString(R.string.action_search));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
