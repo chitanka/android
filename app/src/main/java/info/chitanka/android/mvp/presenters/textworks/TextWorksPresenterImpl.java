@@ -62,4 +62,27 @@ public class TextWorksPresenterImpl extends BasePresenter<TextWorksView> impleme
                         })
         );
     }
+
+    @Override
+    public void getAuthorTextWorks(String authorSlug) {
+        getView().showLoading();
+        compositeSubscription.add(
+                chitankaApi
+                        .getAuthorTextWorks(authorSlug)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(textworks -> {
+                            if(viewExists()) {
+                                getView().hideLoading();
+                                getView().presentTextWorks(textworks.getTexts());
+                            }
+                        }, (error) -> {
+                            Timber.e(error, "Error loading categories!");
+                            if (!viewExists())
+                                return;
+                            getView().hideLoading();
+                            getView().presentTextWorks(new ArrayList<>());
+                        })
+        );
+    }
 }

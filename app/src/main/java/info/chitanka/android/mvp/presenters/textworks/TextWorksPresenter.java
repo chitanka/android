@@ -9,4 +9,5 @@ import info.chitanka.android.mvp.views.TextWorksView;
 
 public interface TextWorksPresenter extends BaseViewPresenter<TextWorksView> {
     void searchTextWorks(String searchTerm);
+    void getAuthorTextWorks(String authorSlug);
 }

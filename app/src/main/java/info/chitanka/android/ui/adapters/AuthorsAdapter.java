@@ -17,8 +17,7 @@ import butterknife.ButterKnife;
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
 import info.chitanka.android.mvp.models.Author;
-import info.chitanka.android.mvp.models.SearchTerms;
-import info.chitanka.android.ui.BooksActivity;
+import info.chitanka.android.ui.AuthorDetailsActivity;
 
 /**
  * Created by nmp on 16-3-13.
@@ -38,8 +37,7 @@ public class AuthorsAdapter extends RecyclerView.Adapter<AuthorsAdapter.ViewHold
         ViewHolder viewHolder = new ViewHolder(view);
         viewHolder.cardView.setOnClickListener(v -> {
             Author author = authors.get(viewHolder.getAdapterPosition());
-            Intent intent = new Intent(context, BooksActivity.class);
-            intent.putExtra(Constants.EXTRA_SEARCH_TERM, SearchTerms.AUTHOR.toString());
+            Intent intent = new Intent(context, AuthorDetailsActivity.class);
             intent.putExtra(Constants.EXTRA_TITLE, author.getName());
             intent.putExtra(Constants.EXTRA_SLUG, author.getSlug());
             context.startActivity(intent);

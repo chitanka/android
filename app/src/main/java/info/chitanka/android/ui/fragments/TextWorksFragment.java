@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +37,6 @@ import rx.Subscription;
 public class TextWorksFragment extends BaseFragment implements TextWorksView {
     public static final String TAG = TextWorksFragment.class.getSimpleName();
 
-    private String searchTerm;
-
     @Inject
     TextWorksPresenter presenter;
 
@@ -53,12 +52,16 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
     @Bind(R.id.loading)
     CircularProgressBar loading;
 
+    private String searchTerm;
+    private String authorSlug;
+
     private Subscription subscription;
 
-    public static TextWorksFragment newInstance(String searchTerm) {
+    public static TextWorksFragment newInstance(String searchTerm, String authorSlug) {
 
         Bundle args = new Bundle();
         args.putString(Constants.EXTRA_SEARCH_TERM, searchTerm);
+        args.putString(Constants.EXTRA_SLUG, authorSlug);
         TextWorksFragment fragment = new TextWorksFragment();
         fragment.setArguments(args);
         return fragment;
@@ -68,11 +71,16 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         searchTerm = getArgument(Constants.EXTRA_SEARCH_TERM, savedInstanceState);
+        authorSlug = getArgument(Constants.EXTRA_SLUG, savedInstanceState);
 
         getComponent(PresenterComponent.class).inject(this);
         presenter.setView(this);
         presenter.onStart();
-        presenter.searchTextWorks(searchTerm);
+        if(TextUtils.isEmpty(searchTerm)) {
+            presenter.getAuthorTextWorks(authorSlug);
+        } else {
+            presenter.searchTextWorks(searchTerm);
+        }
 
         subscription = rxBus.toObserverable().subscribe((event) -> {
             if (event instanceof SearchBookEvent) {

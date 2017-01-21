@@ -4,6 +4,7 @@ import java.util.List;
 
 import info.chitanka.android.mvp.models.Author;
 import info.chitanka.android.mvp.models.AuthorBooks;
+import info.chitanka.android.mvp.models.AuthorTextWorks;
 import info.chitanka.android.mvp.models.Authors;
 import info.chitanka.android.mvp.models.BookDetails;
 import info.chitanka.android.mvp.models.Categories;
@@ -30,6 +31,9 @@ public interface ChitankaApi {
 
     @GET("/author/{slug}/books.json")
     Observable<AuthorBooks> getAuthorBooks(@Path("slug") String slug);
+
+    @GET("/author/{slug}/texts.json")
+    Observable<AuthorTextWorks> getAuthorTextWorks(@Path("slug") String slug);
 
     @GET("/book/{id}.json")
     Observable<BookDetails> getBookDetails(@Path("id") int id);

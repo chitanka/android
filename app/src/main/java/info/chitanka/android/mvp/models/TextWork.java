@@ -52,7 +52,7 @@ public class TextWork {
     }
 
     public String getDownloadUrl() {
-        return "";
+        return Constants.CHITANKA_INFO_API + "text/" + id + ".%s";
     }
 
     public String getChitankaUrl() {

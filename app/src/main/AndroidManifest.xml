@@ -50,6 +50,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="info.chitanka.android.ui.MainActivity" />
         </activity>
+        <activity
+            android:name=".ui.AuthorDetailsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
