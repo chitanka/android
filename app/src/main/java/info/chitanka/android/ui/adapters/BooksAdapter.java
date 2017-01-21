@@ -2,7 +2,6 @@ package info.chitanka.android.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -25,6 +23,7 @@ import info.chitanka.android.R;
 import info.chitanka.android.mvp.models.Book;
 import info.chitanka.android.ui.BookDetailsActivity;
 import info.chitanka.android.ui.dialogs.DownloadDialog;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by nmp on 16-3-8.
@@ -33,6 +32,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
     private Context context;
     private final FragmentManager fragmentManager;
     private List<Book> books = new ArrayList<>();
+    private PublishSubject<Book> onWebClick = PublishSubject.create();
 
     public BooksAdapter(Context context, List<Book> books, FragmentManager fragmentManager) {
         this.context = context;
@@ -58,16 +58,14 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
 
         viewHolder.tvWeb.setOnClickListener(v2 -> {
             Book book = books.get(viewHolder.getAdapterPosition());
-            Intent sendIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(book.getChitankaUrl()));
-            Intent chooser = Intent.createChooser(sendIntent, context.getString(R.string.title_open_with));
-            if (chooser.resolveActivity(context.getPackageManager()) != null) {
-                context.startActivity(chooser);
-            } else {
-                Toast.makeText(context, context.getString(R.string.web_no_app), Toast.LENGTH_SHORT).show();
-            }
+            onWebClick.onNext(book);
         });
 
         return viewHolder;
+    }
+
+    public rx.Observable<Book> getOnWebClick() {
+        return onWebClick.asObservable();
     }
 
     @Override

@@ -1,8 +1,6 @@
 package info.chitanka.android.ui.adapters;
 
-import android.content.Intent;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -19,6 +16,8 @@ import butterknife.ButterKnife;
 import info.chitanka.android.R;
 import info.chitanka.android.mvp.models.TextWork;
 import info.chitanka.android.ui.dialogs.DownloadDialog;
+import rx.Observable;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by nmp on 21.01.17.
@@ -29,6 +28,7 @@ public class TextWorksAdapter extends RecyclerView.Adapter<TextWorksAdapter.View
     private final FragmentManager fragmentManager;
     private final FragmentActivity activity;
     private List<TextWork> textWorks;
+    private PublishSubject<TextWork> onWebClick = PublishSubject.create();
 
     public TextWorksAdapter(List<TextWork> textWorks, FragmentActivity activity) {
         this.textWorks = textWorks;
@@ -50,16 +50,13 @@ public class TextWorksAdapter extends RecyclerView.Adapter<TextWorksAdapter.View
 
         viewHolder.tvWeb.setOnClickListener(view1 -> {
             TextWork textWork = textWorks.get(viewHolder.getAdapterPosition());
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(textWork.getChitankaUrl()));
-            Intent chooser = Intent.createChooser(intent, res.getString(R.string.title_open_with));
-            if (chooser.resolveActivity(activity.getPackageManager()) != null) {
-                activity.startActivity(intent);
-            } else {
-                Toast.makeText(activity, activity.getString(R.string.web_no_app), Toast.LENGTH_SHORT).show();
-            }
-
+            onWebClick.onNext(textWork);
         });
         return viewHolder;
+    }
+
+    public Observable<TextWork> getOnWebClick() {
+        return onWebClick.asObservable();
     }
 
     @Override
