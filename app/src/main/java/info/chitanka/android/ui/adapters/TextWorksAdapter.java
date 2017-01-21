@@ -42,8 +42,6 @@ public class TextWorksAdapter extends RecyclerView.Adapter<TextWorksAdapter.View
         if (textWork.getAuthors() != null && textWork.getAuthors().size() > 0) {
             holder.tvAuthorName.setText(res.getString(R.string.item_text_work_author, textWork.getAuthors().get(0).getName()));
         }
-
-
     }
 
     @Override

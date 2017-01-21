@@ -41,7 +41,29 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_book, null, false);
-        return new ViewHolder(view);
+        ViewHolder viewHolder = new ViewHolder(view);
+        viewHolder.tvDownload.setOnClickListener(view1 -> {
+            Book book = books.get(viewHolder.getAdapterPosition());
+            DownloadDialog.newInstance(book.getTitle(), book.getDownloadUrl(), book.getFormats()).show(fragmentManager, DownloadDialog.TAG);
+        });
+
+        viewHolder.cardView.setOnClickListener(v -> {
+            Book book = books.get(viewHolder.getAdapterPosition());
+            Intent sendIntent = new Intent(context, BookDetailsActivity.class);
+            sendIntent.putExtra(Constants.EXTRA_BOOK_ID, book.getId());
+            context.startActivity(sendIntent);
+        });
+
+        viewHolder.tvShare.setOnClickListener(v2 -> {
+            Book book = books.get(viewHolder.getAdapterPosition());
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, String.format(context.getString(R.string.share_text), book.getTitle(), book.getTitleAuthor()));
+            sendIntent.setType("text/plain");
+            context.startActivity(sendIntent);
+        });
+
+        return viewHolder;
     }
 
     @Override
@@ -52,24 +74,6 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         holder.tvBookCategory.setText(book.getCategory().getName());
         holder.tvBookAuthor.setText(book.getTitleAuthor());
         Glide.with(context).load(book.getCover()).fitCenter().crossFade().placeholder(R.drawable.ic_no_cover).into(holder.ivCover);
-
-        holder.tvShare.setOnClickListener((view) -> {
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, String.format(context.getString(R.string.share_text), book.getTitle(), book.getTitleAuthor()));
-            sendIntent.setType("text/plain");
-            context.startActivity(sendIntent);
-        });
-
-        holder.tvDownload.setOnClickListener((view) -> {
-            DownloadDialog.newInstance(book).show(fragmentManager, DownloadDialog.TAG);
-        });
-
-        holder.cardView.setOnClickListener(v -> {
-            Intent sendIntent = new Intent(context, BookDetailsActivity.class);
-            sendIntent.putExtra(Constants.EXTRA_BOOK_ID, book.getId());
-            context.startActivity(sendIntent);
-        });
     }
 
     @Override

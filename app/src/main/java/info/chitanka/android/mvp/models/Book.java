@@ -1,11 +1,11 @@
 package info.chitanka.android.mvp.models;
 
-import info.chitanka.android.Constants;
-
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import info.chitanka.android.Constants;
 
 /**
  * Created by joro on 16-3-8.
@@ -45,8 +45,8 @@ public class Book {
         return annotation;
     }
 
-    public String getDownloadUrl(String format) {
-        return Constants.CHITANKA_INFO_API + "book/" + id + "." + format;
+    public String getDownloadUrl() {
+        return Constants.CHITANKA_INFO_API + "book/" + id + ".%s";
     }
 
     public ArrayList<String> getFormats() {

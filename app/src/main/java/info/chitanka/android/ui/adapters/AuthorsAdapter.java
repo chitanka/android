@@ -35,21 +35,23 @@ public class AuthorsAdapter extends RecyclerView.Adapter<AuthorsAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_author, null, false);
-        return new ViewHolder(view);
+        ViewHolder viewHolder = new ViewHolder(view);
+        viewHolder.cardView.setOnClickListener(v -> {
+            Author author = authors.get(viewHolder.getAdapterPosition());
+            Intent intent = new Intent(context, BooksActivity.class);
+            intent.putExtra(Constants.EXTRA_SEARCH_TERM, SearchTerms.AUTHOR.toString());
+            intent.putExtra(Constants.EXTRA_TITLE, author.getName());
+            intent.putExtra(Constants.EXTRA_SLUG, author.getSlug());
+            context.startActivity(intent);
+        });
+
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Author author = authors.get(position);
-
         holder.tvAuthorName.setText(author.getName());
-        holder.cardView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, BooksActivity.class);
-            intent.putExtra(Constants.EXTRA_SEARCH_TERM, SearchTerms.AUTHOR.toString());
-            intent.putExtra(Constants.EXTRA_TITLE, author.getName());
-            intent.putExtra(Constants.EXTRA_SLUG, author.getSlug());
-           context.startActivity(intent);
-        });
     }
 
     @Override

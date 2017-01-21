@@ -14,14 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import info.chitanka.android.R;
-import info.chitanka.android.mvp.models.Book;
-import info.chitanka.android.ui.adapters.DownloadActionsAdapter;
-
-import org.parceler.Parcels;
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import info.chitanka.android.R;
+import info.chitanka.android.ui.adapters.DownloadActionsAdapter;
 
 /**
  * Created by nmp on 16-3-22.
@@ -29,11 +27,9 @@ import butterknife.ButterKnife;
 public class DownloadDialog extends DialogFragment {
 
     public static final String TAG = DownloadDialog.class.getName();
-    private static final String KEY_BOOK = "key_book";
-
-    private AppCompatActivity activity;
-
-    private Book book;
+    private static final String KEY_TITLE = "title";
+    private static final String KEY_FORMATS = "formats";
+    private static final String KEY_DOWNLOAD_URL = "download_url";
 
     @Bind(R.id.tv_title)
     TextView tvTitle;
@@ -41,10 +37,18 @@ public class DownloadDialog extends DialogFragment {
     @Bind(R.id.container_actions)
     RecyclerView rvContainerActions;
 
-    public static DownloadDialog newInstance(Book book) {
+    private String title;
+    private String downloadUrl;
+    private ArrayList<String> formats;
+    private AppCompatActivity activity;
+
+    public static DownloadDialog newInstance(String title, String downloadUrl, ArrayList<String> formats) {
 
         Bundle args = new Bundle();
-        args.putParcelable(KEY_BOOK, Parcels.wrap(book));
+        args.putString(KEY_TITLE, title);
+        args.putString(KEY_DOWNLOAD_URL, downloadUrl);
+        args.putStringArrayList(KEY_FORMATS, formats);
+
         DownloadDialog fragment = new DownloadDialog();
         fragment.setArguments(args);
         return fragment;
@@ -53,7 +57,9 @@ public class DownloadDialog extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        book = Parcels.unwrap(getArguments().getParcelable(KEY_BOOK));
+        title = getArguments().getString(KEY_TITLE);
+        formats = getArguments().getStringArrayList(KEY_FORMATS);
+        downloadUrl = getArguments().getString(KEY_DOWNLOAD_URL);
     }
 
     @Override
@@ -69,8 +75,8 @@ public class DownloadDialog extends DialogFragment {
         ButterKnife.bind(this, view);
         builder.setView(view);
         rvContainerActions.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
-        rvContainerActions.setAdapter(new DownloadActionsAdapter(activity, book));
-        tvTitle.setText(book.getTitle());
+        rvContainerActions.setAdapter(new DownloadActionsAdapter(activity, downloadUrl, formats));
+        tvTitle.setText(title);
 
         return builder.create();
     }

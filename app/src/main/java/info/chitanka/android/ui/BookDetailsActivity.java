@@ -109,7 +109,7 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
         Glide.with(this).load(book.getCover()).crossFade().placeholder(R.drawable.ic_no_cover).into(ivCover);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(view -> DownloadDialog.newInstance(book).show(getSupportFragmentManager(), DownloadDialog.TAG));
+        fab.setOnClickListener(view -> DownloadDialog.newInstance(book.getTitle(), book.getDownloadUrl(), book.getFormats()).show(getSupportFragmentManager(), DownloadDialog.TAG));
         containerBook.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {

@@ -10,16 +10,15 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
 import info.chitanka.android.mvp.models.Category;
 import info.chitanka.android.mvp.models.SearchTerms;
 import info.chitanka.android.ui.BooksActivity;
-
-import java.util.List;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 /**
  * Created by nmp on 16-3-16.
@@ -37,7 +36,24 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_category, parent, false);
-        return new ViewHolder(view);
+        ViewHolder viewHolder = new ViewHolder(view);
+        viewHolder.containerCategory.setOnClickListener(v -> {
+            Category category = categories.get(viewHolder.getAdapterPosition());
+            if(category.getNrOfBooks() == 0) {
+                Snackbar snackbar = Snackbar
+                        .make(viewHolder.containerCategory, "Няма книги в категорията!", Snackbar.LENGTH_SHORT);
+
+                snackbar.show();
+            } else {
+                Intent intent = new Intent(context, BooksActivity.class);
+                intent.putExtra(Constants.EXTRA_SEARCH_TERM, SearchTerms.CATEGORY.toString());
+                intent.putExtra(Constants.EXTRA_TITLE, category.getName());
+                intent.putExtra(Constants.EXTRA_SLUG, category.getSlug());
+
+                context.startActivity(intent);
+            }
+        });
+        return viewHolder;
     }
 
     @Override
@@ -56,29 +72,14 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
         holder.tvCategoryName.setTextSize(textSize);
         holder.tvCategoryName.setText(category.getName());
+        holder.tvBooksCount.setText(String.format("%s", category.getNrOfBooks()));
+
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         params.setMargins(category.getLevel() * 40, 0, 0, 0);
         params.addRule(RelativeLayout.LEFT_OF, R.id.tv_books_count);
         params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         params.addRule(RelativeLayout.CENTER_VERTICAL);
-
-        holder.containerCategory.setOnClickListener(v -> {
-            if(category.getNrOfBooks() == 0) {
-                Snackbar snackbar = Snackbar
-                        .make(holder.containerCategory, "Няма книги в категорията!", Snackbar.LENGTH_SHORT);
-
-                snackbar.show();
-            } else {
-                Intent intent = new Intent(context, BooksActivity.class);
-                intent.putExtra(Constants.EXTRA_SEARCH_TERM, SearchTerms.CATEGORY.toString());
-                intent.putExtra(Constants.EXTRA_TITLE, category.getName());
-                intent.putExtra(Constants.EXTRA_SLUG, category.getSlug());
-
-                context.startActivity(intent);
-            }
-        });
         holder.tvCategoryName.setLayoutParams(params);
-        holder.tvBooksCount.setText(String.format("%s", category.getNrOfBooks()));
     }
 
     @Override

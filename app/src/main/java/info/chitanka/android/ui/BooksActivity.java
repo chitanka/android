@@ -1,6 +1,7 @@
 package info.chitanka.android.ui;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,9 +34,10 @@ public class BooksActivity extends BaseActivity implements HasComponent<Presente
         presenterComponent = DaggerPresenterComponent.builder().applicationComponent(getApplicationComponent()).presenterModule(new PresenterModule()).build();
         getComponent().inject(this);
 
-        String searchTerm = getIntent().getStringExtra(Constants.EXTRA_SEARCH_TERM);
-        String title = getIntent().getStringExtra(Constants.EXTRA_TITLE);
-        String slug = getIntent().getStringExtra(Constants.EXTRA_SLUG);
+        Intent intent = getIntent();
+        String searchTerm = intent.getStringExtra(Constants.EXTRA_SEARCH_TERM);
+        String title = intent.getStringExtra(Constants.EXTRA_TITLE);
+        String slug = intent.getStringExtra(Constants.EXTRA_SLUG);
 
         Fragment fragment;
         if(searchTerm.equals(SearchTerms.AUTHOR.toString())) {
