@@ -1,7 +1,9 @@
 package info.chitanka.android.ui.fragments.books;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -85,7 +87,11 @@ public class AuthorBooksFragment extends BaseBooksFragment implements BooksView 
         View view = inflater.inflate(R.layout.fragment_books, container, false);
         ButterKnife.bind(this, view);
 
-        rvBooks.setLayoutManager(new LinearLayoutManager(getActivity()));
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            rvBooks.setLayoutManager(new LinearLayoutManager(getActivity()));
+        } else {
+            rvBooks.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
+        }
 
         return view;
     }
