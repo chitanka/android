@@ -2,13 +2,17 @@ package info.chitanka.android.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 
-import java.util.ArrayList;
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -20,21 +24,26 @@ import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.mvp.models.Category;
 import info.chitanka.android.mvp.presenters.categories.CategoriesPresenter;
 import info.chitanka.android.mvp.views.CategoriesView;
-import info.chitanka.android.ui.adapters.CategoriesAdapter;
+import info.chitanka.android.ui.fragments.books.CategoryBooksFragment;
 
 /**
  * Created by nmp on 16-3-15.
  */
 public class CategoriesFragment extends BaseFragment implements CategoriesView {
     public static final String TAG = CategoriesFragment.class.getSimpleName();
+    private static final String KEY_CATEGORY_INDEX = "category_index";
 
     @Inject
     CategoriesPresenter categoriesPresenter;
 
-    @Bind(R.id.rv_categories)
-    RecyclerView rvCategories;
+    @Bind(R.id.spinner_category)
+    SearchableSpinner searchableSpinner;
 
-    List<Category> flatCategories = new ArrayList<>();
+    @Bind(R.id.container)
+    FrameLayout container;
+
+    int selectedCategory = -1;
+
 
     public static CategoriesFragment newInstance() {
         return new CategoriesFragment();
@@ -52,8 +61,10 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setHasOptionsMenu(true);
+        if (savedInstanceState != null) {
+            selectedCategory = savedInstanceState.getInt(KEY_CATEGORY_INDEX);
+        }
     }
 
     @Nullable
@@ -62,8 +73,13 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
         View view = inflater.inflate(R.layout.fragment_categories, container, false);
         ButterKnife.bind(this, view);
 
-        rvCategories.setLayoutManager(new LinearLayoutManager(getActivity()));
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(KEY_CATEGORY_INDEX, selectedCategory);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -75,21 +91,35 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
 
     @Override
     public void presentCategories(List<Category> categories, int level) {
-        populateCategoriesLevel(categories, level);
-        rvCategories.setAdapter(new CategoriesAdapter(getActivity(), flatCategories));
-    }
+        List<String> cats = Stream.of(categories)
+                .map(x -> x.getName() + " (" + x.getNrOfBooks() + ")")
+                .collect(Collectors.toList());
 
-    private void populateCategoriesLevel(List<Category> categories, int level) {
-        level++;
-        for(Category category : categories) {
-            if(category.getNrOfBooks() == 0)
-                continue;
-            category.setLevel(level);
-            flatCategories.add(category);
-            if(category.getChildren() != null && category.getChildren().size() > 0) {
-                populateCategoriesLevel(category.getChildren(), level);
+        searchableSpinner.setTitle("Select Item");
+        searchableSpinner.setPositiveButton("OK");
+        searchableSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, cats));
+        searchableSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                selectedCategory = position;
+                Category category = categories.get(position);
+                CategoryBooksFragment categoryBooksFragment = (CategoryBooksFragment) getChildFragmentManager().findFragmentByTag(CategoryBooksFragment.TAG);
+                if (categoryBooksFragment == null) {
+                    getChildFragmentManager().beginTransaction()
+                            .replace(R.id.container, CategoryBooksFragment.newInstance(category.getSlug()), CategoryBooksFragment.TAG)
+                            .commitAllowingStateLoss();
+                } else {
+                    categoryBooksFragment.setSlug(category.getSlug());
+                }
             }
-        }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        searchableSpinner.setSelection(selectedCategory == -1 ? 0 : selectedCategory);
     }
 
     @Override

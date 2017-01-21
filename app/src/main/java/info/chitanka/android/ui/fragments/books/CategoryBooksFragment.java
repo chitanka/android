@@ -3,7 +3,6 @@ package info.chitanka.android.ui.fragments.books;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,9 +31,8 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
     public static final String TAG = CategoryBooksFragment.class.getSimpleName();
     private static final String KEY_SLUG = "slug";
 
-    private int totalItemCount, page=1;
+    private int page=1;
 
-    private LinearLayoutManager layoutManager;
     private BooksAdapter adapter;
 
     @Inject
@@ -105,7 +103,6 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
 
     @Override
     public void presentCategoryBooks(List<Book> books, int totalItemCount) {
-        this.totalItemCount = totalItemCount;
         if(books.size() == 0) {
             rvBooks.setVisibility(View.GONE);
             containerEmpty.setVisibility(View.VISIBLE);
