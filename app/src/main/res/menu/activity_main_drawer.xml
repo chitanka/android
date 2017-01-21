@@ -4,30 +4,25 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_authors"
-            android:title="Автори" />
-        <item
-            android:id="@+id/nav_categories"
-            android:title="Категории" />
+            android:title="@string/drawer_authors" />
+
         <item
             android:id="@+id/nav_books"
-            android:title="Книги" />
-        <!--<item-->
-            <!--android:id="@+id/nav_works"-->
-            <!--android:title="Произведения" />-->
+            android:title="@string/drawer_books" />
     </group>
-    <item android:title="Помощ">
+    <item android:title="@string/drawer_help">
         <menu>
             <item
                 android:id="@+id/nav_readers"
-                android:title="Четци на книги" />
+                android:title="@string/drawer_readers" />
 
             <item
                 android:id="@+id/nav_site"
-                android:title="Уебсайт" />
+                android:title="@string/drawer_website" />
 
             <item
                 android:id="@+id/nav_email"
-                android:title="Пиши ни" />
+                android:title="@string/drawer_email" />
         </menu>
     </item>
 
