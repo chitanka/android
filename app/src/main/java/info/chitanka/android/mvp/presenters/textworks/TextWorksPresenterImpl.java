@@ -37,7 +37,7 @@ public class TextWorksPresenterImpl extends BasePresenter<TextWorksView> impleme
 
     @Override
     public void setView(TextWorksView view) {
-        this.view = new WeakReference<TextWorksView>(view);
+        this.view = new WeakReference<>(view);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class TextWorksPresenterImpl extends BasePresenter<TextWorksView> impleme
                                 getView().presentTextWorks(textworks.getTexts());
                             }
                         }, (error) -> {
-                            Timber.e(error, "Error loading categories!");
+                            Timber.e(error, "Error loading textworks!");
                             if (!viewExists())
                                 return;
                             getView().hideLoading();
@@ -77,7 +77,7 @@ public class TextWorksPresenterImpl extends BasePresenter<TextWorksView> impleme
                                 getView().presentTextWorks(textworks.getTexts());
                             }
                         }, (error) -> {
-                            Timber.e(error, "Error loading categories!");
+                            Timber.e(error, "Error loading textworks!");
                             if (!viewExists())
                                 return;
                             getView().hideLoading();

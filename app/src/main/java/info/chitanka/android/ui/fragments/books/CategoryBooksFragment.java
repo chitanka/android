@@ -149,4 +149,13 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
     public String getTitle() {
         return TAG;
     }
+
+    public void setSlug(String categorySlug) {
+        if (!slug.equals(categorySlug)) {
+            slug = categorySlug;
+            page = 1;
+            adapter = null;
+            booksPresenter.getBooksForCategory(categorySlug, page);
+        }
+    }
 }

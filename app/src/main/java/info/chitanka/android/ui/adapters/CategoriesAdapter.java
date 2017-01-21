@@ -17,7 +17,6 @@ import butterknife.ButterKnife;
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
 import info.chitanka.android.mvp.models.Category;
-import info.chitanka.android.mvp.models.SearchTerms;
 import info.chitanka.android.ui.BooksActivity;
 
 /**
@@ -46,7 +45,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
                 snackbar.show();
             } else {
                 Intent intent = new Intent(context, BooksActivity.class);
-                intent.putExtra(Constants.EXTRA_SEARCH_TERM, SearchTerms.CATEGORY.toString());
                 intent.putExtra(Constants.EXTRA_TITLE, category.getName());
                 intent.putExtra(Constants.EXTRA_SLUG, category.getSlug());
 

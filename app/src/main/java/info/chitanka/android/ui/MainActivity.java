@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
         }
 
         Fragment fragmentByTag = getSupportFragmentManager().findFragmentByTag(fragment.getTitle());
-        if(fragmentByTag != null && fragmentByTag.isVisible()) {
+        if(fragmentByTag != null) {
             return;
         }
 

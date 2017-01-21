@@ -31,4 +31,8 @@
     <string name="download_no_app">Нямате приложения за сваляне на ресурси!</string>
     <string name="web_no_app">Нямате приложения за отваряне на линкове!</string>
     <string name="downloading">Сваля се …</string>
+
+    <!-- Searchable Spinner -->
+    <string name="search">Потърси...</string>
+    <string name="empty_list">Няма резултати!</string>
 </resources>
