@@ -46,7 +46,6 @@ public class AuthorBooksPresenterImpl extends BasePresenter<BooksView> implement
 
     @Override
     public void onStart() {
-
     }
 
     @Override
