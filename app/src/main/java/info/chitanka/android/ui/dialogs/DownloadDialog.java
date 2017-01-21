@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -84,12 +85,14 @@ public class DownloadDialog extends DialogFragment {
         DownloadActionsAdapter adapter = new DownloadActionsAdapter(formats);
         subscription = adapter.getOnDownloadClick().subscribe(format -> {
 
-            DownloadManager.Request downloadRequest = new DownloadManager.Request(Uri.parse(String.format(downloadUrl, format)));
-            downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            downloadRequest.setVisibleInDownloadsUi(true);
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format(downloadUrl, format)));
+            Intent chooser = Intent.createChooser(intent, activity.getString(R.string.title_download));
+            if (intent.resolveActivity(activity.getPackageManager()) != null) {
+                activity.startActivity(chooser);
+            } else {
+                downloadWithManager(format);
+            }
 
-            DownloadManager downloadManager = (DownloadManager) activity.getSystemService(Activity.DOWNLOAD_SERVICE);
-            downloadManager.enqueue(downloadRequest);
             DownloadDialog.this.dismiss();
             Toast.makeText(activity, getString(R.string.downloading), Toast.LENGTH_SHORT).show();
         });
@@ -97,6 +100,17 @@ public class DownloadDialog extends DialogFragment {
         tvTitle.setText(title);
 
         return builder.create();
+    }
+
+    private void downloadWithManager(String format) {
+        Uri parse = Uri.parse(String.format(downloadUrl, format));
+        DownloadManager.Request downloadRequest = new DownloadManager.Request(parse);
+        downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        downloadRequest.setVisibleInDownloadsUi(true);
+        downloadRequest.allowScanningByMediaScanner();
+
+        DownloadManager downloadManager = (DownloadManager) activity.getSystemService(Activity.DOWNLOAD_SERVICE);
+        downloadManager.enqueue(downloadRequest);
     }
 
     @Override
