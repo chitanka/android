@@ -35,4 +35,5 @@
     <!-- Searchable Spinner -->
     <string name="search">Потърси...</string>
     <string name="empty_list">Няма резултати!</string>
+    <string name="categories_pick">Избери категория</string>
 </resources>

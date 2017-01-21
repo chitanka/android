@@ -1,8 +1,11 @@
 package info.chitanka.android.ui.fragments.books;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +81,9 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category_books, container, false);
         ButterKnife.bind(this, view);
-
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            rvBooks.getRecyclerView().setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
+        }
         rvBooks.setOnEndReachedListener(() -> {
             page++;
             booksPresenter.getBooksForCategory(slug, page);

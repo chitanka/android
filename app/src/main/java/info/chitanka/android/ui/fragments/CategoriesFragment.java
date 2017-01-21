@@ -95,8 +95,8 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
                 .map(x -> x.getName() + " (" + x.getNrOfBooks() + ")")
                 .collect(Collectors.toList());
 
-        searchableSpinner.setTitle("Select Item");
-        searchableSpinner.setPositiveButton("OK");
+        searchableSpinner.setTitle(getString(R.string.categories_pick));
+        searchableSpinner.setPositiveButton(getString(R.string.OK));
         searchableSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, cats));
         searchableSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
