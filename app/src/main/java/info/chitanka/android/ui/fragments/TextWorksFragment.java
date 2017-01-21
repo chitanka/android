@@ -21,10 +21,13 @@ import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
 import info.chitanka.android.di.presenters.PresenterComponent;
+import info.chitanka.android.events.SearchBookEvent;
 import info.chitanka.android.mvp.models.TextWork;
 import info.chitanka.android.mvp.presenters.textworks.TextWorksPresenter;
 import info.chitanka.android.mvp.views.TextWorksView;
 import info.chitanka.android.ui.adapters.TextWorksAdapter;
+import info.chitanka.android.utils.RxBus;
+import rx.Subscription;
 
 /**
  * Created by nmp on 21.01.17.
@@ -38,6 +41,9 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
     @Inject
     TextWorksPresenter presenter;
 
+    @Inject
+    RxBus rxBus;
+
     @Bind(R.id.rv_textworks)
     RecyclerView rvTextWorks;
 
@@ -46,6 +52,8 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
 
     @Bind(R.id.loading)
     CircularProgressBar loading;
+
+    private Subscription subscription;
 
     public static TextWorksFragment newInstance(String searchTerm) {
 
@@ -65,6 +73,15 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
         presenter.setView(this);
         presenter.onStart();
         presenter.searchTextWorks(searchTerm);
+
+        subscription = rxBus.toObserverable().subscribe((event) -> {
+            if (event instanceof SearchBookEvent) {
+                containerEmpty.setVisibility(View.GONE);
+                rvTextWorks.setVisibility(View.GONE);
+                searchTerm = ((SearchBookEvent) event).getName();
+                presenter.searchTextWorks(searchTerm);
+            }
+        });
     }
 
     @Nullable
@@ -93,6 +110,7 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
         super.onDetach();
         ButterKnife.unbind(this);
         presenter.onDestroy();
+        subscription.unsubscribe();
     }
 
     @Override

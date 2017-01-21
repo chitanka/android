@@ -15,8 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import javax.inject.Inject;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import info.chitanka.android.ChitankaApplication;
@@ -30,14 +28,10 @@ import info.chitanka.android.ui.fragments.AuthorsFragment;
 import info.chitanka.android.ui.fragments.BaseFragment;
 import info.chitanka.android.ui.fragments.CategoriesFragment;
 import info.chitanka.android.utils.ConnectivityUtils;
-import info.chitanka.android.utils.RxBus;
 
 public class MainActivity extends AppCompatActivity implements HasComponent<PresenterComponent>, NavigationView.OnNavigationItemSelectedListener {
     public static final String NETWORK_REQUIRED_DIALOG_FRAGMENT = "NetworkRequiredDialogFragment";
     private static final String KEY_SELECTED_ITEM = "selected_item";
-
-    @Inject
-    RxBus rxBus;
 
     @Bind(R.id.nav_view)
     NavigationView navigationView;
