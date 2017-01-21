@@ -2,6 +2,7 @@ package info.chitanka.android.ui.fragments.books;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,10 +38,6 @@ public class BooksFragment extends BaseBooksFragment implements BooksView {
     public BooksFragment() {
     }
 
-    public static BooksFragment newInstance() {
-        return new BooksFragment();
-    }
-
     public static BooksFragment newInstance(String searchTerm) {
 
         Bundle args = new Bundle();
@@ -59,9 +56,8 @@ public class BooksFragment extends BaseBooksFragment implements BooksView {
         if(savedInstanceState != null) {
             query = savedInstanceState.getString(KEY_QUERY);
         } else {
-            if (getArguments() != null && getArguments().containsKey(Constants.EXTRA_SEARCH_TERM)) {
-                query = getArguments().getString(Constants.EXTRA_SEARCH_TERM);
-            } else {
+            query = getArguments().getString(Constants.EXTRA_SEARCH_TERM);
+            if (TextUtils.isEmpty(query)) {
                 query = Constants.INITIAL_SEARCH_BOOK_NAME;
             }
         }

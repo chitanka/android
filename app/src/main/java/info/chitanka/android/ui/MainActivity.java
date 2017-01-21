@@ -152,11 +152,11 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
     private void selectNavigationItem(int id) {
         BaseFragment fragment = null;
         if (id == R.id.nav_authors) {
-            fragment = new AuthorsFragment();
+            fragment = AuthorsFragment.newInstance("");
         } else if (id == R.id.nav_categories) {
-            fragment = new CategoriesFragment();
+            fragment = CategoriesFragment.newInstance();
         } else if (id == R.id.nav_books) {
-            fragment = new BooksFragment();
+            fragment = BooksFragment.newInstance("");
         } else if(id == R.id.nav_readers) {
             startActivity(new Intent(this, ReadersActivity.class));
             return;

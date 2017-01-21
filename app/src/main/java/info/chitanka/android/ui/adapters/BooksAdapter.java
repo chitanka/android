@@ -12,17 +12,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import info.chitanka.android.Constants;
-import info.chitanka.android.R;
-import info.chitanka.android.mvp.models.Book;
-import info.chitanka.android.ui.BookDetailsActivity;
-import info.chitanka.android.ui.dialogs.DownloadDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import info.chitanka.android.Constants;
+import info.chitanka.android.R;
+import info.chitanka.android.mvp.models.Book;
+import info.chitanka.android.ui.BookDetailsActivity;
+import info.chitanka.android.ui.dialogs.DownloadDialog;
 
 /**
  * Created by nmp on 16-3-8.
@@ -56,7 +56,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         holder.tvShare.setOnClickListener((view) -> {
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, String.format(context.getResources().getString(R.string.share_text), book.getTitle(), book.getTitleAuthor()));
+            sendIntent.putExtra(Intent.EXTRA_TEXT, String.format(context.getString(R.string.share_text), book.getTitle(), book.getTitleAuthor()));
             sendIntent.setType("text/plain");
             context.startActivity(sendIntent);
         });

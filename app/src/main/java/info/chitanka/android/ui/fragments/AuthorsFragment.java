@@ -2,6 +2,7 @@ package info.chitanka.android.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
+import info.chitanka.android.Constants;
 import info.chitanka.android.R;
 import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.events.SearchBookEvent;
@@ -23,7 +25,6 @@ import info.chitanka.android.ui.adapters.AuthorsAdapter;
 import info.chitanka.android.ui.views.containers.ScrollRecyclerView;
 import info.chitanka.android.utils.RxBus;
 import rx.Subscription;
-import timber.log.Timber;
 
 /**
  * Created by nmp on 16-3-11.
@@ -53,6 +54,15 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
     private Subscription subscription;
     private String query;
 
+    public static AuthorsFragment newInstance(String searchTerm) {
+
+        Bundle args = new Bundle();
+        args.putString(Constants.EXTRA_SEARCH_TERM, searchTerm);
+        AuthorsFragment fragment = new AuthorsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,11 +90,17 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
         ButterKnife.bind(this, view);
 
         authorsPresenter.setView(this);
-        authorsPresenter.loadAuthors(currentPage, pageSize);
         rvAuthors.setOnEndReachedListener(() -> {
             currentPage++;
             authorsPresenter.loadAuthors(currentPage, pageSize);
         });
+
+        query = getArguments().getString(Constants.EXTRA_SEARCH_TERM);
+        if (TextUtils.isEmpty(query)) {
+            authorsPresenter.loadAuthors(currentPage, pageSize);
+        } else {
+            authorsPresenter.searchAuthors(query);
+        }
 
         return view;
     }
@@ -106,11 +122,6 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
 
     @Override
     public void presentAuthors(Authors authors) {
-        if(rvAuthors == null || containerEmpty == null) {
-            Timber.e(new Exception("rvAuthors view is null"), "Null rvAuthors");
-            return;
-        }
-
         if(authors.getPersons() == null || authors.getPersons().size() == 0) {
             rvAuthors.setVisibility(View.GONE);
             containerEmpty.setVisibility(View.VISIBLE);
@@ -130,11 +141,6 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
 
     @Override
     public void presentSearch(Authors authors) {
-        if(rvAuthors == null || containerEmpty == null) {
-            Timber.e(new Exception("rvAuthors view is null search"), "Null rvAuthors search");
-            return;
-        }
-
         if(authors.getPersons() == null || authors.getPersons().size() == 0) {
             rvAuthors.setVisibility(View.GONE);
             containerEmpty.setVisibility(View.VISIBLE);
