@@ -2,6 +2,7 @@ package info.chitanka.android.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -54,12 +55,9 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
             context.startActivity(sendIntent);
         });
 
-        viewHolder.tvShare.setOnClickListener(v2 -> {
+        viewHolder.tvWeb.setOnClickListener(v2 -> {
             Book book = books.get(viewHolder.getAdapterPosition());
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, String.format(context.getString(R.string.share_text), book.getTitle(), book.getTitleAuthor()));
-            sendIntent.setType("text/plain");
+            Intent sendIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(book.getChitankaUrl()));
             context.startActivity(sendIntent);
         });
 
@@ -73,6 +71,12 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         holder.tvDescription.setText((book.getAnnotation() != null ? book.getAnnotation() : ""));
         holder.tvBookCategory.setText(book.getCategory().getName());
         holder.tvBookAuthor.setText(book.getTitleAuthor());
+
+        if (book.getFormats() == null || book.getFormats().size() == 0) {
+            holder.tvDownload.setVisibility(View.GONE);
+        } else {
+            holder.tvDownload.setVisibility(View.VISIBLE);
+        }
         Glide.with(context).load(book.getCover()).fitCenter().crossFade().placeholder(R.drawable.ic_no_cover).into(holder.ivCover);
     }
 
@@ -109,8 +113,8 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         @Bind(R.id.iv_cover)
         ImageView ivCover;
 
-        @Bind(R.id.tv_share)
-        TextView tvShare;
+        @Bind(R.id.tv_web)
+        TextView tvWeb;
 
         @Bind(R.id.tv_description)
         TextView tvDescription;

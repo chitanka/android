@@ -2,7 +2,10 @@ package info.chitanka.android.mvp.models;
 
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import info.chitanka.android.Constants;
 
 /**
  * Created by nmp on 18.01.17.
@@ -13,7 +16,7 @@ public class TextWork {
     int id, votes;
     double rating;
     String slug, title, subtitle;
-    List<String> formats;
+    ArrayList<String> formats;
     List<Author> authors;
 
     public int getId() {
@@ -36,7 +39,7 @@ public class TextWork {
         return authors;
     }
 
-    public List<String> getFormats() {
+    public ArrayList<String> getFormats() {
         return formats;
     }
 
@@ -46,5 +49,13 @@ public class TextWork {
 
     public double getRating() {
         return rating;
+    }
+
+    public String getDownloadUrl() {
+        return "";
+    }
+
+    public String getChitankaUrl() {
+        return Constants.CHITANKA_INFO_API + "text/" + id + "-" + slug;
     }
 }

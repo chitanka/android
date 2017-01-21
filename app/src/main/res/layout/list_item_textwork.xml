@@ -56,6 +56,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <RelativeLayout
+                android:id="@+id/container_actions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_rating"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:id="@+id/tv_web"
+                    style="@style/ActionButtons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="@string/open_chitanka" />
+
+                <TextView
+                    android:id="@+id/tv_download"
+                    style="@style/ActionButtons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@id/tv_web"
+                    android:text="@string/download" />
+            </RelativeLayout>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </RelativeLayout>

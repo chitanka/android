@@ -13,7 +13,7 @@ import info.chitanka.android.Constants;
 @Parcel
 public class Book {
     int id, year;
-    String title, titleAuthor, cover, annotation, downloadUrl;
+    String title, slug, titleAuthor, cover, annotation, downloadUrl;
     Category category;
     ArrayList<String> formats;
     List<Author> authors;
@@ -27,6 +27,10 @@ public class Book {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getSlug() {
+        return slug;
     }
 
     public String getTitleAuthor() {
@@ -45,10 +49,6 @@ public class Book {
         return annotation;
     }
 
-    public String getDownloadUrl() {
-        return Constants.CHITANKA_INFO_API + "book/" + id + ".%s";
-    }
-
     public ArrayList<String> getFormats() {
         return formats;
     }
@@ -59,5 +59,13 @@ public class Book {
 
     public List<Author> getAuthors() {
         return authors;
+    }
+
+    public String getDownloadUrl() {
+        return Constants.CHITANKA_INFO_API + "book/" + id + ".%s";
+    }
+
+    public String getChitankaUrl() {
+        return Constants.CHITANKA_INFO_API + "book/" + id + "-" + slug;
     }
 }

@@ -93,12 +93,12 @@
                 android:layout_marginTop="8dp">
 
                 <TextView
-                    android:id="@+id/tv_share"
+                    android:id="@+id/tv_web"
                     style="@style/ActionButtons"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:text="@string/share" />
+                    android:text="@string/open_chitanka" />
 
                 <TextView
                     android:id="@+id/tv_download"
@@ -106,7 +106,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/tv_share"
+                    android:layout_toRightOf="@id/tv_web"
                     android:text="@string/download" />
             </RelativeLayout>
         </RelativeLayout>

@@ -126,6 +126,6 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
 
         rvTextWorks.setVisibility(View.VISIBLE);
         containerEmpty.setVisibility(View.GONE);
-        rvTextWorks.setAdapter(new TextWorksAdapter(texts, getResources()));
+        rvTextWorks.setAdapter(new TextWorksAdapter(texts, getActivity()));
     }
 }
