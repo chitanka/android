@@ -19,6 +19,8 @@ import dagger.Module;
 import dagger.Provides;
 import info.chitanka.android.mvp.presenters.search.SearchPresenter;
 import info.chitanka.android.mvp.presenters.search.SearchPresenterImpl;
+import info.chitanka.android.mvp.presenters.textworks.TextWorksPresenter;
+import info.chitanka.android.mvp.presenters.textworks.TextWorksPresenterImpl;
 
 /**
  * Created by joro on 16-3-8.
@@ -65,5 +67,11 @@ public class PresenterModule {
     @ActivityScope
     public SearchPresenter providesSearchPresenter(ChitankaApi chitankaApi) {
         return new SearchPresenterImpl(chitankaApi);
+    }
+
+    @Provides
+    @ActivityScope
+    public TextWorksPresenter providesTextWorksPresenter(ChitankaApi chitankaApi) {
+        return new TextWorksPresenterImpl(chitankaApi);
     }
 }
