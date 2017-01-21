@@ -30,4 +30,5 @@
     <string name="title_open_with">Отвори с</string>
     <string name="download_no_app">Нямате приложения за сваляне на ресурси!</string>
     <string name="web_no_app">Нямате приложения за отваряне на линкове!</string>
+    <string name="downloading">Сваля се …</string>
 </resources>

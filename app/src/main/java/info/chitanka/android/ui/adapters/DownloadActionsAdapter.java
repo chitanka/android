@@ -1,14 +1,10 @@
 package info.chitanka.android.ui.adapters;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,19 +12,17 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import info.chitanka.android.R;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by nmp on 16-3-22.
  */
 public class DownloadActionsAdapter extends RecyclerView.Adapter<DownloadActionsAdapter.ViewHolder> {
-    private final Context context;
-    private final String downloadUrl;
     private List<String> formats = new ArrayList<>();
+    private PublishSubject<String> onClick = PublishSubject.create();
 
-    public DownloadActionsAdapter(Context context, String downloadUrl, List<String> formats) {
-        this.context = context;
+    public DownloadActionsAdapter(List<String> formats) {
         this.formats = formats;
-        this.downloadUrl = downloadUrl;
     }
 
     @Override
@@ -37,15 +31,13 @@ public class DownloadActionsAdapter extends RecyclerView.Adapter<DownloadActions
         ViewHolder viewHolder = new ViewHolder(view);
         viewHolder.btnFlat.setOnClickListener(view1 -> {
             String format = formats.get(viewHolder.getAdapterPosition());
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format(downloadUrl, format)));
-            Intent chooser = Intent.createChooser(intent, context.getString(R.string.title_download));
-            if (intent.resolveActivity(context.getPackageManager()) != null) {
-                context.startActivity(chooser);
-            } else {
-                Toast.makeText(context, context.getString(R.string.download_no_app), Toast.LENGTH_SHORT).show();
-            }
+            onClick.onNext(format);
         });
         return viewHolder;
+    }
+
+    public rx.Observable<String> getOnDownloadClick() {
+        return onClick.asObservable();
     }
 
     @Override

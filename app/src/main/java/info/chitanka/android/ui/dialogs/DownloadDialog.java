@@ -2,6 +2,9 @@ package info.chitanka.android.ui.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.DownloadManager;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -20,6 +24,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import info.chitanka.android.R;
 import info.chitanka.android.ui.adapters.DownloadActionsAdapter;
+import rx.Subscription;
 
 /**
  * Created by nmp on 16-3-22.
@@ -41,6 +46,7 @@ public class DownloadDialog extends DialogFragment {
     private String downloadUrl;
     private ArrayList<String> formats;
     private AppCompatActivity activity;
+    private Subscription subscription;
 
     public static DownloadDialog newInstance(String title, String downloadUrl, ArrayList<String> formats) {
 
@@ -75,21 +81,34 @@ public class DownloadDialog extends DialogFragment {
         ButterKnife.bind(this, view);
         builder.setView(view);
         rvContainerActions.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
-        rvContainerActions.setAdapter(new DownloadActionsAdapter(activity, downloadUrl, formats));
+        DownloadActionsAdapter adapter = new DownloadActionsAdapter(formats);
+        subscription = adapter.getOnDownloadClick().subscribe(format -> {
+
+            DownloadManager.Request downloadRequest = new DownloadManager.Request(Uri.parse(String.format(downloadUrl, format)));
+            downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+            downloadRequest.setVisibleInDownloadsUi(true);
+
+            DownloadManager downloadManager = (DownloadManager) activity.getSystemService(Activity.DOWNLOAD_SERVICE);
+            downloadManager.enqueue(downloadRequest);
+            DownloadDialog.this.dismiss();
+            Toast.makeText(activity, getString(R.string.downloading), Toast.LENGTH_SHORT).show();
+        });
+        rvContainerActions.setAdapter(adapter);
         tvTitle.setText(title);
 
         return builder.create();
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.activity = (AppCompatActivity) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.activity = (AppCompatActivity) context;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        subscription.unsubscribe();
         ButterKnife.unbind(this);
     }
 }
