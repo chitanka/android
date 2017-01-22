@@ -44,7 +44,7 @@ public class BooksFragment extends BaseBooksFragment implements BooksView {
     public static BooksFragment newInstance(String searchTerm) {
 
         Bundle args = new Bundle();
-        args.putString(Constants.EXTRA_SEARCH_TERM, searchTerm);
+        args.putString(KEY_QUERY, searchTerm);
         BooksFragment fragment = new BooksFragment();
         fragment.setArguments(args);
         return fragment;

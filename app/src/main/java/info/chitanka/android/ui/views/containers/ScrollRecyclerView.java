@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -149,5 +150,10 @@ public class ScrollRecyclerView extends LinearLayout {
 
     public EndlessRecyclerScrollListener getScrollListener() {
         return scrollListener;
+    }
+
+    public void setLayoutManager(GridLayoutManager layoutManager) {
+        this.layoutManager = layoutManager;
+        recyclerView.setLayoutManager(layoutManager);
     }
 }

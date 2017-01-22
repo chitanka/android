@@ -104,10 +104,8 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
         View view = inflater.inflate(R.layout.fragment_authors, container, false);
         ButterKnife.bind(this, view);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            rvAuthors.getRecyclerView().setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        } else {
-            rvAuthors.getRecyclerView().setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            rvAuthors.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
         }
 
         rvAuthors.setOnEndReachedListener(() -> {

@@ -90,9 +90,11 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category_books, container, false);
         ButterKnife.bind(this, view);
+
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            rvBooks.getRecyclerView().setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
+            rvBooks.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
         }
+
         rvBooks.setOnEndReachedListener(() -> {
             page++;
             booksPresenter.getBooksForCategory(slug, page);
@@ -111,7 +113,9 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
     public void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
-        subscription.unsubscribe();
+        if (subscription != null && !subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
+        }
         booksPresenter.setView(null);
         booksPresenter.onDestroy();
     }
