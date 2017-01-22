@@ -1,12 +1,11 @@
 <resources>
     <string name="app_name">chitanka.info Моята Библиотека</string>
-    <string name="action_search">Търси в chitanka</string>
+    <string name="action_search">Търсене в chitanka</string>
     <string name="download">СВАЛИ</string>
     <string name="open_chitanka">УЕБ</string>
     <string name="share_text">%1$s от %2$s</string>
 
     <string name="list_loaded">Целият списък е зареден!</string>
-    <string name="action_settings">Settings</string>
     <string name="network_required">Интернет връзката е задължителна, за да ползваш приложението!</string>
     <string name="network_required_no_internet">Няма Интернет Връзка</string>
     <string name="navigation_drawer_open">Отвори</string>
@@ -33,13 +32,13 @@
     <string name="downloading">Сваля се …</string>
 
     <!-- Searchable Spinner -->
-    <string name="categories_pick">Избери категория</string>
+    <string name="categories_pick">Избор на категория</string>
 
     <!-- Rating dialog -->
-    <string name="erd_title">Оцени приложението ни :)</string>
+    <string name="erd_title">Оценка на приложението ни :)</string>
     <string name="erd_message">Здравей, ще отделиш ли минута, за да оцениш приложението ни? Така заедно ще го направим по-добро! ;)</string>
     <string name="erd_no_thanks">Не, благодаря.</string>
     <string name="erd_remind_me_later">По-късно.</string>
-    <string name="erd_rate_now">Оцени.</string>
+    <string name="erd_rate_now">Оценка.</string>
     <string name="title_readers">Четци на книги</string>
 </resources>
