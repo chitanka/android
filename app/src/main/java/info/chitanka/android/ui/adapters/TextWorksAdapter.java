@@ -62,18 +62,7 @@ public class TextWorksAdapter extends RecyclerView.Adapter<TextWorksAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         TextWork textWork = textWorks.get(position);
-        holder.tvTitle.setText(textWork.getTitle());
-        holder.tvSubtitle.setText(textWork.getSubtitle());
-        holder.tvRating.setText(res.getString(R.string.item_text_work_rating, textWork.getRating(), textWork.getVotes()));
-        if (textWork.getAuthors() != null && textWork.getAuthors().size() > 0) {
-            holder.tvAuthorName.setText(res.getString(R.string.item_text_work_author, textWork.getAuthors().get(0).getName()));
-        }
-
-        if (textWork.getFormats() == null || textWork.getFormats().size() == 0) {
-            holder.tvDownload.setVisibility(View.GONE);
-        } else {
-            holder.tvDownload.setVisibility(View.VISIBLE);
-        }
+        holder.bind(textWork, res);
     }
 
     @Override
@@ -104,6 +93,21 @@ public class TextWorksAdapter extends RecyclerView.Adapter<TextWorksAdapter.View
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        public void bind(TextWork textWork, Resources res) {
+            tvTitle.setText(textWork.getTitle());
+            tvSubtitle.setText(textWork.getSubtitle());
+            tvRating.setText(res.getString(R.string.item_text_work_rating, textWork.getRating(), textWork.getVotes()));
+            if (textWork.getAuthors() != null && textWork.getAuthors().size() > 0) {
+                tvAuthorName.setText(res.getString(R.string.item_text_work_author, textWork.getAuthors().get(0).getName()));
+            }
+
+            if (textWork.getFormats() == null || textWork.getFormats().size() == 0) {
+                tvDownload.setVisibility(View.GONE);
+            } else {
+                tvDownload.setVisibility(View.VISIBLE);
+            }
         }
     }
 }
