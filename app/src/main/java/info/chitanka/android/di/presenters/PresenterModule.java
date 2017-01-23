@@ -1,5 +1,7 @@
 package info.chitanka.android.di.presenters;
 
+import com.google.gson.Gson;
+
 import dagger.Module;
 import dagger.Provides;
 import info.chitanka.android.api.ChitankaApi;
@@ -70,7 +72,7 @@ public class PresenterModule {
 
     @Provides
     @ActivityScope
-    public NewBooksAndTextWorksPresenter providesNewBooksAndTextWorksPresenter(ChitankaApi chitankaApi) {
-        return new NewBooksAndTextWorksPresenterImpl(chitankaApi);
+    public NewBooksAndTextWorksPresenter providesNewBooksAndTextWorksPresenter(ChitankaApi chitankaApi, Gson gson) {
+        return new NewBooksAndTextWorksPresenterImpl(chitankaApi, gson);
     }
 }

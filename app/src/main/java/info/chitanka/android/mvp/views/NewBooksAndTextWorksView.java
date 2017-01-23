@@ -1,14 +1,16 @@
 package info.chitanka.android.mvp.views;
 
+import com.google.gson.internal.LinkedTreeMap;
+
 import java.util.List;
 
-import info.chitanka.android.mvp.models.Book;
-import info.chitanka.android.mvp.models.TextWork;
+import info.chitanka.android.mvp.models.NewBooksResult;
+import info.chitanka.android.mvp.models.NewTextWorksResult;
 
 /**
  * Created by joro on 23.01.17.
  */
 
 public interface NewBooksAndTextWorksView extends BaseView {
-    void presentNewBooksAndTextWorks(List<Book> books, List<TextWork> textWorks);
+    void presentNewBooksAndTextWorks(LinkedTreeMap<String, List<NewBooksResult>> books, LinkedTreeMap<String, List<NewTextWorksResult>> textWorks);
 }

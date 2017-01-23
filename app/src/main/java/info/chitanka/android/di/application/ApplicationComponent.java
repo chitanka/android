@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 
+import com.google.gson.Gson;
+
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -26,6 +28,7 @@ public interface ApplicationComponent {
     RxBus getRxBus();
     ChitankaApi getChitankaApi();
     AnalyticsService getAnalyticsService();
+    Gson getGSON();
 
     void inject(BaseActivity baseActivity);
 }
