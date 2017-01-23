@@ -3,6 +3,7 @@ package info.chitanka.android.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -45,10 +46,13 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
     @Bind(R.id.nav_view)
     NavigationView navigationView;
 
+    @Bind(R.id.app_bar)
+    AppBarLayout appBarLayout;
+
     @Inject
     AnalyticsService analyticsService;
 
-    private int selectedNavItemId;
+    private int selectedNavItemId = R.id.nav_new;
 
     private NetworkRequiredDialog networkRequiredDialog;
     private PresenterComponent presenterComponent;
@@ -83,12 +87,11 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
 
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_SELECTED_ITEM)) {
             selectedNavItemId = savedInstanceState.getInt(KEY_SELECTED_ITEM);
-            MenuItem item = navigationView.getMenu().findItem(selectedNavItemId);
-            onNavigationItemSelected(item);
-        } else {
-            navigationView.getMenu().getItem(0).setChecked(true);
-            onNavigationItemSelected(navigationView.getMenu().getItem(0));
         }
+
+        MenuItem item = navigationView.getMenu().findItem(selectedNavItemId);
+        item.setChecked(true);
+        onNavigationItemSelected(item);
     }
 
     @Override
@@ -177,7 +180,6 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
-
         return true;
     }
 
@@ -198,12 +200,14 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
             return;
         } else if (id == R.id.nav_email) {
             analyticsService.logEvent(TrackingConstants.CLICK_WRITE_US);
-            final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+            final Intent emailIntent = new Intent(Intent.ACTION_SEND);
             emailIntent.setType("plain/text");
-            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"contact@chitanka.info"});
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"contact@chitanka.info"});
             startActivity(Intent.createChooser(emailIntent, "Изпрати имейл"));
             return;
         }
+
+        updateAppBarShadow();
 
         if (fragment == null) {
             return;
@@ -215,6 +219,15 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
         }
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment, fragment.getTitle()).commit();
+    }
+
+    private void updateAppBarShadow() {
+        if (selectedNavItemId == R.id.nav_new) {
+            appBarLayout.setEnabled(false);
+        } else {
+            appBarLayout.setEnabled(true);
+        }
+        appBarLayout.requestLayout();
     }
 
     @Override
