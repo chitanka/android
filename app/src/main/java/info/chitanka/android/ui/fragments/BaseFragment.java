@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Toast;
 
+import info.chitanka.android.R;
 import info.chitanka.android.di.HasComponent;
 import info.chitanka.android.mvp.views.BaseView;
 
@@ -35,10 +36,9 @@ public abstract class BaseFragment extends Fragment implements BaseView {
     public void showError() {
         View view = getView();
         if(view == null) {
-            Toast.makeText(getActivity(), "Възникна проблем със зареждането на данните!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.error_loading_data, Toast.LENGTH_LONG).show();
         } else {
-            Snackbar.make(getView(), "Възникна проблем със зареждането на данните!", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+            Snackbar.make(getView(), R.string.error_loading_data, Snackbar.LENGTH_LONG).show();
         }
     }
 

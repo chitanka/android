@@ -1,5 +1,7 @@
 package info.chitanka.android.api;
 
+import com.google.gson.JsonObject;
+
 import java.util.List;
 
 import info.chitanka.android.mvp.models.Author;
@@ -11,7 +13,6 @@ import info.chitanka.android.mvp.models.Categories;
 import info.chitanka.android.mvp.models.CategoryBooks;
 import info.chitanka.android.mvp.models.SearchBooks;
 import info.chitanka.android.mvp.models.TextWorksSearchResult;
-import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -23,7 +24,7 @@ import rx.Observable;
 public interface ChitankaApi {
 
     @GET("/new.json")
-    Observable<ResponseBody> getNewBooksAndTextworks();
+    Observable<JsonObject> getNewBooksAndTextworks();
 
     @GET("/books.json")
     Observable<Categories> getCategories();
