@@ -8,9 +8,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.List;
 
@@ -21,14 +24,11 @@ import butterknife.ButterKnife;
 import info.chitanka.android.R;
 import info.chitanka.android.components.AnalyticsService;
 import info.chitanka.android.di.presenters.PresenterComponent;
-import info.chitanka.android.mvp.models.Book;
-import info.chitanka.android.mvp.models.TextWork;
+import info.chitanka.android.mvp.models.NewBooksResult;
+import info.chitanka.android.mvp.models.NewTextWorksResult;
 import info.chitanka.android.mvp.presenters.newest.NewBooksAndTextWorksPresenter;
 import info.chitanka.android.mvp.views.NewBooksAndTextWorksView;
-import info.chitanka.android.ui.fragments.AuthorsFragment;
 import info.chitanka.android.ui.fragments.BaseFragment;
-import info.chitanka.android.ui.fragments.TextWorksFragment;
-import info.chitanka.android.ui.fragments.books.BooksFragment;
 
 /**
  * Created by joro on 23.01.17.
@@ -36,6 +36,8 @@ import info.chitanka.android.ui.fragments.books.BooksFragment;
 
 public class NewBooksAndTextworksFragment extends BaseFragment implements NewBooksAndTextWorksView {
     public static final String TAG = NewBooksAndTextworksFragment.class.getSimpleName();
+
+    private SectionsPagerAdapter mSectionsPagerAdapter;
 
     @Inject
     NewBooksAndTextWorksPresenter presenter;
@@ -60,6 +62,7 @@ public class NewBooksAndTextworksFragment extends BaseFragment implements NewBoo
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getComponent(PresenterComponent.class).inject(this);
+        presenter.setView(this);
         presenter.onStart();
         presenter.loadNewBooksAndTextworks();
     }
@@ -70,7 +73,7 @@ public class NewBooksAndTextworksFragment extends BaseFragment implements NewBoo
         View view = inflater.inflate(R.layout.fragment_new_books_textworks, container, false);
         ButterKnife.bind(this, view);
 
-        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setOffscreenPageLimit(mSectionsPagerAdapter.getCount());
 
@@ -107,11 +110,14 @@ public class NewBooksAndTextworksFragment extends BaseFragment implements NewBoo
     }
 
     @Override
-    public void presentNewBooksAndTextWorks(List<Book> books, List<TextWork> textWorks) {
-
+    public void presentNewBooksAndTextWorks(LinkedTreeMap<String, List<NewBooksResult>> books, LinkedTreeMap<String, List<NewTextWorksResult>> textWorks) {
+        ((NewBooksFragment) mSectionsPagerAdapter.getRegisteredFragment(0)).displayBooks(books);
+        ((NewTextWorksFragment) mSectionsPagerAdapter.getRegisteredFragment(1)).displayTextWorks(textWorks);
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        private SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -121,29 +127,43 @@ public class NewBooksAndTextworksFragment extends BaseFragment implements NewBoo
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return BooksFragment.newInstance("");
+                    return NewBooksFragment.newInstance();
                 case 1:
-                    return AuthorsFragment.newInstance("");
-                case 2:
-                    return TextWorksFragment.newInstance("", null);
+                    return NewTextWorksFragment.newInstance();
             }
-            return BooksFragment.newInstance("");
+            return NewBooksFragment.newInstance();
         }
 
         @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment fragment = (Fragment) super.instantiateItem(container, position);
+            registeredFragments.put(position, fragment);
+            return fragment;
+        }
+
+        public Fragment getRegisteredFragment(int position) {
+            return registeredFragments.get(position);
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            registeredFragments.remove(position);
+            super.destroyItem(container, position, object);
+        }
+
+
+        @Override
         public int getCount() {
-            return 3;
+            return 2;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return getString(R.string.title_books);
+                    return getString(R.string.title_new_books);
                 case 1:
-                    return getString(R.string.title_authors);
-                case 2:
-                    return getString(R.string.title_textworks);
+                    return getString(R.string.title_new_textworks);
             }
             return null;
         }
