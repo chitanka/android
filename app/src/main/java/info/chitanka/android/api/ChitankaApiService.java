@@ -1,7 +1,6 @@
 package info.chitanka.android.api;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import info.chitanka.android.Constants;
 import okhttp3.OkHttpClient;
@@ -16,8 +15,7 @@ public class ChitankaApiService {
     private ChitankaApiService() {
     }
 
-    public static ChitankaApi createChitankaApiService() {
-        Gson gson = new GsonBuilder().setLenient().create();
+    public static ChitankaApi createChitankaApiService(Gson gson) {
         Retrofit.Builder builder = new Retrofit.Builder()
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))

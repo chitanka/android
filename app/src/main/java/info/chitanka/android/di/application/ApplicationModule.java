@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -58,8 +61,14 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    public ChitankaApi providesApi() {
-        return ChitankaApiService.createChitankaApiService();
+    public Gson providesGson() {
+        return new GsonBuilder().setLenient().create();
+    }
+
+    @Provides
+    @Singleton
+    public ChitankaApi providesApi(Gson gson) {
+        return ChitankaApiService.createChitankaApiService(gson);
     }
 
     @Provides

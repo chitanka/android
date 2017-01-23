@@ -16,6 +16,8 @@ import info.chitanka.android.mvp.presenters.categories.CategoriesPresenter;
 import info.chitanka.android.mvp.presenters.categories.CategoriesPresenterImpl;
 import info.chitanka.android.mvp.presenters.category_books.CategoryBooksPresenter;
 import info.chitanka.android.mvp.presenters.category_books.CategoryBooksPresenterImpl;
+import info.chitanka.android.mvp.presenters.newest.NewBooksAndTextWorksPresenter;
+import info.chitanka.android.mvp.presenters.newest.NewBooksAndTextWorksPresenterImpl;
 import info.chitanka.android.mvp.presenters.textworks.TextWorksPresenter;
 import info.chitanka.android.mvp.presenters.textworks.TextWorksPresenterImpl;
 
@@ -64,5 +66,11 @@ public class PresenterModule {
     @ActivityScope
     public TextWorksPresenter providesTextWorksPresenter(ChitankaApi chitankaApi) {
         return new TextWorksPresenterImpl(chitankaApi);
+    }
+
+    @Provides
+    @ActivityScope
+    public NewBooksAndTextWorksPresenter providesNewBooksAndTextWorksPresenter(ChitankaApi chitankaApi) {
+        return new NewBooksAndTextWorksPresenterImpl(chitankaApi);
     }
 }

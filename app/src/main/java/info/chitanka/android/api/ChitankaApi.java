@@ -11,6 +11,7 @@ import info.chitanka.android.mvp.models.Categories;
 import info.chitanka.android.mvp.models.CategoryBooks;
 import info.chitanka.android.mvp.models.SearchBooks;
 import info.chitanka.android.mvp.models.TextWorksSearchResult;
+import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -20,6 +21,10 @@ import rx.Observable;
  * Created by nmp on 16-3-15.
  */
 public interface ChitankaApi {
+
+    @GET("/new.json")
+    Observable<ResponseBody> getNewBooksAndTextworks();
+
     @GET("/books.json")
     Observable<Categories> getCategories();
 
