@@ -1,8 +1,10 @@
 package info.chitanka.android.ui.fragments.newest;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -61,6 +63,13 @@ public class NewTextWorksFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_text_works, container, false);
         ButterKnife.bind(this, view);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            rvTextWorks.setLayoutManager(new LinearLayoutManager(getActivity()));
+        } else {
+            rvTextWorks.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
+        }
+
         return view;
     }
 
@@ -76,6 +85,7 @@ public class NewTextWorksFragment extends Fragment {
     public void displayTextWorks(LinkedTreeMap<String, List<NewTextWorksResult>> map) {
         loading.progressiveStop();
         loading.setVisibility(View.GONE);
+
         rvTextWorks.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         NewTextWorksAdapter adapter = new NewTextWorksAdapter(map, getResources(), getChildFragmentManager());
         subscription = adapter.getOnWebClick().subscribe(textwork -> {
