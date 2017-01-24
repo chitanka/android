@@ -18,6 +18,7 @@ import info.chitanka.android.R;
 import info.chitanka.android.mvp.models.Book;
 import info.chitanka.android.mvp.models.NewBooksResult;
 import info.chitanka.android.ui.dialogs.DownloadDialog;
+import info.chitanka.android.utils.DateUtils;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -65,7 +66,7 @@ public class NewBooksAdapter extends AdvancedSectionedRecyclerViewAdapter<NewBoo
         int i = 0;
         for (String key : map.keySet()) {
             if (i == keyPosition) {
-                return key;
+                return DateUtils.getReadableDateWithTime(key, "yyy-MM-dd");
             }
             i++;
         }

@@ -17,6 +17,7 @@ import info.chitanka.android.R;
 import info.chitanka.android.mvp.models.NewTextWorksResult;
 import info.chitanka.android.mvp.models.TextWork;
 import info.chitanka.android.ui.dialogs.DownloadDialog;
+import info.chitanka.android.utils.DateUtils;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -64,7 +65,7 @@ public class NewTextWorksAdapter extends AdvancedSectionedRecyclerViewAdapter<Ne
         int i = 0;
         for (String key : map.keySet()) {
             if (i == keyPosition) {
-                return key;
+                return DateUtils.getReadableDateWithTime(key, "yyyy-MM-dd");
             }
             i++;
         }
