@@ -1,6 +1,7 @@
 package info.chitanka.android.ui.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,9 +15,11 @@ import com.google.gson.internal.LinkedTreeMap;
 import java.util.List;
 
 import butterknife.Bind;
+import info.chitanka.android.Constants;
 import info.chitanka.android.R;
 import info.chitanka.android.mvp.models.Book;
 import info.chitanka.android.mvp.models.NewBooksResult;
+import info.chitanka.android.ui.BookDetailsActivity;
 import info.chitanka.android.ui.dialogs.DownloadDialog;
 import info.chitanka.android.utils.DateUtils;
 import rx.Observable;
@@ -110,6 +113,12 @@ public class NewBooksAdapter extends AdvancedSectionedRecyclerViewAdapter<NewBoo
 
         holder.tvWeb.setOnClickListener(view1 -> {
             onWebClick.onNext(book);
+        });
+
+        holder.cardView.setOnClickListener(v -> {
+            Intent sendIntent = new Intent(context, BookDetailsActivity.class);
+            sendIntent.putExtra(Constants.EXTRA_BOOK_ID, book.getId());
+            context.startActivity(sendIntent);
         });
     }
 
