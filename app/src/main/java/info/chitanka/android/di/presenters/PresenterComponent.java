@@ -17,6 +17,7 @@ import info.chitanka.android.ui.fragments.books.AuthorBooksFragment;
 import info.chitanka.android.ui.fragments.books.BooksFragment;
 import info.chitanka.android.ui.fragments.books.CategoryBooksFragment;
 import info.chitanka.android.ui.fragments.newest.NewBooksAndTextworksFragment;
+import info.chitanka.android.ui.fragments.newest.NewTextWorksFragment;
 
 /**
  * Created by joro on 16-3-8.
@@ -40,4 +41,5 @@ public interface PresenterComponent {
     void inject(TextWorksFragment textWorksFragment);
     void inject(DownloadDialog downloadDialog);
     void inject(NewBooksAndTextworksFragment newBooksAndTextworksFragment);
+    void inject(NewTextWorksFragment newTextWorksFragment);
 }

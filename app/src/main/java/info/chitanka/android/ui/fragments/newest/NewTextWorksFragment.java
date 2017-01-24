@@ -13,12 +13,20 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import info.chitanka.android.R;
+import info.chitanka.android.TrackingConstants;
+import info.chitanka.android.components.AnalyticsService;
+import info.chitanka.android.di.HasComponent;
+import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.mvp.models.NewTextWorksResult;
 import info.chitanka.android.ui.adapters.NewTextWorksAdapter;
+import info.chitanka.android.utils.IntentUtils;
+import rx.Subscription;
 
 /**
  * Created by nmp on 23.01.17.
@@ -31,11 +39,22 @@ public class NewTextWorksFragment extends Fragment {
         return new NewTextWorksFragment();
     }
 
+    private Subscription subscription;
+
+    @Inject
+    AnalyticsService analyticsService;
+
     @Bind(R.id.rv_textworks)
     RecyclerView rvTextWorks;
 
     @Bind(R.id.loading)
     CircularProgressBar loading;
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        PresenterComponent.class.cast(((HasComponent<PresenterComponent>) getActivity()).getComponent()).inject(this);
+    }
 
     @Nullable
     @Override
@@ -49,12 +68,20 @@ public class NewTextWorksFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        if (subscription != null && !subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
+        }
     }
 
     public void displayTextWorks(LinkedTreeMap<String, List<NewTextWorksResult>> map) {
         loading.progressiveStop();
         loading.setVisibility(View.GONE);
         rvTextWorks.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        rvTextWorks.setAdapter(new NewTextWorksAdapter(map, getResources()));
+        NewTextWorksAdapter adapter = new NewTextWorksAdapter(map, getResources(), getChildFragmentManager());
+        subscription = adapter.getOnWebClick().subscribe(textwork -> {
+            IntentUtils.openWebUrl(textwork.getChitankaUrl(), getActivity());
+            analyticsService.logEvent(TrackingConstants.CLICK_WEB_NEW_TEXTWORKS);
+        });
+        rvTextWorks.setAdapter(adapter);
     }
 }

@@ -1,6 +1,7 @@
 package info.chitanka.android.ui.adapters;
 
 import android.content.res.Resources;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,10 @@ import java.util.List;
 import butterknife.Bind;
 import info.chitanka.android.R;
 import info.chitanka.android.mvp.models.NewTextWorksResult;
+import info.chitanka.android.mvp.models.TextWork;
+import info.chitanka.android.ui.dialogs.DownloadDialog;
+import rx.Observable;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by nmp on 23.01.17.
@@ -22,11 +27,14 @@ import info.chitanka.android.mvp.models.NewTextWorksResult;
 public class NewTextWorksAdapter extends AdvancedSectionedRecyclerViewAdapter<NewTextWorksAdapter.SectionViewHolder, TextWorksAdapter.ViewHolder> {
 
     private final Resources res;
+    private final FragmentManager fragmentManager;
     LinkedTreeMap<String, List<NewTextWorksResult>> map;
+    private PublishSubject<TextWork> onWebClick = PublishSubject.create();
 
-    public NewTextWorksAdapter(LinkedTreeMap<String, List<NewTextWorksResult>> map, Resources res) {
+    public NewTextWorksAdapter(LinkedTreeMap<String, List<NewTextWorksResult>> map, Resources res, FragmentManager fragmentManager) {
         this.map = map;
         this.res = res;
+        this.fragmentManager = fragmentManager;
     }
 
     @Override
@@ -73,6 +81,7 @@ public class NewTextWorksAdapter extends AdvancedSectionedRecyclerViewAdapter<Ne
     @Override
     public TextWorksAdapter.ViewHolder onCreateChildViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_textwork, parent, false);
+
         return new TextWorksAdapter.ViewHolder(view);
     }
 
@@ -81,10 +90,25 @@ public class NewTextWorksAdapter extends AdvancedSectionedRecyclerViewAdapter<Ne
         holder.tvHeader.setText(getDate(position));
     }
 
+    public Observable<TextWork> getOnWebClick() {
+        return onWebClick.asObservable();
+    }
+
     @Override
     public void onBindChildViewHolder(TextWorksAdapter.ViewHolder holder, int belongingGroup, int position, List<Object> payloads) {
         NewTextWorksResult newTextWorksResults = getTextWorks(belongingGroup).get(position);
-        holder.bind(newTextWorksResults.getText(), res);
+        TextWork textWork = newTextWorksResults.getText();
+        holder.bind(textWork, res);
+
+        holder.tvDownload.setOnClickListener(view1 -> {
+            DownloadDialog
+                    .newInstance(textWork.getTitle(), textWork.getDownloadUrl(), textWork.getFormats())
+                    .show(fragmentManager, DownloadDialog.TAG);
+        });
+
+        holder.tvWeb.setOnClickListener(view1 -> {
+            onWebClick.onNext(textWork);
+        });
     }
 
     static class SectionViewHolder extends RecyclerView.ViewHolder {
