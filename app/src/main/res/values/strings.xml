@@ -41,4 +41,8 @@
     <string name="erd_remind_me_later">По-късно.</string>
     <string name="erd_rate_now">Оценка.</string>
     <string name="title_readers">Четци на книги</string>
+    <string name="drawer_new">Ново</string>
+    <string name="title_new_books">Нови Книги</string>
+    <string name="title_new_textworks">Нови Произведения</string>
+    <string name="error_loading_data">Възникна проблем със зареждането на данните!</string>
 </resources>

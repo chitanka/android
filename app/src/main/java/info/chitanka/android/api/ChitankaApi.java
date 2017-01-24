@@ -1,5 +1,7 @@
 package info.chitanka.android.api;
 
+import com.google.gson.JsonObject;
+
 import java.util.List;
 
 import info.chitanka.android.mvp.models.Author;
@@ -20,6 +22,10 @@ import rx.Observable;
  * Created by nmp on 16-3-15.
  */
 public interface ChitankaApi {
+
+    @GET("/new.json")
+    Observable<JsonObject> getNewBooksAndTextworks();
+
     @GET("/books.json")
     Observable<Categories> getCategories();
 

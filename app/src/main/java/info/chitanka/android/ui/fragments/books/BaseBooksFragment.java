@@ -70,7 +70,9 @@ public abstract class BaseBooksFragment extends BaseFragment implements BooksVie
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        subscription.unsubscribe();
+        if (subscription != null) {
+            subscription.unsubscribe();
+        }
     }
 
     @Override

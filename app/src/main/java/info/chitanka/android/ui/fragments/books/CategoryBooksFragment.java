@@ -113,11 +113,15 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
     public void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
+        unsubscribe();
+        booksPresenter.setView(null);
+        booksPresenter.onDestroy();
+    }
+
+    private void unsubscribe() {
         if (subscription != null && !subscription.isUnsubscribed()) {
             subscription.unsubscribe();
         }
-        booksPresenter.setView(null);
-        booksPresenter.onDestroy();
     }
 
     @Override
@@ -176,7 +180,7 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
         if (!slug.equals(categorySlug)) {
             slug = categorySlug;
             page = 1;
-            subscription.unsubscribe();
+            unsubscribe();
             adapter = null;
             booksPresenter.getBooksForCategory(categorySlug, page);
         }

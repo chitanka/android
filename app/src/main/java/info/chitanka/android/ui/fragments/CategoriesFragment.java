@@ -2,6 +2,7 @@ package info.chitanka.android.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,6 +130,19 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
         });
 
         searchableSpinner.setSelection(selectedCategory == -1 ? 0 : selectedCategory);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        removeSearchableDialog();
+    }
+
+    public void removeSearchableDialog() {
+        android.app.Fragment searchableSpinnerDialog = getActivity().getFragmentManager().findFragmentByTag("TAG");
+        if (searchableSpinnerDialog != null && searchableSpinnerDialog.isAdded()) {
+            getActivity().getFragmentManager().beginTransaction().remove(searchableSpinnerDialog).commit();
+        }
     }
 
     @Override

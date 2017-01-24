@@ -71,17 +71,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Book book = books.get(position);
-        holder.tvBookName.setText(book.getTitle());
-        holder.tvDescription.setText((book.getAnnotation() != null ? book.getAnnotation() : ""));
-        holder.tvBookCategory.setText(book.getCategory().getName());
-        holder.tvBookAuthor.setText(book.getTitleAuthor());
-
-        if (book.getFormats() == null || book.getFormats().size() == 0) {
-            holder.tvDownload.setVisibility(View.GONE);
-        } else {
-            holder.tvDownload.setVisibility(View.VISIBLE);
-        }
-        Glide.with(context).load(book.getCover()).fitCenter().crossFade().placeholder(R.drawable.ic_no_cover).into(holder.ivCover);
+        holder.bind(context, book);
     }
 
     @Override
@@ -100,7 +90,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.card_view)
         CardView cardView;
@@ -129,6 +119,20 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        public void bind(Context context, Book book) {
+            tvBookName.setText(book.getTitle());
+            tvDescription.setText((book.getAnnotation() != null ? book.getAnnotation() : ""));
+            tvBookCategory.setText(book.getCategory().getName());
+            tvBookAuthor.setText(book.getTitleAuthor());
+
+            if (book.getFormats() == null || book.getFormats().size() == 0) {
+                tvDownload.setVisibility(View.GONE);
+            } else {
+                tvDownload.setVisibility(View.VISIBLE);
+            }
+            Glide.with(context).load(book.getCover()).fitCenter().crossFade().placeholder(R.drawable.ic_no_cover).into(ivCover);
         }
     }
 }

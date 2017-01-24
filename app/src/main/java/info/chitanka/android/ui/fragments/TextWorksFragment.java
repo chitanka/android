@@ -151,7 +151,7 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
 
     @Override
     public void presentTextWorks(List<TextWork> texts) {
-        if (texts.size() == 0) {
+        if (texts == null || texts.size() == 0) {
             rvTextWorks.setVisibility(View.GONE);
             containerEmpty.setVisibility(View.VISIBLE);
             return;
