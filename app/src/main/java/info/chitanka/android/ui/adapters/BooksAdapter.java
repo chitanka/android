@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -124,7 +125,9 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         public void bind(Context context, Book book) {
             tvBookName.setText(book.getTitle());
             tvDescription.setText((book.getAnnotation() != null ? book.getAnnotation() : ""));
-            tvBookCategory.setText(book.getCategory().getName());
+            if (book.getCategory() != null && !TextUtils.isEmpty(book.getCategory().getName())) {
+                tvBookCategory.setText(book.getCategory().getName());
+            }
             tvBookAuthor.setText(book.getTitleAuthor());
 
             if (book.getFormats() == null || book.getFormats().size() == 0) {
