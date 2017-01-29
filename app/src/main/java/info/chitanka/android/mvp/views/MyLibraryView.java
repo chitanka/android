@@ -5,4 +5,5 @@ package info.chitanka.android.mvp.views;
  */
 
 public interface MyLibraryView extends BaseView {
+    void requestPermissionFromUser();
 }

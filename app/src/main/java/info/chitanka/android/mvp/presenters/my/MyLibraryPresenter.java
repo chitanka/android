@@ -8,4 +8,5 @@ import info.chitanka.android.mvp.views.MyLibraryView;
  */
 
 public interface MyLibraryPresenter extends BaseViewPresenter<MyLibraryView> {
+    void readFiles();
 }

@@ -1,5 +1,7 @@
 package info.chitanka.android.mvp.presenters.my;
 
+import java.lang.ref.WeakReference;
+
 import info.chitanka.android.mvp.presenters.BasePresenter;
 import info.chitanka.android.mvp.views.MyLibraryView;
 
@@ -14,7 +16,7 @@ public class MyLibraryPresenterImpl extends BasePresenter<MyLibraryView> impleme
 
     @Override
     public void onStart() {
-
+        getView().requestPermissionFromUser();
     }
 
     @Override
@@ -24,6 +26,11 @@ public class MyLibraryPresenterImpl extends BasePresenter<MyLibraryView> impleme
 
     @Override
     public void setView(MyLibraryView view) {
+        this.view = new WeakReference<MyLibraryView>(view);
+    }
+
+    @Override
+    public void readFiles() {
 
     }
 }
