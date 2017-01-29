@@ -77,4 +77,7 @@ dependencies {
     }
     compile 'io.github.kobakei:ratethisapp:1.1.1'
     compile project(':folioreader')
+
+    compile 'com.github.hotchemi:permissionsdispatcher:2.3.1'
+    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.3.1'
 }

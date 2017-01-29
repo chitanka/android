@@ -26,6 +26,7 @@
     <string name="drawer_help">Помощ</string>
     <string name="drawer_books">Книги</string>
     <string name="drawer_authors">Автори</string>
+    <string name="drawer_my_lib">Моята библиотека</string>
     <string name="title_open_with">Отвори с</string>
     <string name="download_no_app">Нямате приложения за сваляне на ресурси!</string>
     <string name="web_no_app">Нямате приложения за отваряне на линкове!</string>
@@ -46,4 +47,5 @@
     <string name="title_new_textworks">Нови Произведения</string>
     <string name="error_loading_data">Възникна проблем със зареждането на данните!</string>
     <string name="read">ПРОЧЕТИ</string>
+    <string name="action_settings">Настройки</string>
 </resources>

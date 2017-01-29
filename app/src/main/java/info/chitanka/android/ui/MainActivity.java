@@ -36,6 +36,7 @@ import info.chitanka.android.ui.dialogs.NetworkRequiredDialog;
 import info.chitanka.android.ui.fragments.AuthorsFragment;
 import info.chitanka.android.ui.fragments.BaseFragment;
 import info.chitanka.android.ui.fragments.CategoriesFragment;
+import info.chitanka.android.ui.fragments.my.MyLibraryFragment;
 import info.chitanka.android.ui.fragments.newest.NewBooksAndTextworksFragment;
 import info.chitanka.android.utils.ConnectivityUtils;
 
@@ -191,6 +192,8 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
             fragment = AuthorsFragment.newInstance("");
         } else if (id == R.id.nav_books) {
             fragment = CategoriesFragment.newInstance();
+        } else if (id == R.id.nav_my_lib) {
+            fragment = MyLibraryFragment.newInstance();
         } else if(id == R.id.nav_readers) {
             startActivity(new Intent(this, ReadersActivity.class));
             return;

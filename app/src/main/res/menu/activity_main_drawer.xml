@@ -14,6 +14,11 @@
             android:id="@+id/nav_books"
             android:title="@string/drawer_books" />
     </group>
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_my_lib"
+            android:title="@string/drawer_my_lib" />
+    </group>
     <item android:title="@string/drawer_help">
         <menu>
             <item
