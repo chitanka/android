@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.folioreader.activity.FolioActivity;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.List;
@@ -114,6 +115,17 @@ public class NewBooksAdapter extends AdvancedSectionedRecyclerViewAdapter<NewBoo
         holder.tvWeb.setOnClickListener(view1 -> {
             onWebClick.onNext(book);
         });
+
+        holder.tvRead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, FolioActivity.class);
+                intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
+                intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, "/storage/emulated/0/Download/test.epub");
+                context.startActivity(intent);
+            }
+        });
+
 
         holder.cardView.setOnClickListener(v -> {
             Intent sendIntent = new Intent(context, BookDetailsActivity.class);

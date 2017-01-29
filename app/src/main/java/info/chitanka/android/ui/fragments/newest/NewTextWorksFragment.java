@@ -75,6 +75,10 @@ public class NewTextWorksFragment extends Fragment {
     }
 
     public void displayTextWorks(LinkedTreeMap<String, List<NewTextWorksResult>> map) {
+        if (!isAdded()) {
+            return;
+        }
+
         loading.progressiveStop();
         loading.setVisibility(View.GONE);
 

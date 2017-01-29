@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.folioreader.activity.FolioActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +61,16 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         viewHolder.tvWeb.setOnClickListener(v2 -> {
             Book book = books.get(viewHolder.getAdapterPosition());
             onWebClick.onNext(book);
+        });
+
+        viewHolder.tvRead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, FolioActivity.class);
+                intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
+                intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, "/storage/emulated/0/Download/test.epub");
+                context.startActivity(intent);
+            }
         });
 
         return viewHolder;
@@ -116,6 +127,9 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
 
         @Bind(R.id.tv_download)
         TextView tvDownload;
+
+        @Bind(R.id.tv_read)
+        TextView tvRead;
 
         public ViewHolder(View itemView) {
             super(itemView);

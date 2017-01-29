@@ -75,6 +75,10 @@ public class NewBooksFragment extends Fragment {
     }
 
     public void displayBooks(LinkedTreeMap<String, List<NewBooksResult>> map) {
+        if (!isAdded()) {
+            return;
+        }
+
         loading.progressiveStop();
         loading.setVisibility(View.GONE);
 
