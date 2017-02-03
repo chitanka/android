@@ -18,4 +18,5 @@ public class Constants {
     public static final String EXTRA_SLUG = "extra_slug";
     public static final String EXTRA_FORMATS = "extra_formats";
     public static final String EXTRA_BOOK_ID = "extra_book_id";
+    public static final String CHITANKA_FOLDER_ROOT = "chitanka";
 }

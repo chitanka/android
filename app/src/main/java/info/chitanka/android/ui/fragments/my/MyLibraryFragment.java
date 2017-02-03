@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import java.io.File;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.Bind;
@@ -25,6 +28,7 @@ import permissions.dispatcher.OnPermissionDenied;
 import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
+import timber.log.Timber;
 
 /**
  * Created by joro on 29.01.17.
@@ -97,7 +101,7 @@ public class MyLibraryFragment extends BaseFragment implements MyLibraryView{
 
     @Override
     public boolean isActive() {
-        return false;
+        return isAdded();
     }
 
     @Override
@@ -113,6 +117,11 @@ public class MyLibraryFragment extends BaseFragment implements MyLibraryView{
     @Override
     public void requestPermissionFromUser() {
         MyLibraryFragmentPermissionsDispatcher.readFilesWithCheck(this);
+    }
+
+    @Override
+    public void displayFilesList(List<File> fileNames) {
+        Timber.d(fileNames.toString());
     }
 
     @Override
