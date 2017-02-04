@@ -52,4 +52,6 @@
     <string name="button_deny">Отказ</string>
     <string name="message_storage_needed">Разрешението ви е нужно, за да видите списъка с вашите книги!</string>
     <string name="storage_denied">Книгите ви не могат да бъдат заредени!</string>
+    <string name="downloading_file">Файлът се сваля!</string>
+    <string name="file_downloaded">Файлът е свален!</string>
 </resources>

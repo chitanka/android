@@ -59,6 +59,8 @@
         <activity
             android:name=".ui.AuthorDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <service android:name=".ui.services.DownloadService" />
     </application>
 
 </manifest>
