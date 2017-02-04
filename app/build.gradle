@@ -30,8 +30,8 @@ android {
         applicationId "info.chitanka.android"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 8
-        versionName "3.1.1"
+        versionCode 9
+        versionName "4.0"
 
         buildConfigField "String", "FLURRY_KEY", "\"${flurryKey}\""
     }
