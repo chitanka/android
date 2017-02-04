@@ -125,7 +125,7 @@
                         android:visibility="@{book.getFormats() == null || book.getFormats().size() == 0 ? View.GONE : View.VISIBLE}"
                         app:downloadTitle="@{book.getTitle()}"
                         app:downloadFormats="@{book.getFormats()}"
-                        app:downloadUrl="@{book.getChitankaUrl()}"
+                        app:downloadUrl="@{book.getDownloadUrl()}"
                         app:context="@{context}"/>
 
                     <TextView
@@ -135,6 +135,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_toRightOf="@id/tv_download"
+                        app:downloadTitle="@{book.getReadingFileName()}"
+                        app:downloadUrl='@{String.format(book.getDownloadUrl(), "epub")}'
+                        app:context="@{context}"
                         android:text="@string/read" />
                 </RelativeLayout>
             </RelativeLayout>

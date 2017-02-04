@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import info.chitanka.android.R;
 import info.chitanka.android.ui.dialogs.DownloadDialog;
+import info.chitanka.android.ui.fragments.DownloadFilePermissionsFragment;
 
 /**
  * Created by nmp on 04.02.17.
@@ -23,6 +24,17 @@ public class BindingAdapters {
     public static void displayDownloadDialog(TextView textView, String title, String url, ArrayList<String> formats, Context context) {
         textView.setOnClickListener(null);
         textView.setOnClickListener(view -> DownloadDialog.newInstance(title, url, formats).show(((FragmentActivity)context).getSupportFragmentManager(), DownloadDialog.TAG));
+    }
+
+    @BindingAdapter({"app:downloadTitle", "app:downloadUrl", "app:context"})
+    public static void displayDownloadDialog(TextView textView, String title, String url, Context context) {
+        textView.setOnClickListener(null);
+        textView.setOnClickListener(view -> {
+            ((FragmentActivity) context).getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(android.R.id.content, DownloadFilePermissionsFragment.newInstance(title, url), DownloadFilePermissionsFragment.TAG)
+                    .commit();
+        });
     }
 
     @BindingAdapter({"app:imageUrl", "app:context"})
