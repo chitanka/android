@@ -9,9 +9,12 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+
+import org.parceler.Parcels;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -122,10 +125,18 @@ public class DownloadService extends IntentService {
         notificationManager.notify(0, notificationBuilder.build());
     }
 
+    private void sendIntent(Download download){
+        Intent intent = new Intent(Constants.ACTION_MESSAGE_PROGRESS);
+        intent.putExtra(Constants.EXTRA_DOWNLOAD, Parcels.wrap(download));
+        LocalBroadcastManager.getInstance(DownloadService.this).sendBroadcast(intent);
+    }
+
     private void onDownloadComplete() {
 
         Download download = new Download();
         download.setProgress(100);
+        download.setFilePath(new File(folderPath, fileName).getAbsolutePath());
+        sendIntent(download);
 
         notificationManager.cancel(0);
         notificationBuilder.setProgress(0, 0, false);

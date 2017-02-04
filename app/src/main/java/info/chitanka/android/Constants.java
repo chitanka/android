@@ -23,4 +23,6 @@ public class Constants {
     public static final String EXTRA_FILE_URL = "file_url";
     public static final String EXTRA_FILE_NAME = "file_name";
     public static final String EXTRA_FOLDER_PATH = "folder_path";
+    public static final String EXTRA_DOWNLOAD = "extra_download";
+    public static final String ACTION_MESSAGE_PROGRESS = "message_progress";
 }

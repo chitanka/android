@@ -1,11 +1,15 @@
 package info.chitanka.android.ui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,6 +21,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.kobakei.ratethisapp.RateThisApp;
+
+import org.parceler.Parcels;
 
 import java.util.HashMap;
 
@@ -32,6 +38,7 @@ import info.chitanka.android.components.AnalyticsService;
 import info.chitanka.android.di.HasComponent;
 import info.chitanka.android.di.presenters.DaggerPresenterComponent;
 import info.chitanka.android.di.presenters.PresenterComponent;
+import info.chitanka.android.mvp.models.Download;
 import info.chitanka.android.ui.dialogs.NetworkRequiredDialog;
 import info.chitanka.android.ui.fragments.AuthorsFragment;
 import info.chitanka.android.ui.fragments.BaseFragment;
@@ -39,6 +46,7 @@ import info.chitanka.android.ui.fragments.CategoriesFragment;
 import info.chitanka.android.ui.fragments.my.MyLibraryFragment;
 import info.chitanka.android.ui.fragments.newest.NewBooksAndTextworksFragment;
 import info.chitanka.android.utils.ConnectivityUtils;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements HasComponent<PresenterComponent>, NavigationView.OnNavigationItemSelectedListener {
     public static final String NETWORK_REQUIRED_DIALOG_FRAGMENT = "NetworkRequiredDialogFragment";
@@ -57,11 +65,20 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
 
     private NetworkRequiredDialog networkRequiredDialog;
     private PresenterComponent presenterComponent;
+    private BroadcastReceiver readBookReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Download download = Parcels.unwrap(intent.getParcelableExtra(Constants.EXTRA_DOWNLOAD));
+            Timber.d(download.getFilePath() + " " + download.getProgress());
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(readBookReceiver, new IntentFilter(Constants.ACTION_MESSAGE_PROGRESS));
 
         presenterComponent = DaggerPresenterComponent.builder().applicationComponent(ChitankaApplication.getApplicationComponent()).build();
         getComponent().inject(this);
@@ -158,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(readBookReceiver);
     }
 
     @Override
