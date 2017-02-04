@@ -13,9 +13,11 @@ import info.chitanka.android.mvp.models.Categories;
 import info.chitanka.android.mvp.models.CategoryBooks;
 import info.chitanka.android.mvp.models.SearchBooks;
 import info.chitanka.android.mvp.models.TextWorksSearchResult;
+import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Streaming;
 import rx.Observable;
 
 /**
@@ -52,4 +54,8 @@ public interface ChitankaApi {
 
     @GET("/texts/search.json")
     Observable<TextWorksSearchResult> searchTextWorks(@Query("q") String searchTerm);
+
+    @GET("{fullUrl}")
+    @Streaming
+    retrofit2.Call<ResponseBody> downloadFile(@Path(value = "fullUrl", encoded = true) String url);
 }

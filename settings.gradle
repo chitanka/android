@@ -1,1 +1,3 @@
-include ':app'
+include ':app', ':folioreader', ':webViewMarker'
+project(':folioreader').projectDir = new File('FolioReader-Android/folioreader')
+project(':webViewMarker').projectDir = new File('FolioReader-Android/webViewMarker')

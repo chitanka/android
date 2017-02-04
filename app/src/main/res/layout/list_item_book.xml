@@ -1,114 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="book" type="info.chitanka.android.mvp.models.Book"/>
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_view"
-        android:layout_width="wrap_content"
-        android:layout_height="260dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="5dp"
-        app:cardCornerRadius="2dp">
+        <import type="android.text.TextUtils" />
+        <import type="android.view.View" />
+    </data>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="4dp"
-            android:paddingRight="4dp"
-            android:paddingLeft="4dp"
-            android:paddingTop="4dp">
+    <RelativeLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_view"
+            android:layout_width="wrap_content"
+            android:layout_height="260dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            app:cardCornerRadius="2dp">
 
             <RelativeLayout
-                android:id="@+id/container_details"
-                android:layout_above="@+id/tv_description"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="4dp">
+                android:layout_height="match_parent"
+                android:paddingBottom="4dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:paddingTop="4dp">
 
-                <ImageView
-                    android:id="@+id/iv_cover"
-                    android:layout_width="100dp"
-                    android:layout_height="140dp"
-                    android:layout_alignParentLeft="true"
-                    android:scaleType="centerInside" />
+                <RelativeLayout
+                    android:id="@+id/container_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/tv_description"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp">
+
+                    <ImageView
+                        android:id="@+id/iv_cover"
+                        android:layout_width="100dp"
+                        android:layout_height="140dp"
+                        android:layout_alignParentLeft="true"
+                        app:imageUrl="@{book.getCover()}"
+                        app:context="@{context}"
+                        android:scaleType="centerInside" />
+
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="8dp"
+                        android:layout_toRightOf="@+id/iv_cover"
+                        android:ellipsize="end"
+                        android:maxLines="3"
+                        android:text="@{book.getTitle()}"
+                        android:textColor="@color/primary_title"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/tv_author"
+                        android:text="@{book.getTitleAuthor()}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_name"
+                        android:layout_marginLeft="8dp"
+                        android:layout_toRightOf="@+id/iv_cover"
+                        android:textColor="@color/secondary_title"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_category"
+                        android:text='@{(book.getCategory() != null &amp;&amp; !TextUtils.isEmpty(book.getCategory().getName)) ? book.getCategory().getName() : ""}'
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_author"
+                        android:layout_marginLeft="8dp"
+                        android:layout_toRightOf="@+id/iv_cover"
+                        android:textColor="@color/hint"
+                        android:textSize="12sp" />
+
+                </RelativeLayout>
 
                 <TextView
-                    android:id="@+id/tv_name"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_description"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:maxLines="3"
+                    android:layout_above="@+id/container_actions"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text='@{TextUtils.isEmpty(book.getAnnotation()) ? "" : book.getAnnotation()}'
                     android:ellipsize="end"
-                    android:layout_marginLeft="8dp"
-                    android:layout_toRightOf="@+id/iv_cover"
-                    android:textColor="@color/primary_title"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/tv_author"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_name"
-                    android:layout_marginLeft="8dp"
-                    android:layout_toRightOf="@+id/iv_cover"
+                    android:maxLines="3"
                     android:textColor="@color/secondary_title"
-                    android:textSize="14sp" />
+                    android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/tv_category"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:id="@+id/container_actions"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_author"
-                    android:layout_marginLeft="8dp"
-                    android:layout_toRightOf="@+id/iv_cover"
-                    android:textColor="@color/hint"
-                    android:textSize="12sp" />
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp">
 
+                    <TextView
+                        android:id="@+id/tv_web"
+                        style="@style/ActionButtons"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="@string/open_chitanka" />
+
+                    <TextView
+                        android:id="@+id/tv_download"
+                        style="@style/ActionButtons"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tv_web"
+                        android:text="@string/download"
+                        android:visibility="@{book.getFormats() == null || book.getFormats().size() == 0 ? View.GONE : View.VISIBLE}"
+                        app:downloadTitle="@{book.getTitle()}"
+                        app:downloadFormats="@{book.getFormats()}"
+                        app:downloadUrl="@{book.getDownloadUrl()}"
+                        app:context="@{context}"/>
+
+                    <TextView
+                        android:id="@+id/tv_read"
+                        style="@style/ActionButtons"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tv_download"
+                        app:downloadTitle="@{book.getReadingFileName()}"
+                        app:downloadUrl='@{String.format(book.getDownloadUrl(), "epub")}'
+                        app:context="@{context}"
+                        android:text="@string/read" />
+                </RelativeLayout>
             </RelativeLayout>
-
-            <TextView
-                android:id="@+id/tv_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/container_actions"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="8dp"
-                android:ellipsize="end"
-                android:maxLines="3"
-                android:textColor="@color/secondary_title"
-                android:textSize="18sp" />
-
-            <RelativeLayout
-                android:id="@+id/container_actions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp">
-
-                <TextView
-                    android:id="@+id/tv_web"
-                    style="@style/ActionButtons"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:text="@string/open_chitanka" />
-
-                <TextView
-                    android:id="@+id/tv_download"
-                    style="@style/ActionButtons"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/tv_web"
-                    android:text="@string/download" />
-            </RelativeLayout>
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
-</RelativeLayout>
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
+</layout>

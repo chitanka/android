@@ -31,7 +31,6 @@ import info.chitanka.android.mvp.views.TextWorksView;
 import info.chitanka.android.ui.adapters.TextWorksAdapter;
 import info.chitanka.android.utils.IntentUtils;
 import info.chitanka.android.utils.RxBus;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by nmp on 21.01.17.
@@ -61,8 +60,6 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
     private String searchTerm;
     private String authorSlug;
 
-    private CompositeSubscription subscription;
-
     public static TextWorksFragment newInstance(String searchTerm, String authorSlug) {
 
         Bundle args = new Bundle();
@@ -88,15 +85,16 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
             presenter.searchTextWorks(searchTerm);
         }
 
-        subscription = new CompositeSubscription();
-        subscription.add(rxBus.toObserverable().subscribe((event) -> {
-            if (event instanceof SearchBookEvent) {
-                containerEmpty.setVisibility(View.GONE);
-                rvTextWorks.setVisibility(View.GONE);
-                searchTerm = ((SearchBookEvent) event).getName();
-                presenter.searchTextWorks(searchTerm);
-            }
-        }));
+        rxBus.toObserverable()
+                .compose(bindToLifecycle())
+                .subscribe((event) -> {
+                    if (event instanceof SearchBookEvent) {
+                        containerEmpty.setVisibility(View.GONE);
+                        rvTextWorks.setVisibility(View.GONE);
+                        searchTerm = ((SearchBookEvent) event).getName();
+                        presenter.searchTextWorks(searchTerm);
+                    }
+                });
     }
 
     @Nullable
@@ -125,7 +123,6 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
         super.onDetach();
         ButterKnife.unbind(this);
         presenter.onDestroy();
-        subscription.unsubscribe();
     }
 
     @Override
@@ -160,10 +157,12 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
         rvTextWorks.setVisibility(View.VISIBLE);
         containerEmpty.setVisibility(View.GONE);
         TextWorksAdapter adapter = new TextWorksAdapter(texts, getActivity());
-        subscription.add(adapter.getOnWebClick().subscribe(textwork -> {
-            IntentUtils.openWebUrl(textwork.getChitankaUrl(), getActivity());
-            analyticsService.logEvent(TrackingConstants.CLICK_WEB_TEXTWORKS);
-        }));
+        adapter.getOnWebClick()
+                .compose(bindToLifecycle())
+                .subscribe(textwork -> {
+                    IntentUtils.openWebUrl(textwork.getChitankaUrl(), getActivity());
+                    analyticsService.logEvent(TrackingConstants.CLICK_WEB_TEXTWORKS);
+                });
         rvTextWorks.setAdapter(adapter);
     }
 }

@@ -20,7 +20,6 @@ import info.chitanka.android.events.SearchBookEvent;
 import info.chitanka.android.mvp.presenters.books.BooksPresenter;
 import info.chitanka.android.mvp.views.BooksView;
 import info.chitanka.android.utils.RxBus;
-import rx.Subscription;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -35,7 +34,6 @@ public class BooksFragment extends BaseBooksFragment implements BooksView {
     @Inject
     RxBus rxBus;
 
-    private Subscription subscription;
     private String query;
 
     public BooksFragment() {
@@ -60,14 +58,16 @@ public class BooksFragment extends BaseBooksFragment implements BooksView {
 
         getComponent(PresenterComponent.class).inject(this);
 
-        subscription = rxBus.toObserverable().subscribe((event) -> {
-            if (event instanceof SearchBookEvent) {
-                containerEmpty.setVisibility(View.GONE);
-                rvBooks.setVisibility(View.GONE);
-                query = ((SearchBookEvent) event).getName();
-                booksPresenter.searchBooks(query);
-            }
-        });
+        rxBus.toObserverable()
+                .compose(bindToLifecycle())
+                .subscribe((event) -> {
+                    if (event instanceof SearchBookEvent) {
+                        containerEmpty.setVisibility(View.GONE);
+                        rvBooks.setVisibility(View.GONE);
+                        query = ((SearchBookEvent) event).getName();
+                        booksPresenter.searchBooks(query);
+                    }
+                });
 
         booksPresenter.onStart();
         booksPresenter.setView(this);
@@ -100,7 +100,6 @@ public class BooksFragment extends BaseBooksFragment implements BooksView {
     public void onStop() {
         super.onStop();
         booksPresenter.onDestroy();
-        subscription.unsubscribe();
     }
 
     @Override

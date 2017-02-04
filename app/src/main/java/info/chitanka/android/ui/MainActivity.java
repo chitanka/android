@@ -1,11 +1,16 @@
 package info.chitanka.android.ui;
 
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,7 +21,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.folioreader.activity.FolioActivity;
 import com.kobakei.ratethisapp.RateThisApp;
+
+import org.parceler.Parcels;
 
 import java.util.HashMap;
 
@@ -32,10 +40,12 @@ import info.chitanka.android.components.AnalyticsService;
 import info.chitanka.android.di.HasComponent;
 import info.chitanka.android.di.presenters.DaggerPresenterComponent;
 import info.chitanka.android.di.presenters.PresenterComponent;
+import info.chitanka.android.mvp.models.Download;
 import info.chitanka.android.ui.dialogs.NetworkRequiredDialog;
 import info.chitanka.android.ui.fragments.AuthorsFragment;
 import info.chitanka.android.ui.fragments.BaseFragment;
 import info.chitanka.android.ui.fragments.CategoriesFragment;
+import info.chitanka.android.ui.fragments.my.MyLibraryFragment;
 import info.chitanka.android.ui.fragments.newest.NewBooksAndTextworksFragment;
 import info.chitanka.android.utils.ConnectivityUtils;
 
@@ -56,11 +66,22 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
 
     private NetworkRequiredDialog networkRequiredDialog;
     private PresenterComponent presenterComponent;
+    private BroadcastReceiver readBookReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(Constants.NOTIFICATION_ID_DOWNLOAD);
+            Download download = Parcels.unwrap(intent.getParcelableExtra(Constants.EXTRA_DOWNLOAD));
+            readFile(download.getFilePath());
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(readBookReceiver, new IntentFilter(Constants.ACTION_MESSAGE_PROGRESS));
 
         presenterComponent = DaggerPresenterComponent.builder().applicationComponent(ChitankaApplication.getApplicationComponent()).build();
         getComponent().inject(this);
@@ -157,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(readBookReceiver);
     }
 
     @Override
@@ -191,6 +213,8 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
             fragment = AuthorsFragment.newInstance("");
         } else if (id == R.id.nav_books) {
             fragment = CategoriesFragment.newInstance();
+        } else if (id == R.id.nav_my_lib) {
+            fragment = MyLibraryFragment.newInstance();
         } else if(id == R.id.nav_readers) {
             startActivity(new Intent(this, ReadersActivity.class));
             return;
@@ -228,6 +252,13 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
             appBarLayout.setEnabled(true);
         }
         appBarLayout.requestLayout();
+    }
+
+    private void readFile(String filePath) {
+        Intent intent = new Intent(this, FolioActivity.class);
+        intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
+        intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, filePath);
+        startActivity(intent);
     }
 
     @Override

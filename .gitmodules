@@ -1,0 +1,3 @@
+[submodule "FolioReader-Android"]
+    path = FolioReader-Android
+    url = git@github.com:n0m0r3pa1n/FolioReader-Android.git

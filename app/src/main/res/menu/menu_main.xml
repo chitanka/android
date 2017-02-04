@@ -10,5 +10,4 @@
         app:queryHint="@string/action_search"
         android:actionViewClass="android.support.v7.widget.SearchView"
         app:actionViewClass="android.support.v7.widget.SearchView"/>
-
 </menu>

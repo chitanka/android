@@ -1,9 +1,7 @@
 package info.chitanka.android.ui.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +13,10 @@ import com.google.gson.internal.LinkedTreeMap;
 import java.util.List;
 
 import butterknife.Bind;
-import info.chitanka.android.Constants;
 import info.chitanka.android.R;
+import info.chitanka.android.databinding.ListItemBookBinding;
 import info.chitanka.android.mvp.models.Book;
 import info.chitanka.android.mvp.models.NewBooksResult;
-import info.chitanka.android.ui.BookDetailsActivity;
-import info.chitanka.android.ui.dialogs.DownloadDialog;
 import info.chitanka.android.utils.DateUtils;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -32,14 +28,13 @@ import rx.subjects.PublishSubject;
 public class NewBooksAdapter extends AdvancedSectionedRecyclerViewAdapter<NewBooksAdapter.SectionViewHolder, BooksAdapter.ViewHolder> {
 
     private final Context context;
-    private final FragmentManager fragmentManager;
     LinkedTreeMap<String, List<NewBooksResult>> map;
     private PublishSubject<Book> onWebClick = PublishSubject.create();
+    private PublishSubject<Book> onReadClick = PublishSubject.create();
 
     public NewBooksAdapter(LinkedTreeMap<String, List<NewBooksResult>> map, FragmentActivity activity) {
         this.map = map;
         this.context = activity;
-        this.fragmentManager = activity.getSupportFragmentManager();
     }
 
     @Override
@@ -85,9 +80,8 @@ public class NewBooksAdapter extends AdvancedSectionedRecyclerViewAdapter<NewBoo
 
     @Override
     public BooksAdapter.ViewHolder onCreateChildViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_book, parent, false);
-
-        return new BooksAdapter.ViewHolder(view);
+        ListItemBookBinding binding = ListItemBookBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new BooksAdapter.ViewHolder(binding);
     }
 
     @Override
@@ -99,27 +93,24 @@ public class NewBooksAdapter extends AdvancedSectionedRecyclerViewAdapter<NewBoo
         return onWebClick.asObservable();
     }
 
+    public Observable<Book> getOnReadClick() {
+        return onReadClick.asObservable();
+    }
+
     @Override
     public void onBindChildViewHolder(BooksAdapter.ViewHolder holder, int belongingGroup, int position, List<Object> payloads) {
         NewBooksResult newTextWorksResults = getBooks(belongingGroup).get(position);
         Book book = newTextWorksResults.getBook();
-        holder.bind(context, book);
 
-        holder.tvDownload.setOnClickListener(view1 -> {
-            DownloadDialog
-                    .newInstance(book.getTitle(), book.getDownloadUrl(), book.getFormats())
-                    .show(fragmentManager, DownloadDialog.TAG);
-        });
-
-        holder.tvWeb.setOnClickListener(view1 -> {
+        holder.binding.tvWeb.setOnClickListener(view1 -> {
             onWebClick.onNext(book);
         });
 
-        holder.cardView.setOnClickListener(v -> {
-            Intent sendIntent = new Intent(context, BookDetailsActivity.class);
-            sendIntent.putExtra(Constants.EXTRA_BOOK_ID, book.getId());
-            context.startActivity(sendIntent);
+        holder.binding.tvRead.setOnClickListener(view -> {
+            onReadClick.onNext(book);
         });
+
+        holder.bind(book, context);
     }
 
     static class SectionViewHolder extends RecyclerView.ViewHolder {

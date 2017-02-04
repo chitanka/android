@@ -30,6 +30,10 @@ public class DownloadActionsAdapter extends RecyclerView.Adapter<DownloadActions
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_download, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         viewHolder.btnFlat.setOnClickListener(view1 -> {
+            if (viewHolder.getAdapterPosition() == RecyclerView.NO_POSITION) {
+                return;
+            }
+
             String format = formats.get(viewHolder.getAdapterPosition());
             onClick.onNext(format);
         });

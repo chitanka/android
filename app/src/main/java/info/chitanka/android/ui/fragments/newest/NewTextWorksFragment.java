@@ -2,7 +2,6 @@ package info.chitanka.android.ui.fragments.newest;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.internal.LinkedTreeMap;
+import com.trello.rxlifecycle.components.support.RxFragment;
 
 import java.util.List;
 
@@ -26,20 +26,18 @@ import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.mvp.models.NewTextWorksResult;
 import info.chitanka.android.ui.adapters.NewTextWorksAdapter;
 import info.chitanka.android.utils.IntentUtils;
-import rx.Subscription;
 
 /**
  * Created by nmp on 23.01.17.
  */
 
-public class NewTextWorksFragment extends Fragment {
+public class NewTextWorksFragment extends RxFragment {
     public static final String TAG = NewTextWorksFragment.class.getSimpleName();
 
     public static NewTextWorksFragment newInstance() {
         return new NewTextWorksFragment();
     }
 
-    private Subscription subscription;
 
     @Inject
     AnalyticsService analyticsService;
@@ -69,18 +67,21 @@ public class NewTextWorksFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        if (subscription != null && !subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
-        }
     }
 
     public void displayTextWorks(LinkedTreeMap<String, List<NewTextWorksResult>> map) {
+        if (!isAdded()) {
+            return;
+        }
+
         loading.progressiveStop();
         loading.setVisibility(View.GONE);
 
         rvTextWorks.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         NewTextWorksAdapter adapter = new NewTextWorksAdapter(map, getResources(), getChildFragmentManager());
-        subscription = adapter.getOnWebClick().subscribe(textwork -> {
+        adapter.getOnWebClick()
+                .compose(bindToLifecycle())
+                .subscribe(textwork -> {
             IntentUtils.openWebUrl(textwork.getChitankaUrl(), getActivity());
             analyticsService.logEvent(TrackingConstants.CLICK_WEB_NEW_TEXTWORKS);
         });
