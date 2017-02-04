@@ -122,7 +122,7 @@ public class DownloadService extends IntentService {
     private void sendNotification(Download download) {
         notificationBuilder.setProgress(100, download.getProgress(), false);
         notificationBuilder.setContentText(download.getCurrentFileSize() + "/" + totalFileSize + " MB");
-        notificationManager.notify(0, notificationBuilder.build());
+        notificationManager.notify(Constants.NOTIFICATION_ID_DOWNLOAD, notificationBuilder.build());
     }
 
     private void sendIntent(Download download){
@@ -138,10 +138,10 @@ public class DownloadService extends IntentService {
         download.setFilePath(new File(folderPath, fileName).getAbsolutePath());
         sendIntent(download);
 
-        notificationManager.cancel(0);
+        notificationManager.cancel(Constants.NOTIFICATION_ID_DOWNLOAD);
         notificationBuilder.setProgress(0, 0, false);
         notificationBuilder.setContentText(getString(R.string.file_downloaded));
-        notificationManager.notify(0, notificationBuilder.build());
+        notificationManager.notify(Constants.NOTIFICATION_ID_DOWNLOAD, notificationBuilder.build());
 
     }
 

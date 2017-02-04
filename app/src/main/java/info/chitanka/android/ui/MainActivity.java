@@ -1,5 +1,6 @@
 package info.chitanka.android.ui;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.folioreader.activity.FolioActivity;
 import com.kobakei.ratethisapp.RateThisApp;
 
 import org.parceler.Parcels;
@@ -46,7 +48,6 @@ import info.chitanka.android.ui.fragments.CategoriesFragment;
 import info.chitanka.android.ui.fragments.my.MyLibraryFragment;
 import info.chitanka.android.ui.fragments.newest.NewBooksAndTextworksFragment;
 import info.chitanka.android.utils.ConnectivityUtils;
-import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements HasComponent<PresenterComponent>, NavigationView.OnNavigationItemSelectedListener {
     public static final String NETWORK_REQUIRED_DIALOG_FRAGMENT = "NetworkRequiredDialogFragment";
@@ -68,8 +69,10 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
     private BroadcastReceiver readBookReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(Constants.NOTIFICATION_ID_DOWNLOAD);
             Download download = Parcels.unwrap(intent.getParcelableExtra(Constants.EXTRA_DOWNLOAD));
-            Timber.d(download.getFilePath() + " " + download.getProgress());
+            readFile(download.getFilePath());
         }
     };
 
@@ -249,6 +252,13 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
             appBarLayout.setEnabled(true);
         }
         appBarLayout.requestLayout();
+    }
+
+    private void readFile(String filePath) {
+        Intent intent = new Intent(this, FolioActivity.class);
+        intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
+        intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, filePath);
+        startActivity(intent);
     }
 
     @Override
