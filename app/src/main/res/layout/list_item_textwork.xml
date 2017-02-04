@@ -1,87 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_view"
+    <data>
+
+        <variable
+            name="textWork"
+            type="info.chitanka.android.mvp.models.TextWork" />
+
+        <import type="android.text.TextUtils" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <RelativeLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="4dp"
-        app:cardCornerRadius="2dp">
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="4dp">
-
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_alignParentTop="true"
-                android:gravity="center"
-                style="@style/TextAppearance.AppCompat.Title"
-                android:layout_centerHorizontal="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/tv_subtitle"
-                style="@style/Base.TextAppearance.AppCompat.SearchResult.Subtitle"
-                android:layout_marginTop="4dp"
-                android:layout_below="@id/tv_title"
-                android:gravity="center_horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/tv_author_name"
-                android:layout_marginTop="4dp"
-                style="@style/Base.TextAppearance.AppCompat.Body1"
-                android:layout_below="@id/tv_subtitle"
-                android:gravity="center_horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/tv_rating"
-                style="@style/Base.TextAppearance.AppCompat.Body1"
-                android:layout_below="@id/tv_author_name"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="4dp"
+            app:cardCornerRadius="2dp">
 
             <RelativeLayout
-                android:id="@+id/container_actions"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_rating"
-                android:layout_alignParentBottom="true"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp">
+                android:layout_height="match_parent"
+                android:padding="4dp">
 
                 <TextView
-                    android:id="@+id/tv_web"
-                    style="@style/ActionButtons"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_title"
+                    android:text="@{textWork.getTitle()}"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:text="@string/open_chitanka" />
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center" />
 
                 <TextView
-                    android:id="@+id/tv_download"
-                    style="@style/ActionButtons"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_subtitle"
+                    android:text="@{textWork.getSubtitle()}"
+                    style="@style/Base.TextAppearance.AppCompat.SearchResult.Subtitle"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/tv_web"
-                    android:text="@string/download" />
+                    android:layout_below="@id/tv_title"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_horizontal" />
+
+                <TextView
+                    android:id="@+id/tv_author_name"
+                    style="@style/Base.TextAppearance.AppCompat.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_subtitle"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_horizontal" />
+
+                <TextView
+                    android:id="@+id/tv_rating"
+                    style="@style/Base.TextAppearance.AppCompat.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_author_name"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center" />
+
+                <RelativeLayout
+                    android:id="@+id/container_actions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@id/tv_rating"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp">
+
+                    <TextView
+                        android:id="@+id/tv_web"
+                        style="@style/ActionButtons"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="@string/open_chitanka" />
+
+                    <TextView
+                        android:id="@+id/tv_download"
+                        style="@style/ActionButtons"
+                        android:visibility="@{textWork.getFormats() == null || textWork.getFormats().size() == 0 ? View.GONE : View.VISIBLE}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tv_web"
+                        android:text="@string/download"
+                        app:downloadTitle="@{textWork.getTitle()}"
+                        app:downloadFormats="@{textWork.getFormats()}"
+                        app:downloadUrl="@{textWork.getDownloadUrl()}"
+                        app:context="@{context}" />
+                </RelativeLayout>
             </RelativeLayout>
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
-</RelativeLayout>
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
+</layout>

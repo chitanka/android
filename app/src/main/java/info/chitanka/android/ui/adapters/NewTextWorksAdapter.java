@@ -14,9 +14,9 @@ import java.util.List;
 
 import butterknife.Bind;
 import info.chitanka.android.R;
+import info.chitanka.android.databinding.ListItemTextworkBinding;
 import info.chitanka.android.mvp.models.NewTextWorksResult;
 import info.chitanka.android.mvp.models.TextWork;
-import info.chitanka.android.ui.dialogs.DownloadDialog;
 import info.chitanka.android.utils.DateUtils;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -81,9 +81,9 @@ public class NewTextWorksAdapter extends AdvancedSectionedRecyclerViewAdapter<Ne
 
     @Override
     public TextWorksAdapter.ViewHolder onCreateChildViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_textwork, parent, false);
+        ListItemTextworkBinding binding = ListItemTextworkBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
 
-        return new TextWorksAdapter.ViewHolder(view);
+        return new TextWorksAdapter.ViewHolder(binding);
     }
 
     @Override
@@ -101,13 +101,7 @@ public class NewTextWorksAdapter extends AdvancedSectionedRecyclerViewAdapter<Ne
         TextWork textWork = newTextWorksResults.getText();
         holder.bind(textWork, res);
 
-        holder.tvDownload.setOnClickListener(view1 -> {
-            DownloadDialog
-                    .newInstance(textWork.getTitle(), textWork.getDownloadUrl(), textWork.getFormats())
-                    .show(fragmentManager, DownloadDialog.TAG);
-        });
-
-        holder.tvWeb.setOnClickListener(view1 -> {
+        holder.binding.tvWeb.setOnClickListener(view1 -> {
             onWebClick.onNext(textWork);
         });
     }
