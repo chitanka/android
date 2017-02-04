@@ -34,6 +34,10 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         ViewHolder viewHolder = new ViewHolder(binding);
 
         viewHolder.binding.tvWeb.setOnClickListener(v2 -> {
+            if (viewHolder.getAdapterPosition() == RecyclerView.NO_POSITION) {
+                return;
+            }
+
             Book book = books.get(viewHolder.getAdapterPosition());
             onWebClick.onNext(book);
         });

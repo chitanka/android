@@ -32,6 +32,10 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_file, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         viewHolder.llContainer.setOnClickListener(view1 -> {
+            if (viewHolder.getAdapterPosition() == RecyclerView.NO_POSITION) {
+                return;
+            }
+
             File file = files.get(viewHolder.getAdapterPosition());
             onFileClick.onNext(file);
         });

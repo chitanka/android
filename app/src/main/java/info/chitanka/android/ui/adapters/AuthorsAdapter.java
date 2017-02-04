@@ -36,6 +36,10 @@ public class AuthorsAdapter extends RecyclerView.Adapter<AuthorsAdapter.ViewHold
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_author, null, false);
         ViewHolder viewHolder = new ViewHolder(view);
         viewHolder.cardView.setOnClickListener(v -> {
+            if (viewHolder.getAdapterPosition() == RecyclerView.NO_POSITION) {
+                return;
+            }
+
             Author author = authors.get(viewHolder.getAdapterPosition());
             Intent intent = new Intent(context, AuthorDetailsActivity.class);
             intent.putExtra(Constants.EXTRA_TITLE, author.getName());
