@@ -20,4 +20,7 @@ public class Constants {
     public static final String EXTRA_BOOK_ID = "extra_book_id";
     public static final String CHITANKA_FOLDER_ROOT = "chitanka";
     public static final String EXTRA_BOOK_FORMAT = "book_format";
+    public static final String EXTRA_FILE_URL = "file_url";
+    public static final String EXTRA_FILE_NAME = "file_name";
+    public static final String EXTRA_FOLDER_PATH = "folder_path";
 }

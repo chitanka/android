@@ -136,9 +136,9 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
         }
 
         if(adapter == null) {
-            adapter = new BooksAdapter(getActivity(), books, getActivity().getSupportFragmentManager());
+            adapter = new BooksAdapter(getActivity(), books);
             subscription = adapter.getOnWebClick().subscribe(book -> {
-                IntentUtils.openWebUrl(book.getChitankaUrl(), getActivity());
+                IntentUtils.openWebUrl(book.getWebChitankaUrl(), getActivity());
                 analyticsService.logEvent(TrackingConstants.CLICK_WEB_BOOKS, new HashMap<String, String>() {{
                     put("bookTitle", book.getTitle());
                 }});

@@ -20,7 +20,6 @@ import info.chitanka.android.events.SearchBookEvent;
 import info.chitanka.android.mvp.presenters.author_books.AuthorBooksPresenter;
 import info.chitanka.android.mvp.views.BooksView;
 import info.chitanka.android.utils.RxBus;
-import rx.Subscription;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -38,7 +37,6 @@ public class AuthorBooksFragment extends BaseBooksFragment implements BooksView 
     @Bind(R.id.rv_books)
     RecyclerView rvBooks;
 
-    private Subscription subscription;
     private String link;
 
     public AuthorBooksFragment() {
@@ -59,15 +57,17 @@ public class AuthorBooksFragment extends BaseBooksFragment implements BooksView 
         getComponent(PresenterComponent.class).inject(this);
         authorBooksPresenter.onStart();
 
-        subscription = rxBus.toObserverable().subscribe((event) -> {
-            if (event instanceof SearchBookEvent) {
-                containerEmpty.setVisibility(View.GONE);
-                rvBooks.setVisibility(View.GONE);
-                link = ((SearchBookEvent) event).getName();
+        rxBus.toObserverable()
+                .compose(bindToLifecycle())
+                .subscribe((event) -> {
+                    if (event instanceof SearchBookEvent) {
+                        containerEmpty.setVisibility(View.GONE);
+                        rvBooks.setVisibility(View.GONE);
+                        link = ((SearchBookEvent) event).getName();
 
-                authorBooksPresenter.searchAuthorBooks(link);
-            }
-        });
+                        authorBooksPresenter.searchAuthorBooks(link);
+                    }
+                });
 
         link = getArgument(KEY_LINK, savedInstanceState);
 
@@ -100,7 +100,6 @@ public class AuthorBooksFragment extends BaseBooksFragment implements BooksView 
     public void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
-        subscription.unsubscribe();
         authorBooksPresenter.onDestroy();
     }
 

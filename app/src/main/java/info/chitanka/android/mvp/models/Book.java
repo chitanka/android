@@ -65,7 +65,11 @@ public class Book {
         return Constants.CHITANKA_INFO_API + "book/" + id + ".%s";
     }
 
-    public String getChitankaUrl() {
+    public String getReadingFileName() {
+        return id + "-" + slug + ".epub";
+    }
+
+    public String getWebChitankaUrl() {
         return Constants.CHITANKA_INFO_API + "book/" + id + "-" + slug;
     }
 }

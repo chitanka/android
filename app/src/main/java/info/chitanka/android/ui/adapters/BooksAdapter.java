@@ -2,7 +2,6 @@ package info.chitanka.android.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import info.chitanka.android.Constants;
 import info.chitanka.android.databinding.ListItemBookBinding;
 import info.chitanka.android.mvp.models.Book;
 import info.chitanka.android.ui.BookDetailsActivity;
-import info.chitanka.android.ui.services.DownloadService;
 import rx.subjects.PublishSubject;
 
 /**
@@ -22,14 +20,12 @@ import rx.subjects.PublishSubject;
  */
 public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> {
     private Context context;
-    private final FragmentManager fragmentManager;
     private List<Book> books = new ArrayList<>();
     private PublishSubject<Book> onWebClick = PublishSubject.create();
 
-    public BooksAdapter(Context context, List<Book> books, FragmentManager fragmentManager) {
+    public BooksAdapter(Context context, List<Book> books) {
         this.context = context;
         this.books = books;
-        this.fragmentManager = fragmentManager;
     }
 
     @Override
@@ -37,21 +33,9 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         ListItemBookBinding binding = ListItemBookBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         ViewHolder viewHolder = new ViewHolder(binding);
 
-        viewHolder.binding.cardView.setOnClickListener(v -> {
-
-        });
-
         viewHolder.binding.tvWeb.setOnClickListener(v2 -> {
             Book book = books.get(viewHolder.getAdapterPosition());
             onWebClick.onNext(book);
-        });
-
-        viewHolder.binding.tvRead.setOnClickListener(view12 -> {
-            Book book = books.get(viewHolder.getAdapterPosition());
-            Intent intent = new Intent(context, DownloadService.class);
-            intent.putExtra(Constants.EXTRA_BOOK_FORMAT, "epub");
-            intent.putExtra(Constants.EXTRA_BOOK_ID, book.getId());
-            context.startService(intent);
         });
 
         return viewHolder;

@@ -19,11 +19,11 @@ import info.chitanka.android.mvp.views.BooksView;
 import info.chitanka.android.ui.adapters.BooksAdapter;
 import info.chitanka.android.ui.fragments.BaseFragment;
 import info.chitanka.android.utils.IntentUtils;
-import rx.Subscription;
 
 /**
  * Created by joro on 16-3-20.
  */
+
 public abstract class BaseBooksFragment extends BaseFragment implements BooksView {
 
     @Bind(R.id.loading)
@@ -38,11 +38,9 @@ public abstract class BaseBooksFragment extends BaseFragment implements BooksVie
     @Inject
     AnalyticsService analyticsService;
 
-    private Subscription subscription;
-
     @Override
     public void presentAuthorBooks(List<Book> books) {
-        if(books == null || books.size() == 0) {
+        if (books == null || books.size() == 0) {
             rvBooks.setVisibility(View.GONE);
             containerEmpty.setVisibility(View.VISIBLE);
         } else {
@@ -50,13 +48,15 @@ public abstract class BaseBooksFragment extends BaseFragment implements BooksVie
             containerEmpty.setVisibility(View.GONE);
         }
 
-        BooksAdapter adapter = new BooksAdapter(getActivity(), books, getActivity().getSupportFragmentManager());
-        subscription = adapter.getOnWebClick().subscribe(book -> {
-            IntentUtils.openWebUrl(book.getChitankaUrl(), getActivity());
-            analyticsService.logEvent(TrackingConstants.CLICK_WEB_BOOKS, new HashMap<String, String>() {{
-                put("bookTitle", book.getTitle());
-            }});
-        });
+        BooksAdapter adapter = new BooksAdapter(getActivity(), books);
+        adapter.getOnWebClick()
+                .compose(bindToLifecycle())
+                .subscribe(book -> {
+                    IntentUtils.openWebUrl(book.getWebChitankaUrl(), getActivity());
+                    analyticsService.logEvent(TrackingConstants.CLICK_WEB_BOOKS, new HashMap<String, String>() {{
+                        put("bookTitle", book.getTitle());
+                    }});
+                });
 
         rvBooks.setAdapter(adapter);
     }
@@ -65,14 +65,6 @@ public abstract class BaseBooksFragment extends BaseFragment implements BooksVie
     public void hideLoading() {
         loading.progressiveStop();
         loading.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (subscription != null) {
-            subscription.unsubscribe();
-        }
     }
 
     @Override

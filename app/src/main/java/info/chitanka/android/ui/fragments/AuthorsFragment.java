@@ -27,7 +27,6 @@ import info.chitanka.android.mvp.views.AuthorsView;
 import info.chitanka.android.ui.adapters.AuthorsAdapter;
 import info.chitanka.android.ui.views.containers.ScrollRecyclerView;
 import info.chitanka.android.utils.RxBus;
-import rx.Subscription;
 
 /**
  * Created by nmp on 16-3-11.
@@ -54,7 +53,6 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
     @Bind(R.id.loading)
     CircularProgressBar loading;
 
-    private Subscription subscription;
     private String query;
 
     public static AuthorsFragment newInstance(String searchTerm) {
@@ -73,17 +71,19 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
         authorsPresenter.setView(this);
         authorsPresenter.onStart();
 
-        subscription = rxBus.toObserverable().subscribe((event) -> {
-            if(event instanceof SearchBookEvent) {
-                containerEmpty.setVisibility(View.GONE);
-                rvAuthors.setVisibility(View.GONE);
-                query = ((SearchBookEvent)event).getName();
-                authorsPresenter.searchAuthors(query);
-            } else if (event instanceof SearchClosedEvent) {
-                currentPage = 1;
-                authorsPresenter.loadAuthors(currentPage, pageSize);
-            }
-        });
+        rxBus.toObserverable()
+                .compose(bindToLifecycle())
+                .subscribe((event) -> {
+                    if (event instanceof SearchBookEvent) {
+                        containerEmpty.setVisibility(View.GONE);
+                        rvAuthors.setVisibility(View.GONE);
+                        query = ((SearchBookEvent) event).getName();
+                        authorsPresenter.searchAuthors(query);
+                    } else if (event instanceof SearchClosedEvent) {
+                        currentPage = 1;
+                        authorsPresenter.loadAuthors(currentPage, pageSize);
+                    }
+                });
 
         if (savedInstanceState != null) {
             query = savedInstanceState.getString(KEY_QUERY);
@@ -126,14 +126,13 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
     public void onDetach() {
         super.onDetach();
         ButterKnife.unbind(this);
-        subscription.unsubscribe();
         authorsPresenter.onDestroy();
         authorsPresenter = null;
     }
 
     @Override
     public void presentAuthors(Authors authors) {
-        if(authors.getPersons() == null || authors.getPersons().size() == 0) {
+        if (authors.getPersons() == null || authors.getPersons().size() == 0) {
             rvAuthors.setVisibility(View.GONE);
             containerEmpty.setVisibility(View.VISIBLE);
             return;
@@ -142,7 +141,7 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
             containerEmpty.setVisibility(View.GONE);
         }
 
-        if(adapter == null) {
+        if (adapter == null) {
             adapter = new AuthorsAdapter(getActivity(), authors.getPersons());
             rvAuthors.setAdapter(adapter, authors.getPager().getTotalCount());
         } else {
@@ -152,7 +151,7 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
 
     @Override
     public void presentSearch(Authors authors) {
-        if(authors.getPersons() == null || authors.getPersons().size() == 0) {
+        if (authors.getPersons() == null || authors.getPersons().size() == 0) {
             rvAuthors.setVisibility(View.GONE);
             containerEmpty.setVisibility(View.VISIBLE);
             return;
@@ -173,7 +172,7 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
 
     @Override
     public void hideLoading() {
-        if(loading != null) {
+        if (loading != null) {
             loading.progressiveStop();
             loading.setVisibility(View.GONE);
         }
@@ -181,7 +180,7 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
 
     @Override
     public void showLoading() {
-        if(loading != null) {
+        if (loading != null) {
             loading.setVisibility(View.VISIBLE);
         }
     }

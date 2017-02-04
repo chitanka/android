@@ -2,9 +2,10 @@ package info.chitanka.android.ui.fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Toast;
+
+import com.trello.rxlifecycle.components.support.RxFragment;
 
 import info.chitanka.android.R;
 import info.chitanka.android.di.HasComponent;
@@ -13,7 +14,7 @@ import info.chitanka.android.mvp.views.BaseView;
 /**
  * Created by joro on 16-3-8.
  */
-public abstract class BaseFragment extends Fragment implements BaseView {
+public abstract class BaseFragment extends RxFragment implements BaseView {
 
     /**
      * Shows a {@link android.widget.Toast} message.

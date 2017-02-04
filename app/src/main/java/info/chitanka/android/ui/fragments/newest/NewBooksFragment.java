@@ -2,7 +2,6 @@ package info.chitanka.android.ui.fragments.newest;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.internal.LinkedTreeMap;
+import com.trello.rxlifecycle.android.FragmentEvent;
+import com.trello.rxlifecycle.components.support.RxFragment;
 
 import java.util.List;
 
@@ -26,16 +27,14 @@ import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.mvp.models.NewBooksResult;
 import info.chitanka.android.ui.adapters.NewBooksAdapter;
 import info.chitanka.android.utils.IntentUtils;
-import rx.Subscription;
 
 /**
  * Created by nmp on 23.01.17.
  */
 
-public class NewBooksFragment extends Fragment {
+public class NewBooksFragment extends RxFragment {
     public static final String TAG = NewBooksFragment.class.getSimpleName();
 
-    private Subscription subscription;
 
     @Inject
     AnalyticsService analyticsService;
@@ -69,9 +68,6 @@ public class NewBooksFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        if (subscription != null && !subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
-        }
     }
 
     public void displayBooks(LinkedTreeMap<String, List<NewBooksResult>> map) {
@@ -84,10 +80,19 @@ public class NewBooksFragment extends Fragment {
 
         rvBooks.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         NewBooksAdapter adapter = new NewBooksAdapter(map, getActivity());
-        subscription = adapter.getOnWebClick().subscribe(book -> {
-            IntentUtils.openWebUrl(book.getChitankaUrl(), getActivity());
-            analyticsService.logEvent(TrackingConstants.CLICK_WEB_NEW_BOOK);
-        });
+        adapter.getOnWebClick()
+                .compose(bindToLifecycle())
+                .subscribe(book -> {
+                    IntentUtils.openWebUrl(book.getWebChitankaUrl(), getActivity());
+                    analyticsService.logEvent(TrackingConstants.CLICK_WEB_NEW_BOOK);
+                });
+
+        adapter.getOnReadClick()
+                .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+                .subscribe(book -> {
+                    IntentUtils.openWebUrl(book.getWebChitankaUrl(), getActivity());
+                    analyticsService.logEvent(TrackingConstants.CLICK_WEB_NEW_BOOK);
+                });
         rvBooks.setAdapter(adapter);
     }
 }

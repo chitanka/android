@@ -1,16 +1,13 @@
 package info.chitanka.android.ui.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.folioreader.activity.FolioActivity;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.List;
@@ -31,14 +28,13 @@ import rx.subjects.PublishSubject;
 public class NewBooksAdapter extends AdvancedSectionedRecyclerViewAdapter<NewBooksAdapter.SectionViewHolder, BooksAdapter.ViewHolder> {
 
     private final Context context;
-    private final FragmentManager fragmentManager;
     LinkedTreeMap<String, List<NewBooksResult>> map;
     private PublishSubject<Book> onWebClick = PublishSubject.create();
+    private PublishSubject<Book> onReadClick = PublishSubject.create();
 
     public NewBooksAdapter(LinkedTreeMap<String, List<NewBooksResult>> map, FragmentActivity activity) {
         this.map = map;
         this.context = activity;
-        this.fragmentManager = activity.getSupportFragmentManager();
     }
 
     @Override
@@ -97,6 +93,10 @@ public class NewBooksAdapter extends AdvancedSectionedRecyclerViewAdapter<NewBoo
         return onWebClick.asObservable();
     }
 
+    public Observable<Book> getOnReadClick() {
+        return onReadClick.asObservable();
+    }
+
     @Override
     public void onBindChildViewHolder(BooksAdapter.ViewHolder holder, int belongingGroup, int position, List<Object> payloads) {
         NewBooksResult newTextWorksResults = getBooks(belongingGroup).get(position);
@@ -107,10 +107,7 @@ public class NewBooksAdapter extends AdvancedSectionedRecyclerViewAdapter<NewBoo
         });
 
         holder.binding.tvRead.setOnClickListener(view -> {
-            Intent intent = new Intent(context, FolioActivity.class);
-            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
-            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, "/storage/emulated/0/Download/test.epub");
-            context.startActivity(intent);
+            onReadClick.onNext(book);
         });
 
         holder.bind(book, context);
