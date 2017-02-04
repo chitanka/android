@@ -62,6 +62,10 @@ public class TextWork {
         return rating;
     }
 
+    public String getReadingFileName() {
+        return id + "-" + slug + ".epub";
+    }
+
     public String getDownloadUrl() {
         return Constants.CHITANKA_INFO_API + "text/" + id + ".%s";
     }

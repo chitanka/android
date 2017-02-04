@@ -101,6 +101,18 @@
                         app:downloadFormats="@{textWork.getFormats()}"
                         app:downloadUrl="@{textWork.getDownloadUrl()}"
                         app:context="@{context}" />
+
+                    <TextView
+                        android:id="@+id/tv_read"
+                        style="@style/ActionButtons"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tv_download"
+                        app:downloadTitle="@{textWork.getReadingFileName()}"
+                        app:downloadUrl='@{String.format(textWork.getDownloadUrl(), "epub")}'
+                        app:context="@{context}"
+                        android:text="@string/read" />
                 </RelativeLayout>
             </RelativeLayout>
         </android.support.v7.widget.CardView>
