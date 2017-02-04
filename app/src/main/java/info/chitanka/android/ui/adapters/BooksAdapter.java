@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.folioreader.activity.FolioActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +24,7 @@ import info.chitanka.android.R;
 import info.chitanka.android.mvp.models.Book;
 import info.chitanka.android.ui.BookDetailsActivity;
 import info.chitanka.android.ui.dialogs.DownloadDialog;
+import info.chitanka.android.ui.services.DownloadService;
 import rx.subjects.PublishSubject;
 
 /**
@@ -63,14 +63,12 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
             onWebClick.onNext(book);
         });
 
-        viewHolder.tvRead.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, FolioActivity.class);
-                intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
-                intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, "/storage/emulated/0/Download/test.epub");
-                context.startActivity(intent);
-            }
+        viewHolder.tvRead.setOnClickListener(view12 -> {
+            Book book = books.get(viewHolder.getAdapterPosition());
+            Intent intent = new Intent(context, DownloadService.class);
+            intent.putExtra(Constants.EXTRA_BOOK_FORMAT, "epub");
+            intent.putExtra(Constants.EXTRA_BOOK_ID, book.getId());
+            context.startService(intent);
         });
 
         return viewHolder;
