@@ -1,10 +1,13 @@
 package info.chitanka.android.utils;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Environment;
 
 import java.io.File;
 
 import info.chitanka.android.Constants;
+import info.chitanka.android.ui.services.DownloadService;
 
 /**
  * Created by joro on 03.02.17.
@@ -37,6 +40,14 @@ public class FileUtils {
             return true;
         }
         return false;
+    }
+
+    public static void downloadFile(String title, String url, Context context) {
+        Intent intent = new Intent(context, DownloadService.class);
+        intent.putExtra(Constants.EXTRA_FILE_URL, url);
+        intent.putExtra(Constants.EXTRA_FILE_NAME, title);
+        intent.putExtra(Constants.EXTRA_FOLDER_PATH, FileUtils.getChitankaEpubFolderPath());
+        context.startService(intent);
     }
 
 
