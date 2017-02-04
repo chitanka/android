@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -30,6 +31,8 @@ import permissions.dispatcher.RuntimePermissions;
 @RuntimePermissions
 public class DownloadFilePermissionsFragment extends Fragment {
     public static final String TAG = DownloadFilePermissionsFragment.class.getSimpleName();
+    private static final String KEY_FILE_DOWNLOADED = "file_downloaded";
+
     private String url;
     private String title;
 
@@ -63,6 +66,7 @@ public class DownloadFilePermissionsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         DownloadFilePermissionsFragmentPermissionsDispatcher.downloadFileWithCheck(this);
     }
 
@@ -75,6 +79,8 @@ public class DownloadFilePermissionsFragment extends Fragment {
     @NeedsPermission(value = Manifest.permission.WRITE_EXTERNAL_STORAGE)
     public void downloadFile() {
         FileUtils.downloadFile(title, url, getActivity());
+        Toast.makeText(getActivity(), R.string.downloading, Toast.LENGTH_SHORT).show();
+        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
     }
 
     @OnShowRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)
