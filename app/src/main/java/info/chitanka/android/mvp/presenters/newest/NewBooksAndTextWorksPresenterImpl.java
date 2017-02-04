@@ -51,17 +51,21 @@ public class NewBooksAndTextWorksPresenterImpl extends BasePresenter<NewBooksAnd
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
-                        Type typeOfNewBooks = new TypeToken<LinkedTreeMap<String, List<NewBooksResult>>>() {
-                        }.getType();
-                        LinkedTreeMap<String, List<NewBooksResult>> booksMap = gson.fromJson(result.getAsJsonObject("book_revisions_by_date"), typeOfNewBooks);
+                    if (!viewExists()) {
+                        return;
+                    }
 
-                        Type typeOfNewTexts = new TypeToken<LinkedTreeMap<String, List<NewTextWorksResult>>>() {
-                        }.getType();
-                        LinkedTreeMap<String, List<NewTextWorksResult>> textsMap = gson.fromJson(result.getAsJsonObject("text_revisions_by_date"), typeOfNewTexts);
+                    Type typeOfNewBooks = new TypeToken<LinkedTreeMap<String, List<NewBooksResult>>>() {
+                    }.getType();
+                    LinkedTreeMap<String, List<NewBooksResult>> booksMap = gson.fromJson(result.getAsJsonObject("book_revisions_by_date"), typeOfNewBooks);
 
-                        getView().presentNewBooksAndTextWorks(booksMap, textsMap);
+                    Type typeOfNewTexts = new TypeToken<LinkedTreeMap<String, List<NewTextWorksResult>>>() {
+                    }.getType();
+                    LinkedTreeMap<String, List<NewTextWorksResult>> textsMap = gson.fromJson(result.getAsJsonObject("text_revisions_by_date"), typeOfNewTexts);
+
+                    getView().presentNewBooksAndTextWorks(booksMap, textsMap);
                 }, err -> {
-                   Timber.e(err);
+                    Timber.e(err);
                 });
     }
 }
