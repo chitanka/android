@@ -22,6 +22,10 @@ android {
     compileSdkVersion 25
     buildToolsVersion "23.0.3"
 
+    dataBinding {
+        enabled = true
+    }
+
     defaultConfig {
         applicationId "info.chitanka.android"
         minSdkVersion 15

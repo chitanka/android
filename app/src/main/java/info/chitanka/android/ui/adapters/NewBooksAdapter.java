@@ -16,12 +16,10 @@ import com.google.gson.internal.LinkedTreeMap;
 import java.util.List;
 
 import butterknife.Bind;
-import info.chitanka.android.Constants;
 import info.chitanka.android.R;
+import info.chitanka.android.databinding.ListItemBookBinding;
 import info.chitanka.android.mvp.models.Book;
 import info.chitanka.android.mvp.models.NewBooksResult;
-import info.chitanka.android.ui.BookDetailsActivity;
-import info.chitanka.android.ui.dialogs.DownloadDialog;
 import info.chitanka.android.utils.DateUtils;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -86,9 +84,8 @@ public class NewBooksAdapter extends AdvancedSectionedRecyclerViewAdapter<NewBoo
 
     @Override
     public BooksAdapter.ViewHolder onCreateChildViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_book, parent, false);
-
-        return new BooksAdapter.ViewHolder(view);
+        ListItemBookBinding binding = ListItemBookBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new BooksAdapter.ViewHolder(binding);
     }
 
     @Override
@@ -104,34 +101,19 @@ public class NewBooksAdapter extends AdvancedSectionedRecyclerViewAdapter<NewBoo
     public void onBindChildViewHolder(BooksAdapter.ViewHolder holder, int belongingGroup, int position, List<Object> payloads) {
         NewBooksResult newTextWorksResults = getBooks(belongingGroup).get(position);
         Book book = newTextWorksResults.getBook();
-        holder.bind(context, book);
 
-        holder.tvDownload.setOnClickListener(view1 -> {
-            DownloadDialog
-                    .newInstance(book.getTitle(), book.getDownloadUrl(), book.getFormats())
-                    .show(fragmentManager, DownloadDialog.TAG);
-        });
-
-        holder.tvWeb.setOnClickListener(view1 -> {
+        holder.binding.tvWeb.setOnClickListener(view1 -> {
             onWebClick.onNext(book);
         });
 
-        holder.tvRead.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, FolioActivity.class);
-                intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
-                intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, "/storage/emulated/0/Download/test.epub");
-                context.startActivity(intent);
-            }
+        holder.binding.tvRead.setOnClickListener(view -> {
+            Intent intent = new Intent(context, FolioActivity.class);
+            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
+            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, "/storage/emulated/0/Download/test.epub");
+            context.startActivity(intent);
         });
 
-
-        holder.cardView.setOnClickListener(v -> {
-            Intent sendIntent = new Intent(context, BookDetailsActivity.class);
-            sendIntent.putExtra(Constants.EXTRA_BOOK_ID, book.getId());
-            context.startActivity(sendIntent);
-        });
+        holder.bind(book, context);
     }
 
     static class SectionViewHolder extends RecyclerView.ViewHolder {
