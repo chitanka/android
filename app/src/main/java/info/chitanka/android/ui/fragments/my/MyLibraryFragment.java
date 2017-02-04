@@ -34,6 +34,7 @@ import info.chitanka.android.mvp.presenters.my.MyLibraryPresenter;
 import info.chitanka.android.mvp.views.MyLibraryView;
 import info.chitanka.android.ui.adapters.FilesAdapter;
 import info.chitanka.android.ui.fragments.BaseFragment;
+import info.chitanka.android.utils.FileUtils;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnPermissionDenied;
 import permissions.dispatcher.OnShowRationale;
@@ -71,6 +72,8 @@ public class MyLibraryFragment extends BaseFragment implements MyLibraryView{
     @Bind(R.id.tv_empty)
     TextView tvNoFiles;
 
+    private FilesAdapter adapter;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +109,16 @@ public class MyLibraryFragment extends BaseFragment implements MyLibraryView{
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (getString(R.string.delete).equals(item.getTitle())) {
+            File file = adapter.getFile(adapter.getPosition());
+            FileUtils.deleteFile(file);
+            presenter.readFiles();
+        }
+        return super.onContextItemSelected(item);
     }
 
     @Override
@@ -169,7 +182,7 @@ public class MyLibraryFragment extends BaseFragment implements MyLibraryView{
             containerEmpty.setVisibility(View.GONE);
             rvFiles.setVisibility(View.VISIBLE);
         }
-        FilesAdapter adapter = new FilesAdapter(files);
+        adapter = new FilesAdapter(files);
         adapter.getOnFileClick().compose(bindToLifecycle()).subscribe(file -> {
             Intent intent = new Intent(getActivity(), FolioActivity.class);
             intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);

@@ -55,4 +55,6 @@
     <string name="downloading_file">Файлът се сваля!</string>
     <string name="file_downloaded">Файлът е свален!</string>
     <string name="my_lib_no_files">Нямате свалени файлове за четене!</string>
+    <string name="files_delete_title">Изтриване на файл</string>
+    <string name="delete">Изтрий</string>
 </resources>

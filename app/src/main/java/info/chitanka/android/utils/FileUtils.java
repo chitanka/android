@@ -55,4 +55,11 @@ public class FileUtils {
         File file = new File(getChitankaEpubFolderPath());
         return file.isDirectory();
     }
+
+    public static boolean deleteFile(File file) {
+        if (file != null && file.exists()) {
+            return file.delete();
+        }
+        return false;
+    }
 }
