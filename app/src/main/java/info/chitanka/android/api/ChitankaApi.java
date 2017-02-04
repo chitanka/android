@@ -55,7 +55,7 @@ public interface ChitankaApi {
     @GET("/texts/search.json")
     Observable<TextWorksSearchResult> searchTextWorks(@Query("q") String searchTerm);
 
-    @GET("/book/{id}.{format}")
+    @GET("{fullUrl}")
     @Streaming
-    retrofit2.Call<ResponseBody> downloadBook(@Path("id") int id, @Path("format") String format);
+    retrofit2.Call<ResponseBody> downloadFile(@Path(value = "fullUrl", encoded = true) String url);
 }

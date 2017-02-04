@@ -2,7 +2,9 @@ package info.chitanka.android.utils;
 
 import android.content.Context;
 import android.databinding.BindingAdapter;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,10 +32,14 @@ public class BindingAdapters {
     public static void displayDownloadDialog(TextView textView, String title, String url, Context context) {
         textView.setOnClickListener(null);
         textView.setOnClickListener(view -> {
-            ((FragmentActivity) context).getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(android.R.id.content, DownloadFilePermissionsFragment.newInstance(title, url), DownloadFilePermissionsFragment.TAG)
-                    .commit();
+            FragmentManager supportFragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+            Fragment downloadFragment = supportFragmentManager.findFragmentByTag(DownloadFilePermissionsFragment.TAG);
+            if (downloadFragment == null) {
+                supportFragmentManager
+                        .beginTransaction()
+                        .add(android.R.id.content, DownloadFilePermissionsFragment.newInstance(title, url), DownloadFilePermissionsFragment.TAG)
+                        .commit();
+            }
         });
     }
 
