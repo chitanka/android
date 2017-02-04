@@ -83,7 +83,7 @@ public class DownloadFilePermissionsFragment extends Fragment {
     public void downloadFile() {
         FileUtils.downloadFile(title, url, getActivity());
         Toast.makeText(getActivity(), R.string.downloading, Toast.LENGTH_SHORT).show();
-        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commitAllowingStateLoss();
     }
 
     @OnShowRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)
