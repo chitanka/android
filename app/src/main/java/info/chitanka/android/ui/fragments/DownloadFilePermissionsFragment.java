@@ -66,8 +66,11 @@ public class DownloadFilePermissionsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        DownloadFilePermissionsFragmentPermissionsDispatcher.downloadFileWithCheck(this);
+        if (FileUtils.isExternalStorageWritable()) {
+            DownloadFilePermissionsFragmentPermissionsDispatcher.downloadFileWithCheck(this);
+        } else {
+            Snackbar.make(llContainer, getString(R.string.storage_denied), Snackbar.LENGTH_LONG).show();
+        }
     }
 
     @Override
