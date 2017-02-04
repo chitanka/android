@@ -8,7 +8,6 @@ import android.app.IntentService;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Environment;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
@@ -31,12 +30,14 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 public class DownloadService extends IntentService {
+    public static final String TAG = DownloadService.class.getSimpleName();
 
-    private String bookFormat;
-    private int bookId;
+    private String url;
+    private String fileName;
+    private String folderPath;
 
     public DownloadService() {
-        super("Download Service");
+        super(TAG);
     }
 
     private NotificationCompat.Builder notificationBuilder;
@@ -45,8 +46,9 @@ public class DownloadService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        bookId = intent.getIntExtra(Constants.EXTRA_BOOK_ID, 0);
-        bookFormat = intent.getStringExtra(Constants.EXTRA_BOOK_FORMAT);
+        url = intent.getStringExtra(Constants.EXTRA_FILE_URL);
+        fileName = intent.getStringExtra(Constants.EXTRA_FILE_NAME);
+        folderPath = intent.getStringExtra(Constants.EXTRA_FOLDER_PATH);
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationBuilder = new NotificationCompat.Builder(this)
@@ -62,7 +64,7 @@ public class DownloadService extends IntentService {
 
     private void initDownload() {
         ChitankaApi retrofitInterface = ChitankaApiService.createChitankaApiService(new Gson());
-        Call<ResponseBody> request = retrofitInterface.downloadBook(bookId, bookFormat);
+        Call<ResponseBody> request = retrofitInterface.downloadFile(url);
         try {
             Response<ResponseBody> execute = request.execute();
             downloadFile(execute.body());
@@ -79,7 +81,7 @@ public class DownloadService extends IntentService {
         byte data[] = new byte[1024 * 4];
         long fileSize = body.contentLength();
         InputStream bis = new BufferedInputStream(body.byteStream(), 1024 * 8);
-        File outputFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "file.zip");
+        File outputFile = new File(folderPath, fileName);
         OutputStream output = new FileOutputStream(outputFile);
         long total = 0;
         long startTime = System.currentTimeMillis();
