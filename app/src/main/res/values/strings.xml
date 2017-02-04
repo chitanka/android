@@ -47,11 +47,12 @@
     <string name="title_new_textworks">Нови Произведения</string>
     <string name="error_loading_data">Възникна проблем със зареждането на данните!</string>
     <string name="read">ПРОЧЕТИ</string>
-    <string name="action_settings">Настройки</string>
+    <string name="action_refresh">Обнови</string>
     <string name="button_allow">ОК</string>
     <string name="button_deny">Отказ</string>
     <string name="message_storage_needed">Разрешението ви е нужно, за да видите списъка с вашите книги!</string>
     <string name="storage_denied">Книгите ви не могат да бъдат заредени!</string>
     <string name="downloading_file">Файлът се сваля!</string>
     <string name="file_downloaded">Файлът е свален!</string>
+    <string name="my_lib_no_files">Нямате свалени файлове за четене!</string>
 </resources>

@@ -1,21 +1,21 @@
 package info.chitanka.android.mvp.models;
 
+import org.parceler.Parcel;
+
 /**
  * Created by joro on 04.02.17.
  */
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-public class Download implements Parcelable {
+@org.parceler.Parcel(Parcel.Serialization.BEAN)
+public class Download {
+    private int progress;
+    private int currentFileSize;
+    private int totalFileSize;
+    private String filePath;
 
     public Download() {
 
     }
-
-    private int progress;
-    private int currentFileSize;
-    private int totalFileSize;
 
     public int getProgress() {
         return progress;
@@ -41,33 +41,11 @@ public class Download implements Parcelable {
         this.totalFileSize = totalFileSize;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getFilePath() {
+        return filePath;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-
-        dest.writeInt(progress);
-        dest.writeInt(currentFileSize);
-        dest.writeInt(totalFileSize);
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
-
-    private Download(Parcel in) {
-
-        progress = in.readInt();
-        currentFileSize = in.readInt();
-        totalFileSize = in.readInt();
-    }
-
-    public static final Parcelable.Creator<Download> CREATOR = new Parcelable.Creator<Download>() {
-        public Download createFromParcel(Parcel in) {
-            return new Download(in);
-        }
-
-        public Download[] newArray(int size) {
-            return new Download[size];
-        }
-    };
 }
