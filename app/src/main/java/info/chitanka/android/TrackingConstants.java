@@ -27,4 +27,7 @@ public interface TrackingConstants {
     String DELETE_FILE = "user.deleted.file";
     String VIEW_FILE = "user.view.file";
     String DOWNLOAD_FILE = "user.download.file";
+    String DOWNLOAD_DETAILS_FILE = "user.downloaded.details.file";
+    String READ_DETAILS_FILE = "user.read.details.file";
+    String VIEW_WEB_DETAILS_FILE = "user.view.web.details.file";
 }

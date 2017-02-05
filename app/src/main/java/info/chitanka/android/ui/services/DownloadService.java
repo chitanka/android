@@ -55,7 +55,7 @@ public class DownloadService extends IntentService {
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_download)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(getString(R.string.downloading))
                 .setContentText(getString(R.string.downloading_file))
                 .setAutoCancel(true);
