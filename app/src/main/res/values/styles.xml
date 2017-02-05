@@ -41,5 +41,9 @@
         <item name="android:textColor">@color/primary_title</item>
         <item name="android:gravity">center</item>
     </style>
-
+    <style name="FabMenuItems">
+        <item name="fab_colorNormal">@color/colorAccent</item>
+        <item name="fab_colorPressed">@color/colorPrimary</item>
+        <item name="fab_size">mini</item>
+    </style>
 </resources>

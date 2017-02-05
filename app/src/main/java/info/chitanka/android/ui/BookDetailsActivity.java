@@ -1,28 +1,22 @@
 package info.chitanka.android.ui;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 
 import java.util.HashMap;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
 import info.chitanka.android.TrackingConstants;
 import info.chitanka.android.components.AnalyticsService;
+import info.chitanka.android.databinding.ActivityBookDetailsBinding;
 import info.chitanka.android.di.HasComponent;
 import info.chitanka.android.di.presenters.DaggerPresenterComponent;
 import info.chitanka.android.di.presenters.PresenterComponent;
@@ -31,6 +25,8 @@ import info.chitanka.android.mvp.models.BookDetails;
 import info.chitanka.android.mvp.presenters.book.BookPresenter;
 import info.chitanka.android.mvp.views.BookView;
 import info.chitanka.android.ui.dialogs.DownloadDialog;
+import info.chitanka.android.ui.fragments.DownloadFilePermissionsFragment;
+import info.chitanka.android.utils.IntentUtils;
 
 public class BookDetailsActivity extends BaseActivity implements HasComponent<PresenterComponent>, BookView {
 
@@ -40,35 +36,15 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
     @Inject
     AnalyticsService analyticsService;
 
-    @Bind(R.id.iv_cover)
-    ImageView ivCover;
-
-    @Bind(R.id.tv_title)
-    TextView tvTitle;
-
-    @Bind(R.id.tv_authors)
-    TextView tvAuthors;
-
-    @Bind(R.id.tv_category)
-    TextView tvCategory;
-
-    @Bind(R.id.tv_year)
-    TextView tvYear;
-
-    @Bind(R.id.tv_description)
-    TextView tvDescription;
-
-    @Bind(R.id.container_book)
-    NestedScrollView containerBook;
     private PresenterComponent presenterComponent;
+    private ActivityBookDetailsBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_book_details);
-        ButterKnife.bind(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_book_details);
+
+        setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -94,7 +70,6 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
         bookPresenter.onDestroy();
     }
 
@@ -107,31 +82,48 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
     public void presentBookDetails(BookDetails bookDetails) {
         Book book = bookDetails.getBook();
         setTitle(getText(book.getTitle()));
-
-        tvTitle.setText(getText(book.getTitle()));
-        tvYear.setText(book.getYear() == 0 ? "" : (book.getYear() + ""));
-        tvAuthors.setText(getText(book.getTitleAuthor()));
-        tvDescription.setText(getText(book.getAnnotation()));
-        tvCategory.setText(getText(book.getCategory().getName()));
-        Glide.with(this).load(book.getCover()).crossFade().placeholder(R.drawable.ic_no_cover).into(ivCover);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(view -> DownloadDialog.newInstance(book.getTitle(), book.getDownloadUrl(), book.getFormats()).show(getSupportFragmentManager(), DownloadDialog.TAG));
-        containerBook.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+        binding.setBook(book);
+        binding.containerBook.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 View view = v.getChildAt(v.getChildCount() - 1);
                 int diff = (view.getBottom()-(v.getHeight()+v.getScrollY()));
 
                 // if diff is zero, then the bottom has been reached
-                if(diff <= 0 && fab.getVisibility() == View.VISIBLE) {
-                    fab.hide();
-                } else if (fab.getVisibility() != View.VISIBLE) {
-                    fab.show();
+                if(diff <= 0 && binding.fabMenu.getVisibility() == View.VISIBLE) {
+                    binding.fabMenu.setVisibility(View.INVISIBLE);
+                } else if (binding.fabMenu.getVisibility() != View.VISIBLE) {
+                    binding.fabMenu.setVisibility(View.VISIBLE);
                 }
             }
         });
+
+        binding.btnDownload.setOnClickListener(view -> {
+            analyticsService.logEvent(TrackingConstants.DOWNLOAD_DETAILS_FILE, new HashMap<String, String>(){{
+                put("fileName", book.getTitle());
+            }});
+            DownloadDialog.newInstance(book.getTitle(), book.getDownloadUrl(), book.getFormats()).show(getSupportFragmentManager(), DownloadDialog.TAG);
+        });
+
+        binding.btnRead.setOnClickListener(view -> {
+            analyticsService.logEvent(TrackingConstants.READ_DETAILS_FILE, new HashMap<String, String>(){{
+                put("fileName", book.getTitle());
+            }});
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(android.R.id.content, DownloadFilePermissionsFragment.newInstance(book.getReadingFileName(), String.format(book.getDownloadUrl(), "epub")), DownloadFilePermissionsFragment.TAG)
+                    .commit();
+        });
+
+        binding.btnWeb.setOnClickListener(view -> {
+            analyticsService.logEvent(TrackingConstants.VIEW_WEB_DETAILS_FILE, new HashMap<String, String>(){{
+                put("fileName", book.getTitle());
+            }});
+            IntentUtils.openWebUrl(book.getWebChitankaUrl(), this);
+        });
     }
+
+
 
     private String getText(String text) {
         if(TextUtils.isEmpty(text)) {
@@ -158,7 +150,7 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
 
     @Override
     public void showError() {
-        Snackbar.make(containerBook, "Възникна проблем със зареждането на книга!", Snackbar.LENGTH_LONG)
+        Snackbar.make(binding.containerBook, "Възникна проблем със зареждането на книга!", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
 
     }

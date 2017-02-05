@@ -69,9 +69,13 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
     private BroadcastReceiver readBookReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(Constants.NOTIFICATION_ID_DOWNLOAD);
             Download download = Parcels.unwrap(intent.getParcelableExtra(Constants.EXTRA_DOWNLOAD));
+            analyticsService.logEvent(TrackingConstants.DOWNLOAD_FILE, new HashMap<String, String>() {{
+                put("filePath", download.getFilePath());
+            }});
+            
             readFile(download.getFilePath());
         }
     };
