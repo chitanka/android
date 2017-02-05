@@ -23,6 +23,7 @@ import permissions.dispatcher.OnPermissionDenied;
 import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
+import timber.log.Timber;
 
 /**
  * Created by nmp on 04.02.17.
@@ -83,7 +84,11 @@ public class DownloadFilePermissionsFragment extends Fragment {
     public void downloadFile() {
         FileUtils.downloadFile(title, url, getActivity());
         Toast.makeText(getActivity(), R.string.downloading, Toast.LENGTH_SHORT).show();
-        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commitAllowingStateLoss();
+        try {
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commitAllowingStateLoss();
+        } catch (Exception e) {
+            Timber.e(e);
+        }
     }
 
     @OnShowRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)
