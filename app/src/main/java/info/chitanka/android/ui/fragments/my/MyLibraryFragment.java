@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.folioreader.activity.FolioActivity;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -29,6 +30,8 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import info.chitanka.android.R;
+import info.chitanka.android.TrackingConstants;
+import info.chitanka.android.components.AnalyticsService;
 import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.mvp.presenters.my.MyLibraryPresenter;
 import info.chitanka.android.mvp.views.MyLibraryView;
@@ -60,6 +63,9 @@ public class MyLibraryFragment extends BaseFragment implements MyLibraryView{
     @Inject
     MyLibraryPresenter presenter;
 
+    @Inject
+    AnalyticsService analyticsService;
+
     @Bind(R.id.container)
     RelativeLayout container;
 
@@ -86,6 +92,7 @@ public class MyLibraryFragment extends BaseFragment implements MyLibraryView{
         getComponent(PresenterComponent.class).inject(this);
         presenter.setView(this);
         presenter.onStart();
+        analyticsService.logEvent(TrackingConstants.VIEW_FILES);
     }
 
     @Nullable
@@ -117,6 +124,8 @@ public class MyLibraryFragment extends BaseFragment implements MyLibraryView{
             File file = adapter.getFile(adapter.getPosition());
             FileUtils.deleteFile(file);
             presenter.readFiles();
+            analyticsService.logEvent(TrackingConstants.DELETE_FILE);
+            return true;
         }
         return super.onContextItemSelected(item);
     }
@@ -178,12 +187,16 @@ public class MyLibraryFragment extends BaseFragment implements MyLibraryView{
             rvFiles.setVisibility(View.GONE);
             containerEmpty.setVisibility(View.VISIBLE);
             tvNoFiles.setText(R.string.my_lib_no_files);
+            return;
         } else {
             containerEmpty.setVisibility(View.GONE);
             rvFiles.setVisibility(View.VISIBLE);
         }
         adapter = new FilesAdapter(files);
         adapter.getOnFileClick().compose(bindToLifecycle()).subscribe(file -> {
+            analyticsService.logEvent(TrackingConstants.VIEW_FILE, new HashMap<String, String>() {{
+                put("file", file.getName());
+            }});
             Intent intent = new Intent(getActivity(), FolioActivity.class);
             intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
             intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, file.getAbsolutePath());

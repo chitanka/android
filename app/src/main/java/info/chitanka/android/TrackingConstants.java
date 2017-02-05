@@ -23,4 +23,8 @@ public interface TrackingConstants {
     String SEARCHED = "user.searched.app";
     String CLICK_WEB_NEW_TEXTWORKS = "user.clicked.web.new.textworks";
     String CLICK_WEB_NEW_BOOK = "user.clicked.web.new.book";
+    String VIEW_FILES = "user.view.my.library";
+    String DELETE_FILE = "user.deleted.file";
+    String VIEW_FILE = "user.view.file";
+    String DOWNLOAD_FILE = "user.download.file";
 }
