@@ -15,8 +15,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import info.chitanka.android.R;
 import info.chitanka.android.TrackingConstants;
@@ -33,7 +34,6 @@ import info.chitanka.android.utils.IntentUtils;
 
 public class NewTextWorksFragment extends RxFragment {
     public static final String TAG = NewTextWorksFragment.class.getSimpleName();
-
     public static NewTextWorksFragment newInstance() {
         return new NewTextWorksFragment();
     }
@@ -42,11 +42,13 @@ public class NewTextWorksFragment extends RxFragment {
     @Inject
     AnalyticsService analyticsService;
 
-    @Bind(R.id.rv_textworks)
+    @BindView(R.id.rv_textworks)
     RecyclerView rvTextWorks;
 
-    @Bind(R.id.loading)
+    @BindView(R.id.loading)
     CircularProgressBar loading;
+
+    private Unbinder unbinder;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -58,7 +60,7 @@ public class NewTextWorksFragment extends RxFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_text_works, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         return view;
     }
@@ -66,7 +68,7 @@ public class NewTextWorksFragment extends RxFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     public void displayTextWorks(LinkedTreeMap<String, List<NewTextWorksResult>> map) {

@@ -13,8 +13,9 @@ import android.widget.RelativeLayout;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
@@ -44,16 +45,17 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
     @Inject
     RxBus rxBus;
 
-    @Bind(R.id.rv_authors)
+    @BindView(R.id.rv_authors)
     ScrollRecyclerView rvAuthors;
 
-    @Bind(R.id.container_empty)
+    @BindView(R.id.container_empty)
     RelativeLayout containerEmpty;
 
-    @Bind(R.id.loading)
+    @BindView(R.id.loading)
     CircularProgressBar loading;
 
     private String query;
+    private Unbinder unbinder;
 
     public static AuthorsFragment newInstance(String searchTerm) {
         Bundle args = new Bundle();
@@ -102,7 +104,7 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_authors, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             rvAuthors.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
@@ -125,7 +127,7 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
     @Override
     public void onDetach() {
         super.onDetach();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
         authorsPresenter.onDestroy();
         authorsPresenter = null;
     }

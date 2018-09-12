@@ -13,8 +13,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
 import info.chitanka.android.utils.FileUtils;
@@ -37,8 +38,10 @@ public class DownloadFilePermissionsFragment extends Fragment {
     private String url;
     private String title;
 
-    @Bind(R.id.container)
+    @BindView(R.id.container)
     LinearLayout llContainer;
+
+    private Unbinder unbinder;
 
     public static DownloadFilePermissionsFragment newInstance(String title, String url) {
         Bundle args = new Bundle();
@@ -60,7 +63,7 @@ public class DownloadFilePermissionsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_download_file_permissions, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         return view;
     }
 
@@ -77,7 +80,7 @@ public class DownloadFilePermissionsFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @NeedsPermission(value = Manifest.permission.WRITE_EXTERNAL_STORAGE)

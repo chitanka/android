@@ -16,8 +16,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import info.chitanka.android.R;
 import info.chitanka.android.TrackingConstants;
@@ -39,11 +40,13 @@ public class NewBooksFragment extends RxFragment {
     @Inject
     AnalyticsService analyticsService;
 
-    @Bind(R.id.rv_books)
+    @BindView(R.id.rv_books)
     RecyclerView rvBooks;
 
-    @Bind(R.id.loading)
+    @BindView(R.id.loading)
     CircularProgressBar loading;
+
+    private Unbinder unbinder;
 
     public static NewBooksFragment newInstance() {
         return new NewBooksFragment();
@@ -59,7 +62,7 @@ public class NewBooksFragment extends RxFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_books, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         return view;
     }
@@ -67,7 +70,7 @@ public class NewBooksFragment extends RxFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     public void displayBooks(LinkedTreeMap<String, List<NewBooksResult>> map) {

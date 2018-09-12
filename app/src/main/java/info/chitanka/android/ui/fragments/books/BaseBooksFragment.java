@@ -9,7 +9,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import info.chitanka.android.R;
 import info.chitanka.android.TrackingConstants;
@@ -26,13 +26,13 @@ import info.chitanka.android.utils.IntentUtils;
 
 public abstract class BaseBooksFragment extends BaseFragment implements BooksView {
 
-    @Bind(R.id.loading)
+    @BindView(R.id.loading)
     CircularProgressBar loading;
 
-    @Bind(R.id.rv_books)
+    @BindView(R.id.rv_books)
     RecyclerView rvBooks;
 
-    @Bind(R.id.container_empty)
+    @BindView(R.id.container_empty)
     RelativeLayout containerEmpty;
 
     @Inject

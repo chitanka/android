@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
 import info.chitanka.android.di.presenters.PresenterComponent;
@@ -35,6 +36,7 @@ public class BooksFragment extends BaseBooksFragment implements BooksView {
     RxBus rxBus;
 
     private String query;
+    private Unbinder unbinder;
 
     public BooksFragment() {
     }
@@ -79,7 +81,7 @@ public class BooksFragment extends BaseBooksFragment implements BooksView {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_books, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             rvBooks.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -105,7 +107,7 @@ public class BooksFragment extends BaseBooksFragment implements BooksView {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @Override

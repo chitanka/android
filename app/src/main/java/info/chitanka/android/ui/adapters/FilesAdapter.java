@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.io.File;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import info.chitanka.android.R;
 import rx.subjects.PublishSubject;
@@ -85,10 +85,10 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.container)
+        @BindView(R.id.container)
         LinearLayout llContainer;
 
-        @Bind(R.id.tv_file_name)
+        @BindView(R.id.tv_file_name)
         TextView tvFileName;
 
         public ViewHolder(View itemView) {

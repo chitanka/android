@@ -10,9 +10,10 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import info.chitanka.android.R;
 import info.chitanka.android.TrackingConstants;
 import info.chitanka.android.components.AnalyticsService;
@@ -20,11 +21,13 @@ import info.chitanka.android.di.presenters.DaggerPresenterComponent;
 
 public class ReadersActivity extends BaseActivity {
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
 
     @Inject
     AnalyticsService analyticsService;
+
+    private Unbinder unbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +36,7 @@ public class ReadersActivity extends BaseActivity {
 
         DaggerPresenterComponent.builder().applicationComponent(getApplicationComponent()).build().inject(this);
 
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -54,7 +57,7 @@ public class ReadersActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @OnClick(R.id.left)

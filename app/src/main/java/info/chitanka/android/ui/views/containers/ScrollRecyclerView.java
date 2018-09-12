@@ -12,12 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import info.chitanka.android.R;
 import info.chitanka.android.ui.views.listeners.EndlessRecyclerScrollListener;
 import info.chitanka.android.ui.views.listeners.OnEndReachedListener;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 /**
  * Created by nmp on 16-3-22.
@@ -28,12 +28,13 @@ public class ScrollRecyclerView extends LinearLayout {
     private LinearLayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
 
-    @Bind(R.id.recycler_view)
+    @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
     private int totalItemsCount = -1;
     private OnEndReachedListener listener;
     private EndlessRecyclerScrollListener scrollListener;
+    private Unbinder unbinder;
 
     public ScrollRecyclerView(Context context) {
         super(context);
@@ -66,7 +67,7 @@ public class ScrollRecyclerView extends LinearLayout {
 
     private void init() {
         view = getLayoutInflater().inflate(R.layout.view_scroll_recyclerview, this, true);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(layoutManager);
@@ -145,7 +146,7 @@ public class ScrollRecyclerView extends LinearLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     public EndlessRecyclerScrollListener getScrollListener() {

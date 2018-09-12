@@ -36,10 +36,6 @@
             android:name=".ui.BookDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity
-            android:name="com.folioreader.activity.FolioActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="35ab927175205a27bcaafc128d07c106a6bd6e8b" />

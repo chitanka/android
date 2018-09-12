@@ -16,8 +16,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import info.chitanka.android.R;
 import info.chitanka.android.TrackingConstants;
@@ -49,18 +50,19 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
     @Inject
     AnalyticsService analyticsService;
 
-    @Bind(R.id.rv_books)
+    @BindView(R.id.rv_books)
     ScrollRecyclerView rvBooks;
 
-    @Bind(R.id.loading)
+    @BindView(R.id.loading)
     CircularProgressBar loadingPb;
 
-    @Bind(R.id.container_empty)
+    @BindView(R.id.container_empty)
     RelativeLayout containerEmpty;
 
 
     private String slug;
     private Subscription subscription;
+    private Unbinder unbinder;
 
     public CategoryBooksFragment() {
     }
@@ -89,7 +91,7 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category_books, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             rvBooks.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
@@ -112,7 +114,7 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
         unsubscribe();
         booksPresenter.setView(null);
         booksPresenter.onDestroy();

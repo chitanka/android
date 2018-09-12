@@ -2,7 +2,6 @@ package info.chitanka.android.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +18,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import info.chitanka.android.R;
 import info.chitanka.android.TrackingConstants;
 import info.chitanka.android.components.AnalyticsService;
@@ -43,14 +43,15 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
     @Inject
     AnalyticsService analyticsService;
 
-    @Bind(R.id.spinner_category)
+    @BindView(R.id.spinner_category)
     SearchableSpinner searchableSpinner;
 
-    @Bind(R.id.container)
+    @BindView(R.id.container)
     FrameLayout container;
 
     int selectedCategory = -1;
 
+    private Unbinder unbinder;
 
     public static CategoriesFragment newInstance() {
         return new CategoriesFragment();
@@ -79,7 +80,7 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_categories, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         return view;
     }
@@ -94,7 +95,7 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
     public void onDetach() {
         super.onDetach();
         categoriesPresenter.onDestroy();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @Override

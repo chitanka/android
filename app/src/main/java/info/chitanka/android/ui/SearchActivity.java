@@ -72,7 +72,7 @@ public class SearchActivity extends BaseActivity implements HasComponent<Present
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_chitanka_main, menu);
 
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         searchView.setQueryHint(getString(R.string.action_search));

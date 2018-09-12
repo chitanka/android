@@ -16,8 +16,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
@@ -48,17 +49,18 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
     @Inject
     AnalyticsService analyticsService;
 
-    @Bind(R.id.rv_textworks)
+    @BindView(R.id.rv_textworks)
     RecyclerView rvTextWorks;
 
-    @Bind(R.id.container_empty)
+    @BindView(R.id.container_empty)
     RelativeLayout containerEmpty;
 
-    @Bind(R.id.loading)
+    @BindView(R.id.loading)
     CircularProgressBar loading;
 
     private String searchTerm;
     private String authorSlug;
+    private Unbinder unbinder;
 
     public static TextWorksFragment newInstance(String searchTerm, String authorSlug) {
 
@@ -101,7 +103,7 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_text_works, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             rvTextWorks.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
@@ -121,7 +123,7 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
     @Override
     public void onDetach() {
         super.onDetach();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
         presenter.onDestroy();
     }
 

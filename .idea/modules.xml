@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/android.iml" filepath="$PROJECT_DIR$/android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/chitanka.iml" filepath="$PROJECT_DIR$/chitanka.iml" />
-      <module fileurl="file://$PROJECT_DIR$/chitanka.info.iml" filepath="$PROJECT_DIR$/chitanka.info.iml" />
-      <module fileurl="file://$PROJECT_DIR$/FolioReader-Android/folioreader/folioreader.iml" filepath="$PROJECT_DIR$/FolioReader-Android/folioreader/folioreader.iml" />
-      <module fileurl="file://$PROJECT_DIR$/FolioReader-Android/webViewMarker/webViewMarker.iml" filepath="$PROJECT_DIR$/FolioReader-Android/webViewMarker/webViewMarker.iml" />
     </modules>
   </component>
 </project>

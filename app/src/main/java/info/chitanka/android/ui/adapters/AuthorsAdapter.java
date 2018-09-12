@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
@@ -68,10 +68,10 @@ public class AuthorsAdapter extends RecyclerView.Adapter<AuthorsAdapter.ViewHold
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.container_authors)
+        @BindView(R.id.container_authors)
         LinearLayout cardView;
 
-        @Bind(R.id.tv_author_name)
+        @BindView(R.id.tv_author_name)
         TextView tvAuthorName;
 
         public ViewHolder(View itemView) {

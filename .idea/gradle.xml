@@ -8,8 +8,6 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/FolioReader-Android/folioreader" />
-            <option value="$PROJECT_DIR$/FolioReader-Android/webViewMarker" />
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>

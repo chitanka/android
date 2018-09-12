@@ -21,7 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.folioreader.activity.FolioActivity;
+import com.folioreader.FolioReader;
 import com.kobakei.ratethisapp.RateThisApp;
 
 import org.parceler.Parcels;
@@ -30,8 +30,9 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import info.chitanka.android.ChitankaApplication;
 import info.chitanka.android.Constants;
 import info.chitanka.android.R;
@@ -53,10 +54,10 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
     public static final String NETWORK_REQUIRED_DIALOG_FRAGMENT = "NetworkRequiredDialogFragment";
     private static final String KEY_SELECTED_ITEM = "selected_item";
 
-    @Bind(R.id.nav_view)
+    @BindView(R.id.nav_view)
     NavigationView navigationView;
 
-    @Bind(R.id.app_bar)
+    @BindView(R.id.app_bar)
     AppBarLayout appBarLayout;
 
     @Inject
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
             readFile(download.getFilePath());
         }
     };
+    private Unbinder unbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
 
         presenterComponent = DaggerPresenterComponent.builder().applicationComponent(ChitankaApplication.getApplicationComponent()).build();
         getComponent().inject(this);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -135,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_chitanka_main, menu);
 
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         searchView.setQueryHint(getString(R.string.action_search));
@@ -181,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(readBookReceiver);
     }
 
@@ -259,10 +261,8 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
     }
 
     private void readFile(String filePath) {
-        Intent intent = new Intent(this, FolioActivity.class);
-        intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
-        intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, filePath);
-        startActivity(intent);
+        FolioReader folioReader = FolioReader.get();
+        folioReader.openBook(filePath);
     }
 
     @Override

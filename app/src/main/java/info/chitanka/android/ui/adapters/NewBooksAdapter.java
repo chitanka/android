@@ -12,7 +12,7 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import info.chitanka.android.R;
 import info.chitanka.android.databinding.ListItemBookBinding;
 import info.chitanka.android.mvp.models.Book;
@@ -114,7 +114,7 @@ public class NewBooksAdapter extends AdvancedSectionedRecyclerViewAdapter<NewBoo
     }
 
     static class SectionViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.tv_header)
+        @BindView(R.id.tv_header)
         TextView tvHeader;
 
         public SectionViewHolder(View itemView) {

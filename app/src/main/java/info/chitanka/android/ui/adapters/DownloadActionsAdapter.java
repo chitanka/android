@@ -9,7 +9,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import info.chitanka.android.R;
 import rx.subjects.PublishSubject;
@@ -58,7 +58,7 @@ public class DownloadActionsAdapter extends RecyclerView.Adapter<DownloadActions
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.btn_download)
+        @BindView(R.id.btn_download)
         TextView btnFlat;
 
         public ViewHolder(View itemView) {

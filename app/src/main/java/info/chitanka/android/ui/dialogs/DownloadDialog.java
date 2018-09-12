@@ -24,8 +24,9 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import info.chitanka.android.R;
 import info.chitanka.android.TrackingConstants;
 import info.chitanka.android.components.AnalyticsService;
@@ -47,10 +48,10 @@ public class DownloadDialog extends DialogFragment {
     @Inject
     AnalyticsService analyticsService;
 
-    @Bind(R.id.tv_title)
+    @BindView(R.id.tv_title)
     TextView tvTitle;
 
-    @Bind(R.id.container_actions)
+    @BindView(R.id.container_actions)
     RecyclerView rvContainerActions;
 
     private String title;
@@ -58,6 +59,7 @@ public class DownloadDialog extends DialogFragment {
     private ArrayList<String> formats;
     private AppCompatActivity activity;
     private Subscription subscription;
+    private Unbinder unbinder;
 
     public static DownloadDialog newInstance(String title, String downloadUrl, ArrayList<String> formats) {
 
@@ -89,7 +91,7 @@ public class DownloadDialog extends DialogFragment {
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         View view = inflater.inflate(R.layout.dialog_download, null);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         builder.setView(view);
         rvContainerActions.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
         DownloadActionsAdapter adapter = new DownloadActionsAdapter(formats);
@@ -145,6 +147,6 @@ public class DownloadDialog extends DialogFragment {
     public void onDestroy() {
         super.onDestroy();
         subscription.unsubscribe();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 }

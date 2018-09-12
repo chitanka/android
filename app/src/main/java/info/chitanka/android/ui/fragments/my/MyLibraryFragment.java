@@ -1,7 +1,6 @@
 package info.chitanka.android.ui.fragments.my;
 
 import android.Manifest;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.folioreader.activity.FolioActivity;
+import com.folioreader.FolioReader;
 
 import java.io.File;
 import java.util.HashMap;
@@ -27,8 +26,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import info.chitanka.android.R;
 import info.chitanka.android.TrackingConstants;
 import info.chitanka.android.components.AnalyticsService;
@@ -66,19 +66,20 @@ public class MyLibraryFragment extends BaseFragment implements MyLibraryView{
     @Inject
     AnalyticsService analyticsService;
 
-    @Bind(R.id.container)
+    @BindView(R.id.container)
     RelativeLayout container;
 
-    @Bind(R.id.rv_files)
+    @BindView(R.id.rv_files)
     RecyclerView rvFiles;
 
-    @Bind(R.id.container_empty)
+    @BindView(R.id.container_empty)
     RelativeLayout containerEmpty;
 
-    @Bind(R.id.tv_empty)
+    @BindView(R.id.tv_empty)
     TextView tvNoFiles;
 
     private FilesAdapter adapter;
+    private Unbinder unbinder;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,7 +100,7 @@ public class MyLibraryFragment extends BaseFragment implements MyLibraryView{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_library, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         rvFiles.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
         return view;
     }
@@ -133,7 +134,7 @@ public class MyLibraryFragment extends BaseFragment implements MyLibraryView{
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
         presenter.onDestroy();
     }
 
@@ -197,13 +198,17 @@ public class MyLibraryFragment extends BaseFragment implements MyLibraryView{
             analyticsService.logEvent(TrackingConstants.VIEW_FILE, new HashMap<String, String>() {{
                 put("file", file.getName());
             }});
-            Intent intent = new Intent(getActivity(), FolioActivity.class);
-            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
-            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, file.getAbsolutePath());
-            startActivity(intent);
+
+
+            readFile(file.getAbsolutePath());
         });
 
         rvFiles.setAdapter(adapter);
+    }
+
+    private void readFile(String filePath) {
+        FolioReader folioReader = FolioReader.get();
+        folioReader.openBook(filePath);
     }
 
     @Override
