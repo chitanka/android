@@ -43,12 +43,12 @@ public class CategoryBooksPresenterImpl extends BasePresenter<CategoryBooksView>
     }
 
     @Override
-    public void onStart() {
+    public void startPresenting() {
 
     }
 
     @Override
-    public void onDestroy() {
+    public void stopPresenting() {
         if (subscription != null) {
             subscription.unsubscribe();
         }

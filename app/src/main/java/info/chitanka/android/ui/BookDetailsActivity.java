@@ -30,6 +30,8 @@ import info.chitanka.android.utils.IntentUtils;
 
 public class BookDetailsActivity extends BaseActivity implements HasComponent<PresenterComponent>, BookView {
 
+    private static final String KEY_BOOK_ID = "key.book.id";
+
     @Inject
     BookPresenter bookPresenter;
 
@@ -38,6 +40,7 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
 
     private PresenterComponent presenterComponent;
     private ActivityBookDetailsBinding binding;
+    private int bookId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +54,9 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
         presenterComponent = DaggerPresenterComponent.builder().applicationComponent(getApplicationComponent()).build();
         getComponent().inject(this);
 
-        bookPresenter.onStart();
-        bookPresenter.setView(this);
+        bookId = savedInstanceState != null ? savedInstanceState.getInt(KEY_BOOK_ID) :
+                getIntent().getIntExtra(Constants.EXTRA_BOOK_ID, 0);
 
-        int bookId = getIntent().getIntExtra(Constants.EXTRA_BOOK_ID, 0);
-        bookPresenter.loadBooksDetails(bookId);
         analyticsService.logEvent(TrackingConstants.View_BOOK_DETAILS, new HashMap<String, String>() {{ put("bookId", String.valueOf(bookId));}});
     }
 
@@ -68,9 +69,17 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        bookPresenter.onDestroy();
+    protected void onResume() {
+        super.onResume();
+        bookPresenter.startPresenting();
+        bookPresenter.setView(this);
+        bookPresenter.loadBooksDetails(bookId);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        bookPresenter.stopPresenting();
     }
 
     @Override

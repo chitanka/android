@@ -37,7 +37,7 @@ public class AuthorDetailsActivity extends BaseActivity implements HasComponent<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_author_details);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle(getIntent().getStringExtra(Constants.EXTRA_TITLE));
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -50,10 +50,10 @@ public class AuthorDetailsActivity extends BaseActivity implements HasComponent<
 
         sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        viewPager = (ViewPager) findViewById(R.id.container);
+        viewPager = findViewById(R.id.container);
         viewPager.setAdapter(sectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
         analyticsService.logEvent(TrackingConstants.VIEW_AUTHOR_DETAILS, new HashMap<String, String>() {{ put("slug", authorSlug);}});

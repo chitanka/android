@@ -226,14 +226,14 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
             return;
         } else if (id == R.id.nav_site) {
             analyticsService.logEvent(TrackingConstants.CLICK_WEBSITE);
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.chitanka.info")));
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.chitanka_website))));
             return;
         } else if (id == R.id.nav_email) {
             analyticsService.logEvent(TrackingConstants.CLICK_WRITE_US);
             final Intent emailIntent = new Intent(Intent.ACTION_SEND);
             emailIntent.setType("plain/text");
-            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"contact@chitanka.info"});
-            startActivity(Intent.createChooser(emailIntent, "Изпрати имейл"));
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.chitanka_email)});
+            startActivity(Intent.createChooser(emailIntent, getString(R.string.title_send_email)));
             return;
         }
 

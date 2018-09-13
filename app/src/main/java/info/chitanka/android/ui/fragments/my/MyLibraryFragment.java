@@ -91,9 +91,20 @@ public class MyLibraryFragment extends BaseFragment implements MyLibraryView{
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getComponent(PresenterComponent.class).inject(this);
-        presenter.setView(this);
-        presenter.onStart();
         analyticsService.logEvent(TrackingConstants.VIEW_FILES);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.setView(this);
+        presenter.startPresenting();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.stopPresenting();
     }
 
     @Nullable
@@ -135,7 +146,6 @@ public class MyLibraryFragment extends BaseFragment implements MyLibraryView{
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        presenter.onDestroy();
     }
 
     @NeedsPermission(value = Manifest.permission.WRITE_EXTERNAL_STORAGE)

@@ -61,9 +61,6 @@ public class NewBooksAndTextworksFragment extends BaseFragment implements NewBoo
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getComponent(PresenterComponent.class).inject(this);
-        presenter.setView(this);
-        presenter.onStart();
-        presenter.loadNewBooksAndTextworks();
     }
 
     @Nullable
@@ -82,10 +79,23 @@ public class NewBooksAndTextworksFragment extends BaseFragment implements NewBoo
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        presenter.setView(this);
+        presenter.startPresenting();
+        presenter.loadNewBooksAndTextworks();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.stopPresenting();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         unbinder.unbind();
-        presenter.onDestroy();
     }
 
     @Override

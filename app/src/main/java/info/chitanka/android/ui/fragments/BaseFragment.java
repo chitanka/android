@@ -48,7 +48,7 @@ public abstract class BaseFragment extends RxFragment implements BaseView {
             return savedInstanceState.getString(key);
         }
 
-        if (getArguments().containsKey(key)) {
+        if (getArguments() != null && getArguments().containsKey(key)) {
             return getArguments().getString(key);
         }
 

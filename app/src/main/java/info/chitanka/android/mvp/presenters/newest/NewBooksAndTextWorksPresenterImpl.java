@@ -13,8 +13,10 @@ import info.chitanka.android.mvp.models.NewBooksResult;
 import info.chitanka.android.mvp.models.NewTextWorksResult;
 import info.chitanka.android.mvp.presenters.BasePresenter;
 import info.chitanka.android.mvp.views.NewBooksAndTextWorksView;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 /**
@@ -23,20 +25,22 @@ import timber.log.Timber;
 public class NewBooksAndTextWorksPresenterImpl extends BasePresenter<NewBooksAndTextWorksView> implements NewBooksAndTextWorksPresenter {
     private final ChitankaApi chitankaApi;
     private final Gson gson;
+    private CompositeSubscription compositeSubscription;
 
     public NewBooksAndTextWorksPresenterImpl(ChitankaApi chitankaApi, Gson gson) {
         this.chitankaApi = chitankaApi;
         this.gson = gson;
+        compositeSubscription = new CompositeSubscription();
     }
 
     @Override
-    public void onStart() {
+    public void startPresenting() {
 
     }
 
     @Override
-    public void onDestroy() {
-
+    public void stopPresenting() {
+        compositeSubscription.clear();
     }
 
     @Override
@@ -47,7 +51,7 @@ public class NewBooksAndTextWorksPresenterImpl extends BasePresenter<NewBooksAnd
 
     @Override
     public void loadNewBooksAndTextworks() {
-        chitankaApi.getNewBooksAndTextworks()
+        Subscription subscription = chitankaApi.getNewBooksAndTextworks()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
@@ -57,15 +61,16 @@ public class NewBooksAndTextWorksPresenterImpl extends BasePresenter<NewBooksAnd
 
                     Type typeOfNewBooks = new TypeToken<LinkedTreeMap<String, List<NewBooksResult>>>() {
                     }.getType();
-                    LinkedTreeMap<String, List<NewBooksResult>> booksMap = gson.fromJson(result.getAsJsonObject("book_revisions_by_date"), typeOfNewBooks);
+                    LinkedTreeMap<String, List<NewBooksResult>> booksMap = gson.fromJson(
+                            result.getAsJsonObject("book_revisions_by_date"), typeOfNewBooks);
 
                     Type typeOfNewTexts = new TypeToken<LinkedTreeMap<String, List<NewTextWorksResult>>>() {
                     }.getType();
-                    LinkedTreeMap<String, List<NewTextWorksResult>> textsMap = gson.fromJson(result.getAsJsonObject("text_revisions_by_date"), typeOfNewTexts);
+                    LinkedTreeMap<String, List<NewTextWorksResult>> textsMap = gson.fromJson(
+                            result.getAsJsonObject("text_revisions_by_date"), typeOfNewTexts);
 
                     getView().presentNewBooksAndTextWorks(booksMap, textsMap);
-                }, err -> {
-                    Timber.e(err);
-                });
+                }, Timber::e);
+        compositeSubscription.add(subscription);
     }
 }

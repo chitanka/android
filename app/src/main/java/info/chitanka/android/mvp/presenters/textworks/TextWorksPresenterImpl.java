@@ -24,12 +24,12 @@ public class TextWorksPresenterImpl extends BasePresenter<TextWorksView> impleme
     }
 
     @Override
-    public void onStart() {
+    public void startPresenting() {
         compositeSubscription = new CompositeSubscription();
     }
 
     @Override
-    public void onDestroy() {
+    public void stopPresenting() {
         if (compositeSubscription != null) {
             compositeSubscription.unsubscribe();
         }

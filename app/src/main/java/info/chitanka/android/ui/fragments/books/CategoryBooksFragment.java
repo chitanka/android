@@ -80,11 +80,25 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getComponent(PresenterComponent.class).inject(this);
-        booksPresenter.setView(this);
-        booksPresenter.onStart();
 
         slug = getArgument(KEY_SLUG, savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter = null;
+        page = 1;
+        booksPresenter.setView(this);
+        booksPresenter.startPresenting();
         booksPresenter.getBooksForCategory(slug, page);
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        booksPresenter.stopPresenting();
     }
 
     @Override
@@ -116,8 +130,6 @@ public class CategoryBooksFragment extends BaseFragment implements CategoryBooks
         super.onDestroy();
         unbinder.unbind();
         unsubscribe();
-        booksPresenter.setView(null);
-        booksPresenter.onDestroy();
     }
 
     private void unsubscribe() {

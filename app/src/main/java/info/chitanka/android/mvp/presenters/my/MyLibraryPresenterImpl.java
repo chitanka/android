@@ -17,12 +17,12 @@ public class MyLibraryPresenterImpl extends BasePresenter<MyLibraryView> impleme
     }
 
     @Override
-    public void onStart() {
+    public void startPresenting() {
         getView().requestPermissionFromUser();
     }
 
     @Override
-    public void onDestroy() {
+    public void stopPresenting() {
 
     }
 

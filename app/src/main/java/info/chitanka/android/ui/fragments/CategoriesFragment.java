@@ -61,7 +61,7 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getComponent(PresenterComponent.class).inject(this);
-        categoriesPresenter.onStart();
+        categoriesPresenter.startPresenting();
         categoriesPresenter.setView(this);
         categoriesPresenter.loadCategories();
         analyticsService.logEvent(TrackingConstants.VIEW_CATEGORIES);
@@ -94,7 +94,7 @@ public class CategoriesFragment extends BaseFragment implements CategoriesView {
     @Override
     public void onDetach() {
         super.onDetach();
-        categoriesPresenter.onDestroy();
+        categoriesPresenter.stopPresenting();
         unbinder.unbind();
     }
 

@@ -71,7 +71,7 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
         getComponent(PresenterComponent.class).inject(this);
 
         authorsPresenter.setView(this);
-        authorsPresenter.onStart();
+        authorsPresenter.startPresenting();
 
         rxBus.toObserverable()
                 .compose(bindToLifecycle())
@@ -128,7 +128,7 @@ public class AuthorsFragment extends BaseFragment implements AuthorsView {
     public void onDetach() {
         super.onDetach();
         unbinder.unbind();
-        authorsPresenter.onDestroy();
+        authorsPresenter.stopPresenting();
         authorsPresenter = null;
     }
 

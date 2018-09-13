@@ -44,11 +44,11 @@ public class BooksPresenterImpl extends BasePresenter<BooksView> implements Book
 
 
     @Override
-    public void onStart() {
+    public void startPresenting() {
     }
 
     @Override
-    public void onDestroy() {
+    public void stopPresenting() {
         if (subscription != null) {
             subscription.unsubscribe();
         }

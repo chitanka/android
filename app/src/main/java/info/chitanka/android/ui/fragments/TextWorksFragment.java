@@ -80,7 +80,7 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
 
         getComponent(PresenterComponent.class).inject(this);
         presenter.setView(this);
-        presenter.onStart();
+        presenter.startPresenting();
         if (TextUtils.isEmpty(searchTerm)) {
             presenter.getAuthorTextWorks(authorSlug);
         } else {
@@ -124,7 +124,7 @@ public class TextWorksFragment extends BaseFragment implements TextWorksView {
     public void onDetach() {
         super.onDetach();
         unbinder.unbind();
-        presenter.onDestroy();
+        presenter.stopPresenting();
     }
 
     @Override

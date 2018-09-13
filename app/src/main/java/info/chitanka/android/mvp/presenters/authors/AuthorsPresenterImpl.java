@@ -25,12 +25,12 @@ public class AuthorsPresenterImpl extends BasePresenter<AuthorsView> implements 
     }
 
     @Override
-    public void onStart() {
+    public void startPresenting() {
         this.compositeSubscription = new CompositeSubscription();
     }
 
     @Override
-    public void onDestroy() {
+    public void stopPresenting() {
         if (compositeSubscription != null) {
             compositeSubscription.unsubscribe();
         }

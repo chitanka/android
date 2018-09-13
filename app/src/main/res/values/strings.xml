@@ -57,4 +57,8 @@
     <string name="my_lib_no_files">Нямате свалени файлове за четене!</string>
     <string name="files_delete_title">Изтриване на файл</string>
     <string name="delete">Изтрий</string>
+
+    <string name="chitanka_website">https://www.chitanka.info</string>
+    <string name="chitanka_email">contact@chitanka.info</string>
+    <string name="title_send_email">Изпрати имейл</string>
 </resources>

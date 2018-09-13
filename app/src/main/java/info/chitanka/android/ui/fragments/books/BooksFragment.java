@@ -70,12 +70,21 @@ public class BooksFragment extends BaseBooksFragment implements BooksView {
                         booksPresenter.searchBooks(query);
                     }
                 });
+    }
 
-        booksPresenter.onStart();
+    @Override
+    public void onResume() {
+        super.onResume();
+        booksPresenter.startPresenting();
         booksPresenter.setView(this);
         booksPresenter.searchBooks(query);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        booksPresenter.stopPresenting();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,12 +105,6 @@ public class BooksFragment extends BaseBooksFragment implements BooksView {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(KEY_QUERY, query);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        booksPresenter.onDestroy();
     }
 
     @Override

@@ -57,7 +57,6 @@ public class AuthorBooksFragment extends BaseBooksFragment implements BooksView 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getComponent(PresenterComponent.class).inject(this);
-        authorBooksPresenter.onStart();
 
         rxBus.toObserverable()
                 .compose(bindToLifecycle())
@@ -70,11 +69,12 @@ public class AuthorBooksFragment extends BaseBooksFragment implements BooksView 
                         authorBooksPresenter.searchAuthorBooks(link);
                     }
                 });
+    }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         link = getArgument(KEY_LINK, savedInstanceState);
-
-        authorBooksPresenter.setView(this);
-        authorBooksPresenter.searchAuthorBooks(link);
     }
 
     @Override
@@ -99,10 +99,24 @@ public class AuthorBooksFragment extends BaseBooksFragment implements BooksView 
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        authorBooksPresenter.startPresenting();
+
+        authorBooksPresenter.setView(this);
+        authorBooksPresenter.searchAuthorBooks(link);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        authorBooksPresenter.stopPresenting();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
-        authorBooksPresenter.onDestroy();
     }
 
     @Override
