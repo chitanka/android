@@ -18,8 +18,6 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.folioreader.FolioReader;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -210,15 +208,10 @@ public class MyLibraryFragment extends BaseFragment implements MyLibraryView{
             }});
 
 
-            readFile(file.getAbsolutePath());
+            presenter.readBook(file.getAbsolutePath());
         });
 
         rvFiles.setAdapter(adapter);
-    }
-
-    private void readFile(String filePath) {
-        FolioReader folioReader = FolioReader.get();
-        folioReader.openBook(filePath);
     }
 
     @Override

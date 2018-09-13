@@ -13,6 +13,7 @@ import dagger.Component;
 import info.chitanka.android.api.ChitankaApi;
 import info.chitanka.android.components.AnalyticsService;
 import info.chitanka.android.ui.BaseActivity;
+import info.chitanka.android.ui.BookReader;
 import info.chitanka.android.utils.RxBus;
 
 /**
@@ -29,6 +30,7 @@ public interface ApplicationComponent {
     ChitankaApi getChitankaApi();
     AnalyticsService getAnalyticsService();
     Gson getGSON();
+    BookReader getBookReader();
 
     void inject(BaseActivity baseActivity);
 }

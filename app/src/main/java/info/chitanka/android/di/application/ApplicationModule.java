@@ -16,6 +16,7 @@ import info.chitanka.android.Constants;
 import info.chitanka.android.api.ChitankaApi;
 import info.chitanka.android.api.ChitankaApiService;
 import info.chitanka.android.components.AnalyticsService;
+import info.chitanka.android.ui.BookReader;
 import info.chitanka.android.utils.RxBus;
 
 /**
@@ -75,5 +76,10 @@ public class ApplicationModule {
     @Singleton
     public AnalyticsService providesAnalytics() {
         return new AnalyticsService();
+    }
+
+    @Provides
+    public BookReader providesBookReader(SharedPreferences sharedPreferences, Gson gson) {
+        return new BookReader(sharedPreferences, gson);
     }
 }

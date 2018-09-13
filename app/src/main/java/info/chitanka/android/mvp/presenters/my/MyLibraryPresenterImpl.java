@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import info.chitanka.android.mvp.presenters.BasePresenter;
 import info.chitanka.android.mvp.views.MyLibraryView;
+import info.chitanka.android.ui.BookReader;
 import info.chitanka.android.utils.FileUtils;
 
 /**
@@ -13,7 +14,10 @@ import info.chitanka.android.utils.FileUtils;
 
 public class MyLibraryPresenterImpl extends BasePresenter<MyLibraryView> implements MyLibraryPresenter {
 
-    public MyLibraryPresenterImpl() {
+    private final BookReader bookReader;
+
+    public MyLibraryPresenterImpl(BookReader bookReader) {
+        this.bookReader = bookReader;
     }
 
     @Override
@@ -36,5 +40,10 @@ public class MyLibraryPresenterImpl extends BasePresenter<MyLibraryView> impleme
         if (viewExists()) {
             getView().displayFilesList(Arrays.asList(FileUtils.listChitankaFiles()));
         }
+    }
+
+    @Override
+    public void readBook(String path) {
+        bookReader.readBook(path);
     }
 }

@@ -21,7 +21,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.folioreader.FolioReader;
 import com.kobakei.ratethisapp.RateThisApp;
 
 import org.parceler.Parcels;
@@ -63,6 +62,9 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
     @Inject
     AnalyticsService analyticsService;
 
+    @Inject
+    BookReader bookReader;
+
     private int selectedNavItemId = R.id.nav_new;
 
     private NetworkRequiredDialog networkRequiredDialog;
@@ -76,8 +78,8 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
             analyticsService.logEvent(TrackingConstants.DOWNLOAD_FILE, new HashMap<String, String>() {{
                 put("filePath", download.getFilePath());
             }});
-            
-            readFile(download.getFilePath());
+
+            bookReader.readBook(download.getFilePath());
         }
     };
     private Unbinder unbinder;
@@ -258,11 +260,6 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
             appBarLayout.setEnabled(true);
         }
         appBarLayout.requestLayout();
-    }
-
-    private void readFile(String filePath) {
-        FolioReader folioReader = FolioReader.get();
-        folioReader.openBook(filePath);
     }
 
     @Override

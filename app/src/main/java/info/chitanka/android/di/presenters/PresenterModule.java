@@ -24,6 +24,7 @@ import info.chitanka.android.mvp.presenters.newest.NewBooksAndTextWorksPresenter
 import info.chitanka.android.mvp.presenters.newest.NewBooksAndTextWorksPresenterImpl;
 import info.chitanka.android.mvp.presenters.textworks.TextWorksPresenter;
 import info.chitanka.android.mvp.presenters.textworks.TextWorksPresenterImpl;
+import info.chitanka.android.ui.BookReader;
 
 /**
  * Created by joro on 16-3-8.
@@ -80,7 +81,7 @@ public class PresenterModule {
 
     @Provides
     @ActivityScope
-    public MyLibraryPresenter providesMyLibraryPresenter() {
-        return new MyLibraryPresenterImpl();
+    public MyLibraryPresenter providesMyLibraryPresenter(BookReader bookReader) {
+        return new MyLibraryPresenterImpl(bookReader);
     }
 }
