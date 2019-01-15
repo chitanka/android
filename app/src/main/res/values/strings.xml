@@ -1,20 +1,20 @@
 <resources>
-    <string name="app_name">chitanka.info Моята Библиотека</string>
+    <string name="app_name">chitanka.info - Моята библиотека</string>
     <string name="action_search">Търсене в chitanka</string>
-    <string name="download">СВАЛИ</string>
+    <string name="download">СВАЛЯНЕ</string>
     <string name="open_chitanka">УЕБ</string>
     <string name="share_text">%1$s от %2$s</string>
 
-    <string name="list_loaded">Целият списък е зареден!</string>
-    <string name="network_required">Интернет връзката е задължителна, за да ползваш приложението!</string>
-    <string name="network_required_no_internet">Няма Интернет Връзка</string>
-    <string name="navigation_drawer_open">Отвори</string>
-    <string name="navigation_drawer_close">Затвори</string>
+    <string name="list_loaded">Пълният списък е зареден.</string>
+    <string name="network_required">Интернет връзката е задължителна, за да ползвате приложението.</string>
+    <string name="network_required_no_internet">Няма връзка към Интернет</string>
+    <string name="navigation_drawer_open">Отваряне</string>
+    <string name="navigation_drawer_close">Затваряне</string>
     <string name="OK">OK</string>
     <string name="title_textworks">Произведения</string>
     <string name="title_authors">Автори</string>
     <string name="title_books">Книги</string>
-    <string name="title_download">Свали с</string>
+    <string name="title_download">Сваляне чрез</string>
     <string name="item_text_work_author" formatted="false">от %s</string>
     <string name="item_text_work_rating" formatted="false">Оценка %1$.2f от %2$d гласа</string>
     <string name="item_book_no_annotation">Няма описание</string>
@@ -27,38 +27,38 @@
     <string name="drawer_books">Книги</string>
     <string name="drawer_authors">Автори</string>
     <string name="drawer_my_lib">Моята библиотека</string>
-    <string name="title_open_with">Отвори с</string>
-    <string name="download_no_app">Нямате приложения за сваляне на ресурси!</string>
-    <string name="web_no_app">Нямате приложения за отваряне на линкове!</string>
+    <string name="title_open_with">Отваряне чрез</string>
+    <string name="download_no_app">Нямате приложение за сваляне на ресурси.</string>
+    <string name="web_no_app">Нямате приложение за отваряне на линкове.</string>
     <string name="downloading">Сваля се …</string>
 
     <!-- Searchable Spinner -->
     <string name="categories_pick">Избор на категория</string>
 
     <!-- Rating dialog -->
-    <string name="erd_title">Оценка на приложението ни :)</string>
-    <string name="erd_message">Здравей, ще отделиш ли минута, за да оцениш приложението ни? Така заедно ще го направим по-добро! ;)</string>
+    <string name="erd_title">Оценка на приложението</string>
+    <string name="erd_message">Здравейте! Ще отделите ли минута, за да оцените приложението ни? Така заедно ще го направим по-добро! ;)</string>
     <string name="erd_no_thanks">Не, благодаря.</string>
     <string name="erd_remind_me_later">По-късно.</string>
     <string name="erd_rate_now">Оценка.</string>
     <string name="title_readers">Четци на книги</string>
     <string name="drawer_new">Ново</string>
-    <string name="title_new_books">Нови Книги</string>
-    <string name="title_new_textworks">Нови Произведения</string>
-    <string name="error_loading_data">Възникна проблем със зареждането на данните!</string>
-    <string name="read">ПРОЧЕТИ</string>
-    <string name="action_refresh">Обнови</string>
+    <string name="title_new_books">Нови книги</string>
+    <string name="title_new_textworks">Нови произведения</string>
+    <string name="error_loading_data">Възникна проблем със зареждането на данните.</string>
+    <string name="read">ПРОЧИТ</string>
+    <string name="action_refresh">Обновяване</string>
     <string name="button_allow">ОК</string>
     <string name="button_deny">Отказ</string>
-    <string name="message_storage_needed">Разрешението ви е нужно, за да видите списъка с вашите книги!</string>
-    <string name="storage_denied">Книгите ви не могат да бъдат заредени!</string>
-    <string name="downloading_file">Файлът се сваля!</string>
-    <string name="file_downloaded">Файлът е свален!</string>
-    <string name="my_lib_no_files">Нямате свалени файлове за четене!</string>
+    <string name="message_storage_needed">Разрешението ви е нужно, за да видите списъка с книгите си.</string>
+    <string name="storage_denied">Книгите ви не могат да бъдат заредени.</string>
+    <string name="downloading_file">Файлът се сваля.</string>
+    <string name="file_downloaded">Файлът е свален.</string>
+    <string name="my_lib_no_files">Нямате свалени файлове за четене.</string>
     <string name="files_delete_title">Изтриване на файл</string>
-    <string name="delete">Изтрий</string>
+    <string name="delete">Изтриване</string>
 
-    <string name="chitanka_website">https://www.chitanka.info</string>
+    <string name="chitanka_website">https://chitanka.info</string>
     <string name="chitanka_email">contact@chitanka.info</string>
-    <string name="title_send_email">Изпрати имейл</string>
+    <string name="title_send_email">Изпращане на имейл</string>
 </resources>
