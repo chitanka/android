@@ -20,7 +20,7 @@
 
     <include layout="@layout/view_empty"  />
 
-    <info.chitanka.android.ui.views.containers.ScrollRecyclerView
+    <info.chitanka.app.ui.views.containers.ScrollRecyclerView
         android:id="@+id/rv_books"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"

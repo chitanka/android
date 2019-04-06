@@ -5,7 +5,7 @@
 
         <variable
             name="textWork"
-            type="info.chitanka.android.mvp.models.TextWork" />
+            type="info.chitanka.app.mvp.models.TextWork" />
 
         <import type="android.text.TextUtils" />
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
-        <variable name="book" type="info.chitanka.android.mvp.models.Book"/>
+        <variable name="book" type="info.chitanka.app.mvp.models.Book"/>
 
         <import type="android.text.TextUtils" />
         <import type="android.view.View" />

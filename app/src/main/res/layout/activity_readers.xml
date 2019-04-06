@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="info.chitanka.android.ui.BookDetailsActivity">
+    tools:context="info.chitanka.app.ui.BookDetailsActivity">
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context="info.chitanka.android.ui.ReadersActivity">
+        tools:context="info.chitanka.app.ui.ReadersActivity">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
