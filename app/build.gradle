@@ -33,8 +33,8 @@ android {
         applicationId "info.chitanka.app"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 10
-        versionName "4.0.1"
+        versionCode 1
+        versionName "1.0.0"
 
         buildConfigField "String", "FLURRY_KEY", "\"${flurryKey}\""
 
@@ -66,7 +66,7 @@ dependencies {
     implementation 'com.toptoche.searchablespinner:searchablespinnerlibrary:1.3.1'
     implementation 'org.parceler:parceler-api:1.1.6'
     annotationProcessor 'org.parceler:parceler:1.1.6'
-    implementation 'com.flurry.android:analytics:6.4.2'
+    implementation 'com.flurry.android:analytics:11.4.0@aar'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
     implementation 'io.reactivex:rxandroid:1.2.1'
     implementation 'io.reactivex:rxjava:1.3.8'
@@ -83,7 +83,7 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
     testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.9@aar') {
         transitive = true;
     }
     implementation 'com.github.clans:fab:1.6.4'
@@ -93,4 +93,5 @@ dependencies {
 
     implementation 'com.github.hotchemi:permissionsdispatcher:2.3.1'
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.3.1'
+    implementation 'com.crashlytics.sdk.android:answers:1.4.7'
 }

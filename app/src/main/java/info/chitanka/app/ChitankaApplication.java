@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.flurry.android.FlurryAgent;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.squareup.leakcanary.LeakCanary;
@@ -32,10 +33,13 @@ public class ChitankaApplication extends Application {
             Timber.plant(new Timber.DebugTree());
         } else {
             new FlurryAgent.Builder()
-                    .withLogEnabled(false)
+                    .withLogEnabled(true)
+                    .withCaptureUncaughtExceptions(true)
+                    .withContinueSessionMillis(10000)
+                    .withLogLevel(Log.VERBOSE)
                     .build(this, BuildConfig.FLURRY_KEY);
 
-            Fabric.with(this, new Crashlytics());
+            Fabric.with(this, new Crashlytics(), new Answers());
             Timber.plant(new CrashReportingTree());
         }
 
