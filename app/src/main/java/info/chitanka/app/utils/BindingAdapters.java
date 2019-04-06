@@ -22,13 +22,13 @@ import info.chitanka.app.ui.fragments.DownloadFilePermissionsFragment;
 
 public class BindingAdapters {
 
-    @BindingAdapter({"app:downloadTitle", "app:downloadUrl", "app:downloadFormats", "app:context"})
+    @BindingAdapter({"downloadTitle", "downloadUrl", "downloadFormats", "context"})
     public static void displayDownloadDialog(TextView textView, String title, String url, ArrayList<String> formats, Context context) {
         textView.setOnClickListener(null);
         textView.setOnClickListener(view -> DownloadDialog.newInstance(title, url, formats).show(((FragmentActivity)context).getSupportFragmentManager(), DownloadDialog.TAG));
     }
 
-    @BindingAdapter({"app:downloadTitle", "app:downloadUrl", "app:context"})
+    @BindingAdapter({"downloadTitle", "downloadUrl", "context"})
     public static void displayDownloadDialog(TextView textView, String title, String url, Context context) {
         textView.setOnClickListener(null);
         textView.setOnClickListener(view -> {
@@ -43,7 +43,7 @@ public class BindingAdapters {
         });
     }
 
-    @BindingAdapter({"app:imageUrl", "app:context"})
+    @BindingAdapter({"imageUrl", "context"})
     public static void loadImageUrl(ImageView imageView, String imageUrl, Context context) {
         Glide.with(context).load(imageUrl).fitCenter().crossFade().placeholder(R.drawable.ic_no_cover).into(imageView);
     }
