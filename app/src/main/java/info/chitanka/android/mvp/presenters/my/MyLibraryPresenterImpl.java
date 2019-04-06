@@ -7,6 +7,11 @@ import info.chitanka.android.mvp.presenters.BasePresenter;
 import info.chitanka.android.mvp.views.MyLibraryView;
 import info.chitanka.android.ui.BookReader;
 import info.chitanka.android.utils.FileUtils;
+import rx.Single;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by joro on 23.01.17.
@@ -15,6 +20,7 @@ import info.chitanka.android.utils.FileUtils;
 public class MyLibraryPresenterImpl extends BasePresenter<MyLibraryView> implements MyLibraryPresenter {
 
     private final BookReader bookReader;
+    private CompositeSubscription compositeSubscription;
 
     public MyLibraryPresenterImpl(BookReader bookReader) {
         this.bookReader = bookReader;
@@ -22,12 +28,15 @@ public class MyLibraryPresenterImpl extends BasePresenter<MyLibraryView> impleme
 
     @Override
     public void startPresenting() {
+        compositeSubscription = new CompositeSubscription();
         getView().requestPermissionFromUser();
     }
 
     @Override
     public void stopPresenting() {
-
+        if (compositeSubscription != null) {
+            compositeSubscription.unsubscribe();
+        }
     }
 
     @Override
@@ -38,7 +47,11 @@ public class MyLibraryPresenterImpl extends BasePresenter<MyLibraryView> impleme
     @Override
     public void readFiles() {
         if (viewExists()) {
-            getView().displayFilesList(Arrays.asList(FileUtils.listChitankaFiles()));
+            Subscription subscription = Single.fromCallable(() -> Arrays.asList(FileUtils.listChitankaFiles()))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(files -> getView().displayFilesList(files));
+            compositeSubscription.add(subscription);
         }
     }
 

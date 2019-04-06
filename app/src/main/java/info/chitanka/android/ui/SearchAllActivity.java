@@ -30,7 +30,7 @@ import info.chitanka.android.ui.fragments.TextWorksFragment;
 import info.chitanka.android.ui.fragments.books.BooksFragment;
 import info.chitanka.android.utils.RxBus;
 
-public class SearchActivity extends BaseActivity implements HasComponent<PresenterComponent> {
+public class SearchAllActivity extends BaseActivity implements HasComponent<PresenterComponent> {
 
     @Inject
     RxBus rxBus;
@@ -47,7 +47,7 @@ public class SearchActivity extends BaseActivity implements HasComponent<Present
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_search_all);
 
         presenterComponent = DaggerPresenterComponent.builder().applicationComponent(getApplicationComponent()).presenterModule(new PresenterModule()).build();
         getComponent().inject(this);

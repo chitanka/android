@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
                     analyticsService.logEvent(TrackingConstants.SEARCHED, new HashMap<String, String>() {{
                         put("term", s);
                     }});
-                    Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                    Intent intent = new Intent(MainActivity.this, SearchAllActivity.class);
                     intent.putExtra(Constants.EXTRA_SEARCH_TERM, s);
                     startActivity(intent);
                 }

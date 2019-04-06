@@ -1,8 +1,6 @@
 package info.chitanka.android.ui.dialogs;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -33,6 +31,7 @@ import info.chitanka.android.components.AnalyticsService;
 import info.chitanka.android.di.HasComponent;
 import info.chitanka.android.di.presenters.PresenterComponent;
 import info.chitanka.android.ui.adapters.DownloadActionsAdapter;
+import info.chitanka.android.utils.FileUtils;
 import rx.Subscription;
 
 /**
@@ -97,13 +96,11 @@ public class DownloadDialog extends DialogFragment {
         DownloadActionsAdapter adapter = new DownloadActionsAdapter(formats);
         subscription = adapter.getOnDownloadClick().subscribe(format -> {
 
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format(downloadUrl, format)));
-            Intent chooser = Intent.createChooser(intent, activity.getString(R.string.title_download));
-            if (intent.resolveActivity(activity.getPackageManager()) != null) {
-                activity.startActivity(chooser);
-            } else {
-                downloadWithManager(format);
+            try {
+                downloadWithService(format);
                 analyticsService.logEvent(TrackingConstants.NO_ACTIVITY_DOWNLOAD);
+            } catch (Exception e) {
+                downloadWithExternalApp(format);
             }
 
             analyticsService.logEvent(TrackingConstants.CLICK_DOWNLOAD_BOOK, new HashMap<String, String>() {{
@@ -120,15 +117,17 @@ public class DownloadDialog extends DialogFragment {
         return builder.create();
     }
 
-    private void downloadWithManager(String format) {
-        Uri parse = Uri.parse(String.format(downloadUrl, format));
-        DownloadManager.Request downloadRequest = new DownloadManager.Request(parse);
-        downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        downloadRequest.setVisibleInDownloadsUi(true);
-        downloadRequest.allowScanningByMediaScanner();
+    private void downloadWithService(String format) {
+        FileUtils.downloadFile(title, String.format(downloadUrl, format), getActivity());
+    }
 
-        DownloadManager downloadManager = (DownloadManager) activity.getSystemService(Activity.DOWNLOAD_SERVICE);
-        downloadManager.enqueue(downloadRequest);
+    private void downloadWithExternalApp(String format) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format(downloadUrl, format)));
+        Intent chooser = Intent.createChooser(intent, activity.getString(R.string.title_download));
+        if (intent.resolveActivity(activity.getPackageManager()) != null) {
+            activity.startActivity(chooser);
+        }
+
     }
 
     @Override
@@ -140,7 +139,7 @@ public class DownloadDialog extends DialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((HasComponent<PresenterComponent>)getActivity()).getComponent().inject(this);
+        ((HasComponent<PresenterComponent>) getActivity()).getComponent().inject(this);
     }
 
     @Override

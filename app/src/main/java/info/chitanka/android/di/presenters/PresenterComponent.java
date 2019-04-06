@@ -8,7 +8,7 @@ import info.chitanka.android.ui.AuthorDetailsActivity;
 import info.chitanka.android.ui.BookDetailsActivity;
 import info.chitanka.android.ui.MainActivity;
 import info.chitanka.android.ui.ReadersActivity;
-import info.chitanka.android.ui.SearchActivity;
+import info.chitanka.android.ui.SearchAllActivity;
 import info.chitanka.android.ui.dialogs.DownloadDialog;
 import info.chitanka.android.ui.fragments.AuthorsFragment;
 import info.chitanka.android.ui.fragments.CategoriesFragment;
@@ -31,7 +31,7 @@ public interface PresenterComponent {
     void inject(MainActivity activity);
     void inject(AuthorBooksActivity authorBooksActivity);
     void inject(BookDetailsActivity bookDetailsActivity);
-    void inject(SearchActivity searchActivity);
+    void inject(SearchAllActivity searchAllActivity);
     void inject(ReadersActivity readersActivity);
     void inject(AuthorDetailsActivity authorDetailsActivity);
 
