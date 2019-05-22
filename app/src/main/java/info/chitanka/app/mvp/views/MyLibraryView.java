@@ -10,4 +10,5 @@ import java.util.List;
 public interface MyLibraryView extends BaseView {
     void requestPermissionFromUser();
     void displayFilesList(List<File> fileNames);
+    void readFile(String path);
 }

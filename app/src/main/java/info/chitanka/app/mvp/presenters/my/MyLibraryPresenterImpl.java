@@ -19,6 +19,8 @@ import rx.subscriptions.CompositeSubscription;
 
 public class MyLibraryPresenterImpl extends BasePresenter<MyLibraryView> implements MyLibraryPresenter {
 
+    private static final String EPUB = "epub";
+
     private final BookReader bookReader;
     private CompositeSubscription compositeSubscription;
 
@@ -57,6 +59,10 @@ public class MyLibraryPresenterImpl extends BasePresenter<MyLibraryView> impleme
 
     @Override
     public void readBook(String path) {
-        bookReader.readBook(path);
+        if(path.contains(EPUB)) {
+            bookReader.readBook(path);
+        } else {
+            getView().readFile(path);
+        }
     }
 }

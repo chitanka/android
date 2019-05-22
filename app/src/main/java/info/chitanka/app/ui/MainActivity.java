@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,6 +54,7 @@ import info.chitanka.app.utils.ConnectivityUtils;
 public class MainActivity extends AppCompatActivity implements HasComponent<PresenterComponent>, NavigationView.OnNavigationItemSelectedListener {
     public static final String NETWORK_REQUIRED_DIALOG_FRAGMENT = "NetworkRequiredDialogFragment";
     private static final String KEY_SELECTED_ITEM = "selected_item";
+    private static final String EPUB = ".epub";
 
     @BindView(R.id.nav_view)
     NavigationView navigationView;
@@ -80,7 +82,17 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
                 put("filePath", download.getFilePath());
             }});
 
-            bookReader.readBook(download.getFilePath());
+            if (download.getFilePath().contains(EPUB)) {
+                bookReader.readBook(download.getFilePath());
+            } else {
+                Intent sendIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(download.getFilePath()));
+                Intent chooser = Intent.createChooser(sendIntent, getString(R.string.title_open_with));
+                if (chooser.resolveActivity(context.getPackageManager()) != null) {
+                    context.startActivity(chooser);
+                } else {
+                    Toast.makeText(context, getString(R.string.file_no_app), Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     };
     private Unbinder unbinder;

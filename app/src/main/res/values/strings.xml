@@ -30,6 +30,7 @@
     <string name="title_open_with">Отваряне чрез</string>
     <string name="download_no_app">Нямате приложение за сваляне на ресурси.</string>
     <string name="web_no_app">Нямате приложение за отваряне на линкове.</string>
+    <string name="file_no_app">Нямате приложение, което може да отвори посоченият файл.</string>
     <string name="downloading">Сваля се …</string>
 
     <!-- Searchable Spinner -->

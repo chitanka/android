@@ -1,6 +1,8 @@
 package info.chitanka.app.ui.fragments.my;
 
 import android.Manifest;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -214,6 +217,19 @@ public class MyLibraryFragment extends BaseFragment implements MyLibraryView{
         });
 
         rvFiles.setAdapter(adapter);
+    }
+
+    @Override
+    public void readFile(String path) {
+        if(isAdded()) {
+            Intent sendIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(path));
+            Intent chooser = Intent.createChooser(sendIntent, getString(R.string.title_open_with));
+            if (chooser.resolveActivity(getActivity().getPackageManager()) != null) {
+                getActivity().startActivity(chooser);
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.file_no_app), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
