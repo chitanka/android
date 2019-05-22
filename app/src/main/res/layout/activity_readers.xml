@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context="info.chitanka.app.ui.BookDetailsActivity">
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -47,7 +47,7 @@
                     android:src="@drawable/ic_alreader"
                     android:layout_width="120dp"
                     android:layout_height="wrap_content" />
-                <android.support.v7.widget.AppCompatTextView
+                <TextView
                     style="@style/reader_text"
                     android:text="Alreader"
                     android:layout_width="match_parent"
@@ -68,7 +68,7 @@
                     android:src="@drawable/ic_coolreader"
                     android:layout_width="120dp"
                     android:layout_height="wrap_content" />
-                <android.support.v7.widget.AppCompatTextView
+                <TextView
                     style="@style/reader_text"
                     android:text="CoolReader"
                     android:layout_width="match_parent"
@@ -90,7 +90,7 @@
                     android:src="@drawable/ic_ebookdroid"
                     android:layout_width="120dp"
                     android:layout_height="wrap_content" />
-                <android.support.v7.widget.AppCompatTextView
+                <TextView
                     style="@style/reader_text"
                     android:text="EbookDroid"
                     android:layout_width="match_parent"
@@ -114,7 +114,7 @@
                     android:layout_width="120dp"
                     android:layout_height="wrap_content" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <TextView
                     style="@style/reader_text"
                     android:text="FbReader"
                     android:layout_width="match_parent"
@@ -123,4 +123,4 @@
 
         </RelativeLayout>
     </ScrollView>
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

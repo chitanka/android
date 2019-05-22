@@ -1,6 +1,6 @@
 package info.chitanka.app.ui.fragments.books;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.RelativeLayout;
 

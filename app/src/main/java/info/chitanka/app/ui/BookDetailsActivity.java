@@ -1,12 +1,14 @@
 package info.chitanka.app.ui;
 
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v4.widget.NestedScrollView;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+
+import androidx.core.widget.NestedScrollView;
+import androidx.databinding.DataBindingUtil;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.HashMap;
 

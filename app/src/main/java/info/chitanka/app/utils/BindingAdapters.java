@@ -1,12 +1,13 @@
 package info.chitanka.app.utils;
 
 import android.content.Context;
-import android.databinding.BindingAdapter;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.databinding.BindingAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.bumptech.glide.Glide;
 
