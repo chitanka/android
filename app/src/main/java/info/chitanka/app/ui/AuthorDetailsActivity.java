@@ -1,13 +1,16 @@
 package info.chitanka.app.ui;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.HashMap;
 
@@ -75,10 +78,11 @@ public class AuthorDetailsActivity extends BaseActivity implements HasComponent<
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             switch (position) {
@@ -88,7 +92,7 @@ public class AuthorDetailsActivity extends BaseActivity implements HasComponent<
                     return TextWorksFragment.newInstance(null, authorSlug);
             }
 
-            return null;
+            return AuthorBooksFragment.newInstance(authorSlug);
         }
 
         @Override

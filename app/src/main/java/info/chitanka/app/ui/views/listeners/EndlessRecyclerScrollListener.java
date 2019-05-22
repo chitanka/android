@@ -1,7 +1,7 @@
 package info.chitanka.app.ui.views.listeners;
 
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by nmp on 16-3-22.

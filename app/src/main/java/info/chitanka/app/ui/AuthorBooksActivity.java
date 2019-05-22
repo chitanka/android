@@ -4,8 +4,8 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.widget.Toolbar;
 
 import java.util.HashMap;
 
@@ -33,7 +33,7 @@ public class AuthorBooksActivity extends BaseActivity implements HasComponent<Pr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_author_books);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         setupActionBar();
@@ -58,11 +58,7 @@ public class AuthorBooksActivity extends BaseActivity implements HasComponent<Pr
         return presenterComponent;
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void setupActionBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            // Show the Up button in the action bar.
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 }

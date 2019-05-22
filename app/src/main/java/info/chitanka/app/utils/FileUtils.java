@@ -50,12 +50,6 @@ public class FileUtils {
         context.startService(intent);
     }
 
-
-    private static boolean isFolderAvailable() {
-        File file = new File(getChitankaEpubFolderPath());
-        return file.isDirectory();
-    }
-
     public static boolean deleteFile(File file) {
         if (file != null && file.exists()) {
             return file.delete();

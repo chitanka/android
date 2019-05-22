@@ -1,6 +1,7 @@
 package info.chitanka.app.ui.adapters;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +19,14 @@ import rx.subjects.PublishSubject;
  * Created by nmp on 16-3-22.
  */
 public class DownloadActionsAdapter extends RecyclerView.Adapter<DownloadActionsAdapter.ViewHolder> {
-    private List<String> formats = new ArrayList<>();
+    private List<String> formats;
     private PublishSubject<String> onClick = PublishSubject.create();
 
     public DownloadActionsAdapter(List<String> formats) {
         this.formats = formats;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_download, parent, false);

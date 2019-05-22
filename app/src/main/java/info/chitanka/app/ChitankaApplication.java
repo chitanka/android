@@ -7,8 +7,6 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.flurry.android.FlurryAgent;
 import com.kobakei.ratethisapp.RateThisApp;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 
 import info.chitanka.app.di.application.ApplicationComponent;
 import info.chitanka.app.di.application.ApplicationModule;
@@ -21,7 +19,6 @@ import timber.log.Timber;
  */
 public class ChitankaApplication extends Application {
     private static ApplicationComponent applicationComponent;
-    private static RefWatcher refWatcher;
 
     @Override
     public void onCreate() {
@@ -29,7 +26,6 @@ public class ChitankaApplication extends Application {
         applicationComponent = DaggerApplicationComponent.builder().applicationModule(new ApplicationModule(this)).build();
 
         if (BuildConfig.DEBUG) {
-            refWatcher = LeakCanary.install(this);
             Timber.plant(new Timber.DebugTree());
         } else {
             new FlurryAgent.Builder()
@@ -54,10 +50,6 @@ public class ChitankaApplication extends Application {
         config.setNoButtonText(R.string.erd_no_thanks);
         config.setCancelButtonText(R.string.erd_remind_me_later);
         RateThisApp.init(config);
-    }
-
-    public static RefWatcher getRefWatcher() {
-        return refWatcher;
     }
 
     public static ApplicationComponent getApplicationComponent() {
