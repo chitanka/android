@@ -96,14 +96,8 @@ public class DownloadDialog extends DialogFragment {
         rvContainerActions.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
         DownloadActionsAdapter adapter = new DownloadActionsAdapter(formats);
         subscription = adapter.getOnDownloadClick().subscribe(format -> {
-
-            try {
-                downloadWithService(format);
-                analyticsService.logEvent(TrackingConstants.NO_ACTIVITY_DOWNLOAD);
-            } catch (Exception e) {
-                downloadWithExternalApp(format);
-            }
-
+            FileUtils.downloadFile(title, String.format(downloadUrl, format), getActivity());
+            analyticsService.logEvent(TrackingConstants.NO_ACTIVITY_DOWNLOAD);
             analyticsService.logEvent(TrackingConstants.CLICK_DOWNLOAD_BOOK, new HashMap<String, String>() {{
                 put("title", title);
                 put("format", format);
@@ -116,19 +110,6 @@ public class DownloadDialog extends DialogFragment {
         tvTitle.setText(title);
 
         return builder.create();
-    }
-
-    private void downloadWithService(String format) {
-        FileUtils.downloadFile(title, String.format(downloadUrl, format), getActivity());
-    }
-
-    private void downloadWithExternalApp(String format) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format(downloadUrl, format)));
-        Intent chooser = Intent.createChooser(intent, activity.getString(R.string.title_download));
-        if (intent.resolveActivity(activity.getPackageManager()) != null) {
-            activity.startActivity(chooser);
-        }
-
     }
 
     @Override

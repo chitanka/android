@@ -94,18 +94,15 @@ public class BookDetailsActivity extends BaseActivity implements HasComponent<Pr
         Book book = bookDetails.getBook();
         setTitle(getText(book.getTitle()));
         binding.setBook(book);
-        binding.containerBook.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                View view = v.getChildAt(v.getChildCount() - 1);
-                int diff = (view.getBottom()-(v.getHeight()+v.getScrollY()));
+        binding.containerBook.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            View view = v.getChildAt(v.getChildCount() - 1);
+            int diff = (view.getBottom()-(v.getHeight()+v.getScrollY()));
 
-                // if diff is zero, then the bottom has been reached
-                if(diff <= 0 && binding.fabMenu.getVisibility() == View.VISIBLE) {
-                    binding.fabMenu.setVisibility(View.INVISIBLE);
-                } else if (binding.fabMenu.getVisibility() != View.VISIBLE) {
-                    binding.fabMenu.setVisibility(View.VISIBLE);
-                }
+            // if diff is zero, then the bottom has been reached
+            if(diff <= 0 && binding.fabMenu.getVisibility() == View.VISIBLE) {
+                binding.fabMenu.setVisibility(View.INVISIBLE);
+            } else if (binding.fabMenu.getVisibility() != View.VISIBLE) {
+                binding.fabMenu.setVisibility(View.VISIBLE);
             }
         });
 

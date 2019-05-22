@@ -89,6 +89,7 @@ dependencies {
     }
     implementation 'com.github.clans:fab:1.6.4'
     implementation 'io.github.kobakei:ratethisapp:1.1.1'
+    implementation "androidx.tonyodev.fetch2:xfetch2:3.1.1"
 
     implementation 'com.trello:rxlifecycle-components:1.0'
 
