@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Pres
             } else {
                 Intent sendIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(download.getFilePath()));
                 Intent chooser = Intent.createChooser(sendIntent, getString(R.string.title_open_with));
+                chooser.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 if (chooser.resolveActivity(context.getPackageManager()) != null) {
                     context.startActivity(chooser);
                 } else {
